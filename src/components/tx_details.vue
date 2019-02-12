@@ -46,14 +46,14 @@
                 <div class="infoBox">
                     <div class="infoBoxContent">
                         <div class="text"><span>Amount</span></div>
-                        <div class="value"><span><FormatRyo :amount="tx.amount" /></span></div>
+                        <div class="value"><span><FormatLoki :amount="tx.amount" /></span></div>
                     </div>
                 </div>
 
                 <div class="infoBox">
                     <div class="infoBoxContent">
                         <div class="text"><span>Fee <template v-if="tx.type=='in'||tx.type=='pool'">(paid by sender)</template></span></div>
-                        <div class="value"><span><FormatRyo :amount="tx.fee" /></span></div>
+                        <div class="value"><span><FormatLoki :amount="tx.fee" /></span></div>
                     </div>
                 </div>
 
@@ -122,7 +122,7 @@
                             <q-item-main>
                                 <q-item-tile label>{{ destination.name }}</q-item-tile>
                                 <q-item-tile class="monospace ellipsis" sublabel>{{ destination.address }}</q-item-tile>
-                                <q-item-tile sublabel><FormatRyo :amount="destination.amount" /></q-item-tile>
+                                <q-item-tile sublabel><FormatLoki :amount="destination.amount" /></q-item-tile>
                             </q-item-main>
 
                             <q-context-menu>
@@ -182,7 +182,7 @@ import { date } from "quasar"
 const { formatDate } = date
 import Identicon from "components/identicon"
 import TxTypeIcon from "components/tx_type_icon"
-import FormatRyo from "components/format_ryo"
+import FormatLoki from "components/format_loki"
 export default {
     name: "TxDetails",
     computed: mapState({
@@ -298,7 +298,7 @@ export default {
     components: {
         Identicon,
         TxTypeIcon,
-        FormatRyo
+        FormatLoki
     }
 }
 </script>

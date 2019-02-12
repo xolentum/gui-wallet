@@ -21,20 +21,6 @@
         </q-field>
 
         <q-field>
-            <div class="row gutter-md">
-                <div><q-radio v-model="wallet.type" val="long" label="Long address" /></div>
-                <div><q-radio v-model="wallet.type" val="kurz" label="Short (kurz) address" /></div>
-            </div>
-        </q-field>
-
-        <p v-if="wallet.type == 'long'">
-            Create both public/private view & spend keys.  Allows creation of view-only wallets.
-        </p>
-        <p v-if="wallet.type == 'kurz'">
-            Create shorter style address with only private view & spend keys. Does NOT support view-only wallets.
-        </p>
-
-        <q-field>
             <q-input v-model="wallet.password" type="password" float-label="Password" :dark="theme=='dark'" />
         </q-field>
 
@@ -59,7 +45,6 @@ export default {
             wallet: {
                 name: "",
                 language: "English",
-                type: "long",
                 password: "",
                 password_confirm: ""
             },

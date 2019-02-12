@@ -9,6 +9,8 @@ export default {
             }
         },
         pending_config: {
+        },
+        remotes: {
         }
     },
     wallets: {
@@ -34,12 +36,12 @@ export default {
             spend_key: ""
         },
         transactions: {
-            tx_list: [],
+            tx_list: []
         },
         address_list: {
             used: [],
             unused: [],
-            address_book: [],
+            address_book: []
         }
     },
     tx_status: {

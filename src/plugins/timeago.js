@@ -1,4 +1,4 @@
-import VueTimeago from 'vue-timeago'
+import VueTimeago from "vue-timeago"
 export default ({
     app,
     router,
@@ -6,7 +6,7 @@ export default ({
     Vue
 }) => {
     Vue.use(VueTimeago, {
-        name: 'Timeago',
-        locale: 'en'
+        name: "Timeago",
+        locale: "en"
     })
 }

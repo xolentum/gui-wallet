@@ -6,7 +6,7 @@ module.exports = function (ctx) {
         plugins: [
             "i18n",
             "axios",
-	    "vuelidate",
+            "vuelidate",
             "gateway",
             "timeago"
         ],
@@ -28,7 +28,7 @@ module.exports = function (ctx) {
             // gzip: true,
             // analyze: true,
             // extractCSS: false,
-            extendWebpack(cfg) {
+            extendWebpack (cfg) {
                 /*
                 cfg.module.rules.push({
                     enforce: "pre",
@@ -59,6 +59,7 @@ module.exports = function (ctx) {
                 "QField",
                 "QInput",
                 "QRadio",
+                "QOptionGroup",
                 "QBtn",
                 "QBtnToggle",
                 "QIcon",
@@ -118,30 +119,30 @@ module.exports = function (ctx) {
                 background_color: "#ffffff",
                 theme_color: "#027be3",
                 icons: [{
-                        "src": "statics/icons/icon-128x128.png",
-                        "sizes": "128x128",
-                        "type": "image/png"
-                    },
-                    {
-                        "src": "statics/icons/icon-192x192.png",
-                        "sizes": "192x192",
-                        "type": "image/png"
-                    },
-                    {
-                        "src": "statics/icons/icon-256x256.png",
-                        "sizes": "256x256",
-                        "type": "image/png"
-                    },
-                    {
-                        "src": "statics/icons/icon-384x384.png",
-                        "sizes": "384x384",
-                        "type": "image/png"
-                    },
-                    {
-                        "src": "statics/icons/icon-512x512.png",
-                        "sizes": "512x512",
-                        "type": "image/png"
-                    }
+                    "src": "statics/icons/icon-128x128.png",
+                    "sizes": "128x128",
+                    "type": "image/png"
+                },
+                {
+                    "src": "statics/icons/icon-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                },
+                {
+                    "src": "statics/icons/icon-256x256.png",
+                    "sizes": "256x256",
+                    "type": "image/png"
+                },
+                {
+                    "src": "statics/icons/icon-384x384.png",
+                    "sizes": "384x384",
+                    "type": "image/png"
+                },
+                {
+                    "src": "statics/icons/icon-512x512.png",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }
                 ]
             }
         },
@@ -150,7 +151,7 @@ module.exports = function (ctx) {
         },
         electron: {
             bundler: "builder", // or "packager"
-            extendWebpack(cfg) {
+            extendWebpack (cfg) {
                 // do something with Electron process Webpack cfg
             },
             packager: {
@@ -166,14 +167,14 @@ module.exports = function (ctx) {
                 // win32metadata: { ... }
 
                 extraResource: [
-                    "bin",
+                    "bin"
                 ]
             },
             builder: {
                 // https://www.electron.build/configuration/configuration
 
-                appId: "com.ryo-currency.wallet",
-                productName: "Ryo Wallet Atom",
+                appId: "com.lokinetwork.wallet",
+                productName: "Loki Wallet Atom",
                 copyright: "Copyright © 2018 Ryo Currency Project",
 
                 // directories: {

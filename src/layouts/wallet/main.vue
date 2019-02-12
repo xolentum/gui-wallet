@@ -17,6 +17,9 @@
             <q-route-tab to="/wallet/addressbook" slot="title">
                 <span><q-icon name="person" /> Address Book</span>
             </q-route-tab>
+            <q-route-tab to="/wallet/servicenode" slot="title">
+                <span><q-icon name="router" /> Service Node</span>
+            </q-route-tab>
             <q-route-tab to="/wallet/txhistory" slot="title">
                 <span><q-icon name="history" /> TX History</span>
             </q-route-tab>

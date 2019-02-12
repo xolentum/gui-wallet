@@ -106,7 +106,7 @@ export default {
                     this.$q.notify({
                         type: "warning",
                         timeout: 2000,
-                        message: "Warning: ryod not found, using remote node"
+                        message: "Warning: lokid not found, using remote node"
                     })
                     break;
                 case 6:

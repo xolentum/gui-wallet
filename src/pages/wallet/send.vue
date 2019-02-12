@@ -5,7 +5,7 @@
         <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
 
             <div class="col-8">
-                <q-icon name="call_made" size="24px" /> Send Ryo
+                <q-icon name="call_made" size="24px" /> Send Loki
             </div>
 
             <div class="col-4">
@@ -25,7 +25,7 @@
         <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
 
             <div class="col-8">
-                <q-icon name="call_made" size="24px" /> Send Ryo
+                <q-icon name="call_made" size="24px" /> Send Loki
             </div>
 
             <div class="col-4">
@@ -74,28 +74,13 @@
                          />
             </q-field>
 
-            <div class="row gutter-md">
-
-                <div class="col-6">
-                    <q-field>
-                        <q-select :dark="theme=='dark'"
-                                  v-model="newTx.mixin"
-                                  float-label="Mixin"
-                                  :options="mixinOptions"
-                                  />
-                    </q-field>
-                </div>
-                <div class="col-6">
-                    <q-field>
-                        <q-select :dark="theme=='dark'"
-                                  v-model="newTx.priority"
-                                  float-label="Priority"
-                                  :options="priorityOptions"
-                                  />
-                    </q-field>
-                </div>
-
-            </div>
+            <q-field>
+                <q-select :dark="theme=='dark'"
+                            v-model="newTx.priority"
+                            float-label="Priority"
+                            :options="priorityOptions"
+                            />
+            </q-field>
 
 
             <q-field>
@@ -154,7 +139,6 @@ export default {
                 amount: 0,
                 address: "",
                 payment_id: "",
-                mixin: 12,
                 priority: 0,
                 address_book: {
                     save: false,
@@ -162,17 +146,11 @@ export default {
                     description: ""
                 }
             },
-            mixinOptions: [
-                {label: "12 mixins (default)", value: 12},
-                {label: "48 mixins (top secret)", value: 48},
-                {label: "96 mixins (paranoid)", value: 60},
-            ],
             priorityOptions: [
                 {label: "Normal (x1 fee)", value: 0},
-                {label: "High (x2 fee)", value: 1},
-                {label: "High (x4 fee)", value: 2},
-                {label: "High (x20 fee)", value: 3},
-                {label: "Highest (x144 fee)", value: 4},
+                {label: "Slow (x0.25 fee)", value: 1},
+                {label: "Fast (x5 fee)", value: 2},
+                {label: "Fastest (x41.5 fee)", value: 3},
             ],
         }
     },
@@ -202,7 +180,6 @@ export default {
                             amount: 0,
                             address: "",
                             payment_id: "",
-                            mixin: 12,
                             priority: 0,
                             address_book: {
                                 save: false,

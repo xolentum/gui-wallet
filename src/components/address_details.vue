@@ -32,14 +32,14 @@
                         <div class="infoBox">
                             <div class="infoBoxContent">
                                 <div class="text"><span>Balance</span></div>
-                                <div class="value"><span><FormatRyo :amount="address.balance" /></span></div>
+                                <div class="value"><span><FormatLoki :amount="address.balance" /></span></div>
                             </div>
                         </div>
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
                                 <div class="text"><span>Unlocked balance</span></div>
-                                <div class="value"><span><FormatRyo :amount="address.unlocked_balance" /></span></div>
+                                <div class="value"><span><FormatLoki :amount="address.unlocked_balance" /></span></div>
                             </div>
                         </div>
 
@@ -128,7 +128,7 @@
 import { mapState } from "vuex"
 const {clipboard} = require("electron")
 import AddressHeader from "components/address_header"
-import FormatRyo from "components/format_ryo"
+import FormatLoki from "components/format_loki"
 import QrcodeVue from "qrcode.vue";
 import TxList from "components/tx_list"
 export default {
@@ -159,7 +159,7 @@ export default {
     components: {
         AddressHeader,
         TxList,
-        FormatRyo,
+        FormatLoki,
         QrcodeVue
     }
 }

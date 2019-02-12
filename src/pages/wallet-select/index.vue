@@ -49,11 +49,12 @@
             <q-item-main label="Create new wallet" />
         </q-item>
         <q-item @click.native="restoreWallet()">
-            <q-item-main label="Restore wallet from seed" />
+            <q-item-main label="Restore wallet from seed (Currently not working)" />
         </q-item>
-        <q-item @click.native="restoreViewWallet()">
+        <!-- TODO: Re-enable this when LOKI has the functionality -->
+        <!-- <q-item @click.native="restoreViewWallet()">
             <q-item-main label="Restore view-only wallet" />
-        </q-item>
+        </q-item> -->
         <q-item @click.native="importWallet()">
             <q-item-main label="Import wallet from file" />
         </q-item>

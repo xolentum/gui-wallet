@@ -67,17 +67,20 @@
             <h6 class="q-mb-md q-mt-md" style="font-weight: 300">Review settings:</h6>
 
             <p>You are using a
-                <template v-if="pending_config.daemon.type == 'local'">
+                <template v-if="config_daemon.type == 'local'">
                     <code>local node</code>
                 </template>
-                <template v-if="pending_config.daemon.type == 'local_remote'">
+                <template v-if="config_daemon.type == 'local_remote'">
                     <code>local + remote node</code>
                 </template>
-                <template v-if="pending_config.daemon.type == 'remote'">
+                <template v-if="config_daemon.type == 'remote'">
                     <code>remote node</code>
                 </template>
-                <template v-if="pending_config.app.testnet">
+                <template v-if="pending_config.app.net_type == 'test'">
                     <code>on testnet</code>
+                </template>
+                <template v-if="pending_config.app.net_type == 'staging'">
+                    <code>on staging</code>
                 </template>
                 and will store data in
                 <code>{{ pending_config.app.data_dir }}</code>
@@ -120,7 +123,10 @@ import SettingsGeneral from "components/settings_general"
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
-        pending_config: state => state.gateway.app.pending_config
+        pending_config: state => state.gateway.app.pending_config,
+        config_daemon (state) {
+            return this.pending_config.daemons[this.pending_config.app.net_type]
+        },
     }),
     data() {
         return {

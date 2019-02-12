@@ -1,4 +1,4 @@
-const objectAssignDeep = require("object-assign-deep");
+const objectAssignDeep = require("object-assign-deep")
 
 export const set_app_data = (state, data) => {
     state.app = objectAssignDeep.noMutate(state.app, data)

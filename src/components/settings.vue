@@ -83,11 +83,12 @@ export default {
         pending_config: state => state.gateway.app.pending_config,
         config: state => state.gateway.app.config,
         tabs: function(state) {
+            const { app, daemons } = state.gateway.app.config;
             let tabs = [
                 {label: 'General', value: 'general', icon: 'settings'},
                 {label: 'Appearance', value: 'appearance', icon: 'visibility'},
             ]
-            if(state.gateway.app.config.daemon.type != 'remote') {
+            if(daemons[app.net_type].type != 'remote') {
                 tabs.push({label: 'Peers', value: 'peers', icon: 'cloud_queue'})
             }
             return tabs

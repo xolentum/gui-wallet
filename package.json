@@ -1,14 +1,17 @@
 {
-  "name": "ryo-wallet-atom",
+  "name": "loki-wallet-atom",
   "version": "1.1.0",
   "daemonVersion": "0.3.2.0",
-  "description": "Modern GUI interface for Ryo Currency",
-  "productName": "Ryo Wallet Atom",
+  "description": "Modern GUI interface for Loki Currency",
+  "productName": "Loki Wallet Atom",
   "cordovaId": "com.ryo-currency.ryo-gui-wallet",
-  "author": "Ryo-currency <contact@ryo-currency.com>",
+  "author": "Loki",
   "private": true,
   "scripts": {
+    "dev": "quasar dev -m electron -t mat",
+    "build": "quasar build -m electron -t mat",
     "lint": "eslint --ext .js,.vue src",
+    "lint-fix": "eslint --fix .",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
@@ -42,8 +45,9 @@
     "eslint-plugin-standard": "^3.0.1",
     "eslint-plugin-vue": "^4.3.0",
     "node-sass": "^4.9.3",
-    "quasar-cli": "^0.16.0",
-    "sass-loader": "^7.1.0"
+    "quasar-cli": "^0.17.23",
+    "sass-loader": "^7.1.0",
+    "strip-ansi": "^3.0.1"
   },
   "engines": {
     "node": ">= 8.9.0",

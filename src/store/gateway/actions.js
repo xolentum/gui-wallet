@@ -1,5 +1,4 @@
 export const resetWalletData = (state) => {
-
     state.commit("set_wallet_data", {
 
         status: {
@@ -20,23 +19,20 @@ export const resetWalletData = (state) => {
             spend_key: ""
         },
         transactions: {
-            tx_list: [],
+            tx_list: []
         },
         address_list: {
             used: [],
             unused: [],
-            address_book: [],
+            address_book: []
         }
     })
-
 }
 
 export const resetPendingConfig = (state) => {
-
     state.commit("set_app_data", {
 
         pending_config: state.state.app.config
 
     })
-
 }
