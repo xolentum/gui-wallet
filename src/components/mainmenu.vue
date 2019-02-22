@@ -1,6 +1,6 @@
 <template>
 <div>
-    <q-btn class="menu" icon="menu" label="" size="md" flat>
+    <q-btn class="menu" icon="menu" size="md" flat>
         <q-popover>
             <q-list separator link>
                 <q-item v-close-overlay @click.native="switchWallet" v-if="!disableSwitchWallet">
@@ -31,7 +31,7 @@
     <q-modal minimized ref="aboutModal">
         <div class="about-modal">
 
-            <img class="q-mb-md" src="statics/ryo-wallet.svg" height="42" />
+            <img class="q-mb-md" src="statics/loki.svg" height="42" />
 
             <p class="q-my-sm">Version: ATOM v{{version}}-v{{daemonVersion}}</p>
             <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
@@ -44,7 +44,8 @@
                 <p>
                     <a @click="openExternal('https://t.me/joinchat/DeNvR0JJ4JPn6TVSQjCsZQ')" href="#">Telegram</a> -
                     <a @click="openExternal('https://discordapp.com/invite/67GXfD6')" href="#">Discord</a> -
-                    <a @click="openExternal('https://www.reddit.com/r/LokiProject/')" href="#">Reddit</a>
+                    <a @click="openExternal('https://www.reddit.com/r/LokiProject/')" href="#">Reddit</a> -
+                    <a @click="openExternal('https://github.com')" href="#">Github</a>
                 </p>
             </div>
 

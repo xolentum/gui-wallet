@@ -3,31 +3,57 @@
     <q-layout-header class="shift-title">
         <main-menu />
 
-        <q-tabs class="col" align="justify" :color="theme == 'dark' ? 'light' : 'dark'" inverted>
-
-            <q-route-tab to="/wallet" default slot="title">
-                <span><q-icon name="attach_money" /> Wallet</span>
-            </q-route-tab>
-            <q-route-tab to="/wallet/receive" slot="title">
-                <span><q-icon name="call_received" /> Receive</span>
-            </q-route-tab>
-            <q-route-tab to="/wallet/send" slot="title">
-                <span><q-icon name="call_made" /> Send</span>
-            </q-route-tab>
-            <q-route-tab to="/wallet/addressbook" slot="title">
-                <span><q-icon name="person" /> Address Book</span>
-            </q-route-tab>
-            <q-route-tab to="/wallet/servicenode" slot="title">
-                <span><q-icon name="router" /> Service Node</span>
-            </q-route-tab>
-            <q-route-tab to="/wallet/txhistory" slot="title">
-                <span><q-icon name="history" /> TX History</span>
-            </q-route-tab>
-
-        </q-tabs>
     </q-layout-header>
 
     <q-page-container>
+        <!-- <AddressHeader :address="info.address" :title="info.name" /> -->
+        <WalletDetails />
+
+        <div class="navigation row items-end">
+            <router-link to="/wallet">
+                <q-btn
+                    class="single-icon"
+                    size="md"
+                    icon="swap_horiz"
+                />
+            </router-link>
+            <router-link to="/wallet/send">
+                <q-btn
+                    class="large-btn"
+                    label="Send"
+                    size="md"
+                    icon-right="arrow_right_alt"
+                    align="left"
+                />
+            </router-link>
+            <router-link to="/wallet/receive">
+                <q-btn
+                    class="large-btn"
+                    label="Receive"
+                    size="md"
+                    icon-right="save_alt"
+                    align="left"
+                />
+            </router-link>
+            <router-link to="/wallet/servicenode">
+                <q-btn
+                    class="large-btn"
+                    label="Service node"
+                    size="md"
+                    icon-right="router"
+                    align="left"
+                />
+            </router-link>
+            <router-link to="/wallet/addressbook" class="address">
+                <q-btn
+                    class="single-icon"
+                    size="md"
+                    icon="person"
+                />
+            </router-link>
+
+        </div>
+        <div class="hr-separator" />
         <keep-alive>
             <router-view />
         </keep-alive>
@@ -39,14 +65,18 @@
 </template>
 
 <script>
+const { clipboard } = require("electron")
 import { openURL } from "quasar"
 import { mapState } from "vuex"
+import WalletDetails from "components/wallet_details"
+import FormatLoki from "components/format_loki"
 import StatusFooter from "components/footer"
 import MainMenu from "components/mainmenu"
 export default {
     name: "LayoutDefault",
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
+        info: state => state.gateway.wallet.info,
     }),
     data() {
         return {
@@ -58,10 +88,40 @@ export default {
     },
     components: {
         StatusFooter,
-        MainMenu
+        MainMenu,
+        WalletDetails
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+.navigation {
+    padding: 12px;
+
+    > * {
+        margin-right: 12px;
+    }
+
+    > *:last-child {
+        margin-right: 0px;
+    }
+
+    .address {
+        margin-left: auto;
+    }
+
+    .single-icon {
+        width: 38px;
+        padding: 0;
+    }
+
+    .large-btn {
+        width: 160px;
+        .q-btn-inner > *:last-child {
+            margin-left: auto;
+        }
+
+    }
+}
+
 </style>

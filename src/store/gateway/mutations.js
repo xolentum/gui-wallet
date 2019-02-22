@@ -15,3 +15,6 @@ export const set_wallet_list = (state, data) => {
 export const set_tx_status = (state, data) => {
     state.tx_status = data
 }
+export const set_stake_status = (state, data) => {
+    state.stake_status = data
+}

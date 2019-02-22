@@ -5,7 +5,7 @@ export default {
         },
         config: {
             appearance: {
-                theme: "light"
+                theme: "dark"
             }
         },
         pending_config: {
@@ -47,6 +47,11 @@ export default {
     tx_status: {
         code: 0,
         message: ""
+    },
+    stake_status: {
+        code: 0,
+        message: "",
+        sending: false
     },
     daemon: {
         info: {

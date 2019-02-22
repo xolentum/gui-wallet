@@ -1,75 +1,43 @@
 <template>
-<q-page padding>
+<div class="wallet-settings">
+    <q-btn icon-right="more_vert" label="Settings" size="md" flat>
+        <q-popover anchor="bottom right" self="top right">
+            <q-list separator link>
+                <q-item :disabled="!is_ready"
+                        v-close-overlay @click.native="getPrivateKeys()">
+                    <q-item-main>
+                        <q-item-tile label>Show Private Keys</q-item-tile>
+                    </q-item-main>
+                </q-item>
+                <q-item :disabled="!is_ready"
+                        v-close-overlay @click.native="showModal('change_password')">
+                    <q-item-main>
+                        <q-item-tile label>Change Password</q-item-tile>
+                    </q-item-main>
+                </q-item>
+                <q-item :disabled="!is_ready"
+                        v-close-overlay @click.native="showModal('rescan')">
+                    <q-item-main>
+                        <q-item-tile label>Rescan Wallet</q-item-tile>
+                    </q-item-main>
+                </q-item>
+                <q-item :disabled="!is_ready"
+                        v-close-overlay @click.native="showModal('key_image')">
+                    <q-item-main>
+                        <q-item-tile label>Manage Key Images</q-item-tile>
+                    </q-item-main>
+                </q-item>
+                <q-item :disabled="!is_ready"
+                        v-close-overlay @click.native="deleteWallet()">
+                    <q-item-main>
+                        <q-item-tile label>Delete Wallet</q-item-tile>
+                    </q-item-main>
+                </q-item>
+            </q-list>
+        </q-popover>
+    </q-btn>
 
-    <div class="row">
-
-        <div class="infoBoxBalance">
-            <div class="infoBox">
-                <div class="infoBoxContent">
-                    <div class="text"><span>Balance</span></div>
-                    <div class="value"><span><FormatLoki :amount="info.balance" /></span></div>
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <div class="infoBox">
-                <div class="infoBoxContent">
-                    <div class="text"><span>Unlocked balance</span></div>
-                    <div class="value"><span><FormatLoki :amount="info.unlocked_balance" /></span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col text-right q-mr-sm">
-            <div class="infoBox q-pt-md">
-                <q-btn icon-right="more_vert" label="Wallet actions" size="md" flat>
-                    <q-popover anchor="bottom right" self="top right">
-                        <q-list separator link>
-                            <q-item :disabled="!is_ready"
-                                    v-close-overlay @click.native="getPrivateKeys()">
-                                <q-item-main>
-                                    <q-item-tile label>Show Private Keys</q-item-tile>
-                                </q-item-main>
-                            </q-item>
-                            <q-item :disabled="!is_ready"
-                                    v-close-overlay @click.native="showModal('change_password')">
-                                <q-item-main>
-                                    <q-item-tile label>Change Password</q-item-tile>
-                                </q-item-main>
-                            </q-item>
-                            <q-item :disabled="!is_ready"
-                                    v-close-overlay @click.native="showModal('rescan')">
-                                <q-item-main>
-                                    <q-item-tile label>Rescan Wallet</q-item-tile>
-                                </q-item-main>
-                            </q-item>
-                            <q-item :disabled="!is_ready"
-                                    v-close-overlay @click.native="showModal('key_image')">
-                                <q-item-main>
-                                    <q-item-tile label>Manage Key Images</q-item-tile>
-                                </q-item-main>
-                            </q-item>
-                            <q-item :disabled="!is_ready"
-                                    v-close-overlay @click.native="deleteWallet()">
-                                <q-item-main>
-                                    <q-item-tile label>Delete Wallet</q-item-tile>
-                                </q-item-main>
-                            </q-item>
-                        </q-list>
-                    </q-popover>
-                </q-btn>
-            </div>
-        </div>
-
-    </div>
-
-    <h6 class="q-my-none">Recent transactions:</h6>
-
-    <div style="margin: 0 -16px;">
-        <TxList :limit="5" />
-    </div>
-
+    <!-- Modals -->
     <q-modal minimized v-model="modals.private_keys.visible" @hide="closePrivateKeys()">
         <div class="modal-header">Show private keys</div>
         <div class="q-ma-lg">
@@ -252,17 +220,15 @@
             </div>
         </div>
     </q-modal>
-
-</q-page>
+</div>
 </template>
 
 <script>
 const { clipboard } = require("electron")
 import { mapState } from "vuex"
-import AddressHeader from "components/address_header"
-import FormatLoki from "components/format_loki"
-import TxList from "components/tx_list"
+
 export default {
+    name: "WalletSettings",
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
         info: state => state.gateway.wallet.info,
@@ -542,21 +508,9 @@ export default {
             })
         }
     },
-    components: {
-        FormatLoki,
-        AddressHeader,
-        TxList
-    },
 }
 </script>
 
 <style lang="scss">
-.infoBoxBalance {
-    width: 290px;
-}
-@media screen and (max-width: 750px) {
-    .infoBoxBalance {
-        width: 200px;
-    }
-}
 </style>
+

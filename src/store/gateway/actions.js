@@ -29,6 +29,15 @@ export const resetWalletData = (state) => {
     })
 }
 
+export const resetWalletStatus = (state) => {
+    state.commit("set_wallet_data", {
+        status: {
+            code: 1,
+            message: null
+        }
+    })
+}
+
 export const resetPendingConfig = (state) => {
     state.commit("set_app_data", {
 

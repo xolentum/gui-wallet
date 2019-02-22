@@ -1,36 +1,30 @@
 <template>
 <q-page>
-    <div class="q-mx-md">
+    <div class="q-mx-md import-wallet">
 
-        <q-field class="q-mt-none">
+        <LokiField label="New wallet name" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
-                float-label="New wallet name"
+                placeholder="A name for your wallet"
                 @blur="$v.wallet.name.$touch"
-                :error="$v.wallet.name.$error"
                 :dark="theme=='dark'"
+                hide-underline
                 />
-        </q-field>
+        </LokiField>
 
-        <q-field>
-            <div class="row gutter-sm">
-                <div class="col">
-                    <q-input v-model="wallet.path" stack-label="Wallet file" disable :dark="theme=='dark'" />
-                    <input type="file" id="walletPath" v-on:change="setWalletPath" ref="fileInput" hidden />
-                </div>
-                <div class="col-auto">
-                    <q-btn v-on:click="selectFile" class="float-right" :text-color="theme=='dark'?'white':'dark'">Select wallet file</q-btn>
-                </div>
-            </div>
-        </q-field>
+        <LokiField label="Wallet file" disable-hover>
+            <q-input v-model="wallet.path" placeholder="Please select a file" disable :dark="theme=='dark'" hide-underline/>
+            <input type="file" id="walletPath" v-on:change="setWalletPath" ref="fileInput" hidden />
+            <q-btn color="secondary" v-on:click="selectFile" :text-color="theme=='dark'?'white':'dark'">Select wallet file</q-btn>
+        </LokiField>
 
-        <q-field>
-            <q-input v-model="wallet.password" type="password" float-label="Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField label="Password">
+            <q-input v-model="wallet.password" placeholder="An optional password for the wallet" type="password" :dark="theme=='dark'" hide-underline />
+        </LokiField>
 
-        <q-field>
-            <q-input v-model="wallet.password_confirm" type="password" float-label="Confirm Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField label="Confirm Password">
+            <q-input v-model="wallet.password_confirm" type="password" :dark="theme=='dark'" hide-underline />
+        </LokiField>
 
         <q-field>
             <q-btn color="primary" @click="import_wallet" label="Import wallet" />
@@ -44,6 +38,7 @@
 <script>
 import { required } from "vuelidate/lib/validators"
 import { mapState } from "vuex"
+import LokiField from "components/loki_field"
 export default {
     data () {
         return {
@@ -124,9 +119,24 @@ export default {
         cancel() {
             this.$router.replace({ path: "/wallet-select" });
         }
+    },
+    components: {
+        LokiField
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+.import-wallet {
+    .q-if-disabled {
+        cursor: default !important;
+        .q-input-target {
+            cursor: default !important;
+        }
+    }
+
+    .loki-field {
+        margin-top: 16px;
+    }
+}
 </style>

@@ -160,6 +160,10 @@ export class WalletRPC {
         let params = data.data
 
         switch (data.method) {
+        case "validate_address":
+            this.validateAddress(params.address)
+            break
+
         case "list_wallets":
             this.listWallets()
             break
@@ -189,6 +193,10 @@ export class WalletRPC {
 
         case "close_wallet":
             this.closeWallet()
+            break
+
+        case "stake":
+            this.stake(params.password, params.amount, params.key, params.destination)
             break
 
         case "transfer":
@@ -238,7 +246,39 @@ export class WalletRPC {
         }
     }
 
+    validateAddress (address) {
+        this.sendRPC("validate_address", {
+            address
+        }).then((data) => {
+            if (data.hasOwnProperty("error")) {
+                this.sendGateway("set_valid_address", {
+                    address,
+                    valid: false
+                })
+                return
+            }
+
+            const { valid, nettype } = data.result
+
+            // Check if the net types match
+            let ourNetType = "mainnet"
+            if (this.net_type === "test") ourNetType = "testnet"
+            if (this.net_type === "staging") ourNetType = "stagenet"
+
+            const netMatches = ourNetType === nettype
+            const isValid = valid && netMatches
+
+            this.sendGateway("set_valid_address", {
+                address,
+                valid: isValid,
+                nettype
+            })
+        })
+    }
+
     createWallet (filename, password, language) {
+        // Reset the status error
+        this.sendGateway("reset_wallet_error")
         this.sendRPC("create_wallet", {
             filename,
             password,
@@ -265,6 +305,7 @@ export class WalletRPC {
             let timestamp = refresh_start_timestamp_or_height
             timestamp = timestamp - (timestamp % 86400000) - 86400000
 
+            this.sendGateway("reset_wallet_error")
             this.backend.daemon.timestampToHeight(timestamp).then((height) => {
                 if (height === false) { this.sendGateway("set_wallet_error", {status: {code: -1, message: "Invalid restore date"}}) } else { this.restoreWallet(filename, password, seed, "height", height) }
             })
@@ -278,6 +319,7 @@ export class WalletRPC {
         }
         seed = seed.trim().replace(/\s{2,}/g, " ")
 
+        this.sendGateway("reset_wallet_error")
         this.sendRPC("restore_deterministic_wallet", {
             filename,
             password,
@@ -289,25 +331,12 @@ export class WalletRPC {
                 return
             }
 
-            // restore wallet rpc does not automatically open the wallet after restoring
-            // ^ above behavior is now fixed, no need to open wallet manually
-            // this.sendRPC("open_wallet", {
-            // filename,
-            // password
-            // }).then((data) => {
-            // if(data.hasOwnProperty("error")) {
-            // this.sendGateway("set_wallet_error", {status:data.error})
-            // return
-            // }
-
             // store hash of the password so we can check against it later when requesting private keys, or for sending txs
             this.wallet_state.password_hash = crypto.pbkdf2Sync(password, this.auth[2], 1000, 64, "sha512").toString("hex")
             this.wallet_state.name = filename
             this.wallet_state.open = true
 
             this.finalizeNewWallet(filename)
-
-            // });
         })
     }
 
@@ -352,6 +381,9 @@ export class WalletRPC {
     }
 
     importWallet (filename, password, import_path) {
+        // Reset the status error
+        this.sendGateway("reset_wallet_error")
+
         // trim off suffix if exists
         if (import_path.endsWith(".keys")) {
             import_path = import_path.substring(0, import_path.length - ".keys".length)
@@ -380,8 +412,8 @@ export class WalletRPC {
                 password
             }).then((data) => {
                 if (data.hasOwnProperty("error")) {
-                    fs.unlinkSync(destination)
-                    fs.unlinkSync(destination + ".keys")
+                    if (fs.existsSync(destination)) fs.unlinkSync(destination)
+                    if (fs.existsSync(destination + ".keys")) fs.unlinkSync(destination + ".keys")
 
                     this.sendGateway("set_wallet_error", {status: data.error})
                     return
@@ -393,6 +425,8 @@ export class WalletRPC {
                 this.wallet_state.open = true
 
                 this.finalizeNewWallet(filename)
+            }).catch(() => {
+                this.sendGateway("set_wallet_error", {status: {code: -1, message: "An unknown error occured"}})
             })
         }
     }
@@ -460,6 +494,7 @@ export class WalletRPC {
     }
 
     openWallet (filename, password) {
+        this.sendGateway("reset_wallet_error")
         this.sendRPC("open_wallet", {
             filename,
             password
@@ -579,6 +614,51 @@ export class WalletRPC {
                     })
                 }
             }
+        })
+    }
+
+    stake (password, amount, service_node_key, destination) {
+        crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
+            if (err) {
+                this.sendGateway("set_stake_status", {
+                    code: -1,
+                    message: "Internal error",
+                    sending: false
+                })
+                return
+            }
+            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+                this.sendGateway("set_stake_status", {
+                    code: -1,
+                    message: "Invalid password",
+                    sending: false
+                })
+                return
+            }
+
+            amount = parseFloat(amount).toFixed(9) * 1e9
+
+            this.sendRPC("stake", {
+                amount,
+                destination,
+                service_node_key
+            }).then((data) => {
+                if (data.hasOwnProperty("error")) {
+                    let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
+                    this.sendGateway("set_stake_status", {
+                        code: -1,
+                        message: error,
+                        sending: false
+                    })
+                    return
+                }
+
+                this.sendGateway("set_stake_status", {
+                    code: 0,
+                    message: "Successfully staked",
+                    sending: false
+                })
+            })
         })
     }
 
@@ -811,11 +891,12 @@ export class WalletRPC {
                     }
                 }
 
-                if (data.result.hasOwnProperty("in")) { wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result.in) }
-                if (data.result.hasOwnProperty("out")) { wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result.out) }
-                if (data.result.hasOwnProperty("pending")) { wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result.pending) }
-                if (data.result.hasOwnProperty("failed")) { wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result.failed) }
-                if (data.result.hasOwnProperty("pool")) { wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result.pool) }
+                const types = ["in", "out", "pending", "failed", "pool", "miner", "snode", "gov"]
+                types.forEach(type => {
+                    if (data.result.hasOwnProperty(type)) {
+                        wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result[type]);
+                    }
+                })
 
                 for (let i = 0; i < wallet.transactions.tx_list.length; i++) {
                     if (/^0*$/.test(wallet.transactions.tx_list[i].payment_id)) {

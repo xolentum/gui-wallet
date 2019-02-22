@@ -83,7 +83,7 @@ export default [
             {
                 path: "",
                 component: () =>
-                    import("pages/wallet/wallet")
+                    import("pages/wallet/txhistory")
             },
             {
                 path: "receive",
@@ -99,11 +99,6 @@ export default [
                 path: "addressbook",
                 component: () =>
                     import("pages/wallet/addressbook")
-            },
-            {
-                path: "txhistory",
-                component: () =>
-                    import("pages/wallet/txhistory")
             },
             {
                 path: "servicenode",

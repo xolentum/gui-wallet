@@ -11,6 +11,7 @@
                 <q-btn-toggle
                     v-model="page"
                     toggle-color="primary"
+                    color="tertiary"
                     size="md"
                     :options="tabs"
                     />
@@ -22,22 +23,6 @@
         <div v-if="page=='general'">
             <div class="q-pa-lg">
                 <SettingsGeneral ref="settingsGeneral"></SettingsGeneral>
-            </div>
-        </div>
-
-        <div v-if="page=='appearance'">
-            <div class="q-pa-md">
-                <h6 class="q-mb-md q-mt-none" style="font-weight: 300">Select Appearance:</h6>
-
-                <q-btn-toggle
-                    v-model="theme"
-                    toggle-color="primary"
-                    size="md"
-                    :options="[
-                              {label: 'Light theme', value: 'light', icon: 'brightness_5'},
-                              {label: 'Dark theme', value: 'dark', icon: 'brightness_2'},
-                              ]"
-                />
             </div>
         </div>
 
@@ -79,6 +64,7 @@ import SettingsGeneral from "components/settings_general"
 export default {
     name: "SettingsModal",
     computed: mapState({
+        theme: state => state.gateway.app.config.appearance.theme,
         daemon: state => state.gateway.daemon,
         pending_config: state => state.gateway.app.pending_config,
         config: state => state.gateway.app.config,
@@ -86,7 +72,6 @@ export default {
             const { app, daemons } = state.gateway.app.config;
             let tabs = [
                 {label: 'General', value: 'general', icon: 'settings'},
-                {label: 'Appearance', value: 'appearance', icon: 'visibility'},
             ]
             if(daemons[app.net_type].type != 'remote') {
                 tabs.push({label: 'Peers', value: 'peers', icon: 'cloud_queue'})
@@ -97,22 +82,10 @@ export default {
     data () {
         return {
             page: "general",
-            theme: null,
             isVisible: false
         }
     },
-    mounted: function () {
-        this.theme = this.config.appearance.theme
-    },
     watch: {
-        theme: function (theme, old) {
-            if(old == null) return
-            this.$gateway.send("core", "quick_save_config", {
-                appearance: {
-                    theme: this.theme
-                }
-            })
-        },
         isVisible: function () {
             if(this.isVisible == false) {
                 this.$store.dispatch("gateway/resetPendingConfig")

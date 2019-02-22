@@ -1,5 +1,5 @@
 <template>
-<q-modal v-model="isVisible" maximized :content-css="{padding: '50px'}">
+<q-modal v-model="isVisible" maximized>
     <q-modal-layout>
         <q-toolbar slot="header" color="dark" inverted>
             <q-btn
@@ -23,6 +23,7 @@
                 <AddressHeader :address="address.address"
                                :title="address.address_index == 0 ? 'Primary address' : 'Sub-address (Index '+address.address_index+')'"
                                :extra="'You have '+(address.used?'used':'not used')+' this address'"
+                               :showCopy="false"
                                />
 
 
@@ -87,7 +88,7 @@
                     </div>
 
                     <div style="margin: 0 -16px;">
-                        <TxList type="in" :limit="5" :to-incoming-address-index="address.address_index" />
+                        <TxList type="all_in" :limit="5" :to-incoming-address-index="address.address_index" :key="address.address"/>
                     </div>
 
                 </div>

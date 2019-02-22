@@ -1,58 +1,43 @@
 <template>
 <q-page class="service-node-page">
     <template>
-
-        <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
-
-            <div class="col-8">
-                <q-icon name="router" size="24px" /> Service Nodes
-            </div>
-
-            <div class="col-4">
-            </div>
-
-        </div>
-
         <div class="q-pa-md">
 
-            <q-field>
-                    <q-input v-model="serviceNode.key" float-label="Service Node Key"
-                                :dark="theme=='dark'"
-                                @blur="$v.serviceNode.key.$touch"
-                                :error="$v.serviceNode.key.$error"
-                                />
-            </q-field>
+            <LokiField label="Service Node Key" :error="$v.service_node.key.$error">
+                <q-input v-model="service_node.key"
+                    :dark="theme=='dark'"
+                    @blur="$v.service_node.key.$touch"
+                    placeholder="64 hexadecimal characters"
+                    hide-underline
+                />
+            </LokiField>
 
-            <q-item>
-                <q-item-main>
-                    <q-item-tile label class="recepient-address">Award Recepient's Address (yours)</q-item-tile>
-                    <q-item-tile class="monospace break-all" label>{{ info.address }}</q-item-tile>
-                </q-item-main>
-                <q-item-side>
-                    <q-btn
-                        color="primary" style="width:25px;"
-                        size="sm" icon="file_copy"
-                        @click="copyAddress(info.address, $event)">
-                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Copy address
-                        </q-tooltip>
-                    </q-btn>
-                </q-item-side>
-            </q-item>
-
-            <div class="row items-end gutter-md">
-                <div class="col">
-                     <q-field class="q-ma-none">
-                        <q-input v-model="serviceNode.amount" float-label="Amount" :dark="theme=='dark'"
-                                 type="number" min="0" :max="unlocked_balance / 1e9" />
-                    </q-field>
-                </div>
-
-                <div>
-                    <q-btn @click="serviceNode.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">All coins</q-btn>
-                </div>
-
+            <div class="q-mt-md col">
+                <LokiField label="Award Recepient's Address" :error="$v.service_node.award_address.$error">
+                    <q-input v-model="service_node.award_address"
+                        :dark="theme=='dark'"
+                        @blur="$v.service_node.award_address.$touch"
+                        placeholder="64 hexadecimal characters"
+                        hide-underline
+                    />
+                </LokiField>
+                <div class="address-type" :class="[addressType]">( {{ addressType | addressTypeString }} )</div>
             </div>
+
+             <LokiField label="Amount" class="q-mt-md" :error="$v.service_node.amount.$error">
+                <q-input v-model="service_node.amount"
+                    :dark="theme=='dark'"
+                    type="number"
+                    min="0"
+                    :max="unlocked_balance / 1e9"
+                    placeholder="0"
+                    @blur="$v.service_node.amount.$touch"
+                    hide-underline
+                />
+                <q-btn color="secondary" @click="service_node.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">All</q-btn>
+            </LokiField>
+
+
 
             <q-field class="q-pt-sm">
                 <q-btn
@@ -62,9 +47,9 @@
 
         </div>
 
-        <!-- <q-inner-loading :visible="tx_status.sending" :dark="theme=='dark'">
+        <q-inner-loading :visible="stake_status.sending" :dark="theme=='dark'">
             <q-spinner color="primary" :size="30" />
-        </q-inner-loading> -->
+        </q-inner-loading>
 
     </template>
 
@@ -75,94 +60,176 @@
 const { clipboard } = require("electron")
 import { mapState } from "vuex"
 import { required, decimal } from "vuelidate/lib/validators"
-import { payment_id, service_node_key } from "src/validators/common"
+import { payment_id, service_node_key, greater_than_zero, address } from "src/validators/common"
 import Identicon from "components/identicon"
+import LokiField from "components/loki_field"
 const objectAssignDeep = require("object-assign-deep");
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
         unlocked_balance: state => state.gateway.wallet.info.unlocked_balance,
         info: state => state.gateway.wallet.info,
+        address_list: state => state.gateway.wallet.address_list,
+        stake_status: state => state.gateway.stake_status,
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
         },
         is_able_to_send (state) {
             return this.$store.getters["gateway/isAbleToSend"]
+        },
+
+        addressType (state) {
+            const address = this.service_node.award_address;
+            const inArray = (array) => array.map(o => o.address).includes(address);
+
+            const { primary, used, unused } = this.address_list
+            if (inArray(primary)) {
+                return "primary"
+            } else if (inArray(used)) {
+                return "used"
+            } else if (inArray(unused)) {
+                return "unsued"
+            } else {
+                return "not-ours"
+            }
         }
     }),
     data () {
         return {
-            staking: false,
-            serviceNode: {
+            service_node: {
                 key: "",
                 amount: 0,
+                award_address: "",
             },
+        }
+    },
+    filters: {
+        addressTypeString: function (value) {
+            switch (value) {
+                case "primary":
+                    return "Your primary address"
+                case "used":
+                    return "Your used address"
+                case "ununsed":
+                    return "Your unused address"
+                default:
+                    return "Not your address!"
+            }
         }
     },
     validations: {
-        serviceNode: {
+        service_node: {
+            key: { required, service_node_key },
             amount: {
                 required,
-                decimal
+                decimal,
+                greater_than_zero,
             },
-            key: { required, service_node_key },
+            award_address: {
+                required,
+                isAddress(value) {
+                    if (value === '') return true
+
+                    return new Promise(resolve => {
+                        address(value, this.$gateway)
+                            .then(() => resolve(true))
+                            .catch(e => resolve(false))
+                    });
+                }
+            }
+        }
+    },
+    watch: {
+        stake_status: {
+            handler(val, old){
+                if(val.code == old.code) return
+                switch(this.stake_status.code) {
+                    case 0:
+                        this.$q.notify({
+                            type: "positive",
+                            timeout: 1000,
+                            message: this.stake_status.message
+                        })
+                        this.$v.$reset();
+                        this.service_node = {
+                            key: "",
+                            amount: 0,
+                            award_address: "",
+                        }
+                        break;
+                    case -1:
+                        this.$q.notify({
+                            type: "negative",
+                            timeout: 1000,
+                            message: this.stake_status.message
+                        })
+                        break;
+                }
+            },
+            deep: true
+        },
+    },
+    created () {
+        const { address } = this.info;
+        if (!this.service_node.award_address || this.service_node.award_address === "") {
+            this.service_node.award_address = address || ""
         }
     },
     methods: {
-        copyAddress (address, event) {
-            event.stopPropagation()
-            for(let i = 0; i < event.path.length; i++) {
-                if(event.path[i].tagName == "BUTTON") {
-                    event.path[i].blur()
-                    break
-                }
-            }
-            clipboard.writeText(address)
-            this.$q.notify({
-                type: "positive",
-                timeout: 1000,
-                message: "Address copied to clipboard"
-            })
+        isOurAddress (address) {
+            const { primary, used, unused } = this.address_list
+            const addresses = [...primary, ...used, ...unused].map(o => o.address);
+            console.log(addresses);
+            return addresses.includes(address);
         },
         stake: function () {
 
-            this.$v.serviceNode.$touch()
+            this.$v.service_node.$touch()
 
-            if(this.serviceNode.amount < 0) {
+            if (this.$v.service_node.key.$error) {
+                this.$q.notify({
+                    type: "negative",
+                    timeout: 1000,
+                    message: "Service node key not valid"
+                })
+                return
+            }
+
+            if (this.$v.service_node.award_address.$error) {
+                this.$q.notify({
+                    type: "negative",
+                    timeout: 1000,
+                    message: "Address not valid"
+                })
+                return
+            }
+
+            if(this.service_node.amount < 0) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
                     message: "Amount cannot be negative"
                 })
                 return
-            } else if(this.serviceNode.amount == 0) {
+            } else if(this.service_node.amount == 0) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
                     message: "Amount must be greater than zero"
                 })
                 return
-            } else if(this.serviceNode.amount > this.unlocked_balance / 1e9) {
+            } else if(this.service_node.amount > this.unlocked_balance / 1e9) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
                     message: "Not enough unlocked balance"
                 })
                 return
-            } else if (this.$v.serviceNode.amount.$error) {
+            } else if (this.$v.service_node.amount.$error) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
                     message: "Amount not valid"
-                })
-                return
-            }
-
-            if (this.$v.serviceNode.key.$error) {
-                this.$q.notify({
-                    type: "negative",
-                    timeout: 1000,
-                    message: "Service node key not valid"
                 })
                 return
             }
@@ -183,34 +250,37 @@ export default {
                     color: this.theme=="dark"?"white":"dark"
                 }
             }).then(password => {
-                // this.$store.commit("gateway/set_tx_status", {
-                //     code: 1,
-                //     message: "Sending transaction",
-                //     sending: true
-                // })
-                // let newTx = objectAssignDeep.noMutate(this.newTx, {password})
-                // this.$gateway.send("wallet", "transfer", newTx)
+                this.$store.commit("gateway/set_stake_status", {
+                    code: 1,
+                    message: "Staking...",
+                    sending: true
+                })
+                const service_node = objectAssignDeep.noMutate(this.service_node, {password})
+                this.$gateway.send("wallet", "stake", {
+                    ...service_node,
+                    destination: service_node.award_address,
+                })
             }).catch(() => {
             })
         }
     },
     components: {
         Identicon,
+        LokiField
     }
 }
 </script>
 
 <style lang="scss">
 .service-node-page {
-
-    .q-item {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .recepient-address  {
-        margin-bottom: 8px;
-        font-size: 1rem;
+    .address-type {
+        margin-top: 4px;
+        font-size: 13px;
+        font-weight: 400;
+        text-align: right;
+        &.not-ours {
+            font-weight: bold;
+        }
     }
 }
 </style>

@@ -1,21 +1,24 @@
 <template>
 <q-layout-footer class="status-footer">
-    <div class="status-line">
+    <div class="status-line row items-center">
+        <div class="status row items-center">
+            <span>Status:</span>
+            <span class="status-text" :class="[status]">{{ status | upperCase }}</span>
+        </div>
+        <div class="row">
+            <template v-if="config_daemon.type !== 'remote'">
+                <div>Daemon: {{ daemon.info.height_without_bootstrap }} / {{ target_height }} ({{ daemon_local_pct }}%)</div>
+            </template>
 
-        <template v-if="config_daemon.type !== 'remote'">
-            <div>Daemon: {{ daemon.info.height_without_bootstrap }} / {{ target_height }} ({{ daemon_local_pct }}%)</div>
-        </template>
+            <template v-if="config_daemon.type !== 'local'">
+                <div>Remote: {{ daemon.info.height }}</div>
+            </template>
 
-        <template v-if="config_daemon.type !== 'local'">
-            <div>Remote: {{ daemon.info.height }}</div>
-        </template>
-
-        <div>Wallet: {{ wallet.info.height }} / {{ target_height }} ({{ wallet_pct }}%)</div>
-
-        <div>{{ status }}</div>
+            <div>Wallet: {{ wallet.info.height }} / {{ target_height }} ({{ wallet_pct }}%)</div>
+        </div>
 
     </div>
-    <div class="status-bars">
+    <div class="status-bars" :class="[status]">
         <div v-bind:style="{ width: daemon_pct+'%' }"></div>
         <div v-bind:style="{ width: wallet_pct+'%' }"></div>
     </div>
@@ -36,7 +39,7 @@ export default {
             return this.config.daemons[this.config.app.net_type]
         },
         target_height (state) {
-            if(this.config_daemon.type === "local" && !this.daemon.info.is_ready)
+            if(this.config_daemon.type === "local")
                 return Math.max(this.daemon.info.height, this.daemon.info.target_height)
             else
                 return this.daemon.info.height
@@ -64,26 +67,31 @@ export default {
         },
         status(state) {
             if(this.config_daemon.type === "local") {
-                if(this.daemon.info.height_without_bootstrap < this.target_height || !this.daemon.info.is_ready) {
-                    return "Syncing..."
+                if(this.daemon.info.height_without_bootstrap < this.target_height) {
+                    return "syncing"
                 } else if(this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0) {
-                    return "Scanning..."
+                    return "scanning"
                 } else {
-                    return "Ready"
+                    return "ready"
                 }
             } else {
                 if(this.wallet.info.height < this.target_height - 1 && this.wallet.info.height != 0) {
-                    return "Scanning..."
+                    return "scanning"
                 } else if(this.daemon.info.height_without_bootstrap < this.target_height) {
-                    return "Syncing..."
+                    return "syncing"
                 } else {
-                    return "Ready"
+                    return "ready"
                 }
             }
             return
         }
 
     }),
+    filters: {
+        upperCase: function (status) {
+            return status.toUpperCase();
+        }
+    },
     data () {
         return {
         }

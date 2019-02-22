@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="tx-list">
 
     <template v-if="tx_list_paged.length === 0">
         <p class="q-pa-md q-mb-none">No transactions found</p>
@@ -8,23 +8,22 @@
     <template v-else>
         <q-infinite-scroll :handler="loadMore" ref="scroller">
             <q-list link no-border :dark="theme=='dark'" class="tx-list">
-                <q-item v-for="(tx, index) in tx_list_paged" :key="tx.txid"
+                <q-item class="transaction" v-for="(tx, index) in tx_list_paged" :key="tx.txid"
                         @click.native="details(tx)" :class="'tx-'+tx.type">
-                    <q-item-side>
-                        <TxTypeIcon :type="tx.type" />
+                    <q-item-side class="type">
+                        <div>{{ tx.type | typeToString }}</div>
                     </q-item-side>
-                    <q-item-main>
-                        <q-item-tile class="monospace ellipsis" label>{{ tx.txid }}</q-item-tile>
-                        <q-item-tile sublabel>{{ formatHeight(tx) }}</q-item-tile>
-                    </q-item-main>
-                    <q-item-side>
-                        <q-item-tile label>
+                    <q-item-main class="main">
+                        <q-item-tile class="amount" label>
                             <FormatLoki :amount="tx.amount" />
                         </q-item-tile>
-                        <q-item-tile sublabel>
-                            <timeago :datetime="tx.timestamp*1000" :auto-update="60">
-                            </timeago>
+                        <q-item-tile sublabel>{{ tx.txid }}</q-item-tile>
+                    </q-item-main>
+                    <q-item-side class="meta">
+                        <q-item-tile label>
+                            <timeago :datetime="tx.timestamp*1000" :auto-update="60" />
                         </q-item-tile>
+                        <q-item-tile sublabel>{{ formatHeight(tx) }}</q-item-tile>
                     </q-item-side>
 
                     <q-context-menu>
@@ -105,7 +104,7 @@ export default {
         theme: state => state.gateway.app.config.appearance.theme,
         current_height: state => state.gateway.daemon.info.height,
         wallet_height: state => state.gateway.wallet.info.height,
-        tx_list: state => state.gateway.wallet.transactions.tx_list
+        tx_list: state => state.gateway.wallet.transactions.tx_list,
     }),
     created () {
         this.filterTxList()
@@ -153,11 +152,50 @@ export default {
             }
         },
     },
+    filters: {
+        typeToString: function (value) {
+            switch (value) {
+                case "in":
+                    return "Received"
+                case "out":
+                    return "Sent"
+                case "failed":
+                    return "Failed"
+                case "pending":
+                case "pool":
+                    return "Pending"
+                case "miner":
+                    return "Miner"
+                case "snode":
+                    return "Service Node"
+                case "gov":
+                    return "Governance"
+                default:
+                    return "-"
+            }
+        }
+    },
     methods: {
         filterTxList () {
+            const all_in = ['in', 'pool', "miner", "snode", "gov"]
+            const all_out = ['out', 'pending']
+            const all_pending = ['pending', 'pool']
             this.tx_list_filtered = this.tx_list.filter((tx) => {
                 let valid = true
-                if(this.type !== "all" && this.type !== tx.type) {
+
+                if (this.type === "all_in" && !all_in.includes(tx.type)) {
+                    return false
+                }
+
+                if (this.type === "all_out" && !all_out.includes(tx.type)) {
+                    return false
+                }
+
+                if (this.type === "all_pending" && !all_pending.includes(tx.type)) {
+                    return false
+                }
+
+                if(!this.type.startsWith("all") && this.type !== tx.type) {
                     valid = false
                     return valid
                 }
@@ -242,4 +280,41 @@ export default {
 </script>
 
 <style lang="scss">
+.tx-list {
+    .transaction {
+        margin: 0 16px;
+        padding: 0;
+        border-radius: 3px;
+
+        > * {
+            margin-top: 8px;
+            margin-bottom: 8px;
+
+            &:first-child {
+                margin-left: 16px;
+            }
+
+            &:last-child {
+                margin-right: 16px;
+            }
+        }
+
+        + .transaction {
+            margin-top: 10px;
+        }
+
+        .main {
+            margin: 0;
+            padding: 8px 10px;
+        }
+
+        .type {
+
+            div {
+                min-width: 100px;
+                margin-right: 8px;
+            }
+        }
+    }
+}
 </style>

@@ -7,6 +7,7 @@ const WebSocket = require("ws")
 const os = require("os")
 const fs = require("fs")
 const path = require("path")
+const objectAssignDeep = require("object-assign-deep")
 
 export class Backend {
     constructor (mainWindow) {
@@ -38,7 +39,7 @@ export class Backend {
         this.config_file = path.join(this.config_dir, "gui", "config.json")
 
         const daemon = {
-            type: "local_remote",
+            type: "remote",
             p2p_bind_ip: "0.0.0.0",
             p2p_bind_port: 22022,
             rpc_bind_ip: "127.0.0.1",
@@ -52,41 +53,47 @@ export class Backend {
             log_level: 0
         }
 
-        this.config_data = {
+        const daemons = {
+            main: {
+                ...daemon,
+                remote_host: "doopool.xyz",
+                remote_port: 22020
+            },
+            staging: {
+                ...daemon,
+                type: "local",
+                p2p_bind_port: 38153,
+                rpc_bind_port: 38154,
+                zmq_rpc_bind_port: 38155
+            },
+            test: {
+                ...daemon,
+                type: "local",
+                p2p_bind_port: 38156,
+                rpc_bind_port: 38157,
+                zmq_rpc_bind_port: 38158
+            }
+        }
 
+        // Default values
+        this.defaults = {
+            daemons: objectAssignDeep({}, daemons),
             app: {
                 data_dir: this.config_dir,
                 ws_bind_port: 12213,
                 net_type: "main"
             },
-
-            appearance: {
-                theme: "light"
-            },
-
-            daemons: {
-                main: {
-                    ...daemon,
-                    remote_host: "doopool.xyz",
-                    remote_port: 22020
-                },
-                staging: {
-                    ...daemon,
-                    p2p_bind_port: 38153,
-                    rpc_bind_port: 38154,
-                    zmq_rpc_bind_port: 38155
-                },
-                test: {
-                    ...daemon,
-                    p2p_bind_port: 38156,
-                    rpc_bind_port: 38157,
-                    zmq_rpc_bind_port: 38158
-                }
-            },
-
             wallet: {
                 rpc_bind_port: 18082,
                 log_level: 0
+            }
+        }
+
+        this.config_data = {
+            // Copy all the properties of defaults
+            ...objectAssignDeep({}, this.defaults),
+            appearance: {
+                theme: "dark"
             }
         }
 
@@ -195,6 +202,21 @@ export class Backend {
             Object.keys(params).map(key => {
                 this.config_data[key] = Object.assign(this.config_data[key], params[key])
             })
+
+            const validated = Object.keys(this.defaults)
+                .filter(k => k in this.config_data)
+                .map(k => [k, this.validate_values(this.config_data[k], this.defaults[k])])
+                .reduce((map, obj) => {
+                    map[obj[0]] = obj[1]
+                    return map
+                }, {})
+
+            // Validate deamon data
+            this.config_data = {
+                ...this.config_data,
+                ...validated,
+            }
+
             fs.writeFile(this.config_file, JSON.stringify(this.config_data, null, 4), "utf8", () => {
                 if (data.method == "save_config_init") {
                     this.startup()
@@ -244,7 +266,8 @@ export class Backend {
 
     startup () {
         this.send("set_app_data", {
-            remotes: this.remotes
+            remotes: this.remotes,
+            defaults: this.defaults
         })
 
         fs.readFile(this.config_file, "utf8", (err, data) => {
@@ -269,6 +292,19 @@ export class Backend {
 
             // here we may want to check if config data is valid, if not also send code -1
             // i.e. check ports are integers and > 1024, check that data dir path exists, etc
+            const validated = Object.keys(this.defaults)
+                .filter(k => k in this.config_data)
+                .map(k => [k, this.validate_values(this.config_data[k], this.defaults[k])])
+                .reduce((map, obj) => {
+                    map[obj[0]] = obj[1]
+                    return map
+                }, {})
+
+            // Make sure the daemon data is valid
+            this.config_data = {
+                ...this.config_data,
+                ...validated
+            }
 
             // save config file back to file, so updated options are stored on disk
             fs.writeFile(this.config_file, JSON.stringify(this.config_data, null, 4), "utf8")
@@ -383,5 +419,38 @@ export class Backend {
                 resolve()
             })
         })
+    }
+
+    // Replace any invalid value with default values
+    validate_values (values, defaults) {
+        const isDictionary = (v) => typeof v === "object" && v !== null && !(v instanceof Array) && !(v instanceof Date);
+        const modified = { ...values }
+
+        // Make sure we have valid defaults
+        if (!isDictionary(defaults)) return modified
+
+        for (const key in modified) {
+            // Only modify if we have a default
+            if (!(key in defaults)) continue
+
+            const defaultValue = defaults[key]
+            const invalidDefault = defaultValue === null || defaultValue === undefined || Number.isNaN(defaultValue)
+            if (invalidDefault) continue
+
+            const value = modified[key]
+
+            // If we have a object then recurse through it
+            if (isDictionary(value)) {
+                modified[key] = this.validate_values(value, defaultValue)
+            } else {
+                // Check if we need to replace the value
+                const isValidValue = !(value === undefined || value === null || value === "" || Number.isNaN(value))
+                if (isValidValue) continue
+
+                // Otherwise set the default value
+                modified[key] = defaultValue
+            }
+        }
+        return modified
     }
 }

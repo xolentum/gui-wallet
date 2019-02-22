@@ -1,7 +1,7 @@
 <template>
 <q-page padding>
 
-    <AddressHeader :address="info.address" :title="info.name" />
+    <AddressHeader :address="info.address" :title="walletName"/>
 
     <template v-if="secret.mnemonic">
         <h6 class="q-mb-xs q-mt-lg">Seed words</h6>
@@ -75,6 +75,9 @@ export default {
     computed: mapState({
         info: state => state.gateway.wallet.info,
         secret: state => state.gateway.wallet.secret,
+        walletName (state) {
+            return `Your Wallet (${this.info.name})`
+        }
     }),
     methods: {
         open() {

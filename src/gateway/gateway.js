@@ -1,15 +1,17 @@
 import { ipcRenderer } from "electron"
 import { Notify, Dialog, Loading, LocalStorage } from "quasar"
+import { EventEmitter } from "events"
 import { SCEE } from "./SCEE-Node"
 
-export class Gateway {
+export class Gateway extends EventEmitter {
     constructor (app, router) {
+        super()
         this.app = app
         this.router = router
         this.token = null
         this.scee = new SCEE()
 
-        let theme = LocalStorage.has("theme") ? LocalStorage.get.item("theme") : "light"
+        let theme = LocalStorage.has("theme") ? LocalStorage.get.item("theme") : "dark"
         this.app.store.commit("gateway/set_app_data", {
             config: {
                 appearance: {
@@ -98,6 +100,9 @@ export class Gateway {
             !decrypted_data.hasOwnProperty("data")) { return }
 
         switch (decrypted_data.event) {
+        case "set_valid_address":
+            this.emit("validate_address", decrypted_data.data)
+            break
         case "set_app_data":
             this.app.store.commit("gateway/set_app_data", decrypted_data.data)
             break
@@ -111,8 +116,16 @@ export class Gateway {
             this.app.store.commit("gateway/set_wallet_data", decrypted_data.data)
             break
 
+        case "reset_wallet_error":
+            this.app.store.dispatch("gateway/resetWalletStatus")
+            break
+
         case "set_tx_status":
             this.app.store.commit("gateway/set_tx_status", decrypted_data.data)
+            break
+
+        case "set_stake_status":
+            this.app.store.commit("gateway/set_stake_status", decrypted_data.data)
             break
 
         case "wallet_list":

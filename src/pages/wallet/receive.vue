@@ -1,39 +1,43 @@
 <template>
-<q-page>
-
-    <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
-
-        <div class="col-8">
-            <q-icon name="call_received" size="24px" /> Receive Loki
-        </div>
-
-        <div class="col-4">
-        </div>
-
-    </div>
-
+<q-page class="receive">
     <q-list link no-border :dark="theme=='dark'">
 
         <q-list-header>My primary address</q-list-header>
-        <q-item v-for="(address, index) in address_list.primary" @click.native="details(address)">
-            <q-item-side>
-                <Identicon :address="address.address" ref="primaryIdenticon" />
-            </q-item-side>
-            <q-item-main>
-                <q-item-tile class="monospace ellipsis" label>{{ address.address }}</q-item-tile>
-                <q-item-tile sublabel>Primary address</q-item-tile>
-            </q-item-main>
-            <q-item-side>
-                <q-btn
-                    color="primary" style="width:25px;"
-                    size="sm" icon="file_copy"
-                    @click="copyAddress(address.address, $event)">
-                    <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                        Copy address
-                    </q-tooltip>
-                </q-btn>
-            </q-item-side>
-
+        <q-list class="item-group primary-address" no-border v-for="address in address_list.primary" :key="address.address" @click.native="details(address)">
+            <q-item>
+                <q-item-main>
+                    <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
+                    <q-item-tile sublabel>Primary address</q-item-tile>
+                </q-item-main>
+                <q-item-side>
+                    <q-btn
+                        flat
+                        style="width:25px;"
+                        size="md" icon="file_copy"
+                        @click="copyAddress(address.address, $event)">
+                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                            Copy address
+                        </q-tooltip>
+                    </q-btn>
+                </q-item-side>
+            </q-item>
+            <q-item-separator />
+            <q-item class="info">
+                <q-item-main class="flex justify-between">
+                    <div class="column">
+                        <span>Balance</span>
+                        <span class="value">{{address.balance | currency}}</span>
+                    </div>
+                    <div class="column">
+                        <span>Unlocked balance</span>
+                        <span class="value">{{ address.unlocked_balance | currency }}</span>
+                    </div>
+                    <div class="column">
+                        <span>Unspent outputs</span>
+                        <span class="value">{{ address.num_unspent_outputs | toString }}</span>
+                    </div>
+                </q-item-main>
+            </q-item>
             <q-context-menu>
                 <q-list link separator style="min-width: 150px; max-height: 300px;">
                     <q-item v-close-overlay
@@ -45,36 +49,47 @@
                             @click.native="copyAddress(address.address, $event)">
                         <q-item-main label="Copy address" />
                     </q-item>
-
-                    <q-item v-close-overlay
-                            @click.native="$refs.primaryIdenticon[0].saveIdenticon()">
-                        <q-item-main label="Save identicon to file" />
-                    </q-item>
                 </q-list>
             </q-context-menu>
-
-        </q-item>
+        </q-list>
 
         <template v-if="address_list.used.length">
             <q-list-header>My used addresses</q-list-header>
-            <q-item v-for="(address, index) in address_list.used" @click.native="details(address)">
-                <q-item-side>
-                    <Identicon :address="address.address" :ref="`${index}-usedIdenticon`" />
-                </q-item-side>
-                <q-item-main>
-                    <q-item-tile class="monospace ellipsis" label>{{ address.address }}</q-item-tile>
-                    <q-item-tile sublabel>Sub-address (Index {{ address.address_index }})</q-item-tile>
-                </q-item-main>
-                <q-item-side>
-                    <q-btn
-                        color="primary" style="width:25px;"
-                        size="sm" icon="file_copy"
-                        @click="copyAddress(address.address, $event)">
-                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Copy address
-                        </q-tooltip>
-                    </q-btn>
-                </q-item-side>
+            <q-list class="item-group" no-border v-for="address in address_list.used" @click.native="details(address)" :key="address.address">
+                <q-item>
+                    <q-item-main>
+                        <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
+                        <q-item-tile sublabel>Sub-address (Index {{ address.address_index }})</q-item-tile>
+                    </q-item-main>
+                    <q-item-side>
+                        <q-btn
+                            flat
+                            style="width:25px;"
+                            size="md" icon="file_copy"
+                            @click="copyAddress(address.address, $event)">
+                            <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                                Copy address
+                            </q-tooltip>
+                        </q-btn>
+                    </q-item-side>
+                </q-item>
+                <q-item-separator />
+                <q-item class="info">
+                    <q-item-main class="flex justify-between">
+                        <div class="column">
+                            <span>Balance</span>
+                            <span class="value">{{ address.balance | currency }}</span>
+                        </div>
+                        <div class="column">
+                            <span>Unlocked balance</span>
+                            <span class="value">{{ address.unlocked_balance | currency }}</span>
+                        </div>
+                        <div class="column">
+                            <span>Unspent outputs</span>
+                            <span class="value">{{ address.num_unspent_outputs | toString }}</span>
+                        </div>
+                    </q-item-main>
+                </q-item>
 
                 <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
@@ -87,38 +102,32 @@
                                 @click.native="copyAddress(address.address, $event)">
                             <q-item-main label="Copy address" />
                         </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="$refs[`${index}-usedIdenticon`][0].saveIdenticon()">
-                            <q-item-main label="Save identicon to file" />
-                        </q-item>
                     </q-list>
                 </q-context-menu>
-
-            </q-item>
+            </q-list>
         </template>
 
 
         <template v-if="address_list.unused.length">
             <q-list-header>My unused addresses</q-list-header>
-            <q-item v-for="(address, index) in address_list.unused" @click.native="details(address)">
-                <q-item-side>
-                    <Identicon :address="address.address" :ref="`${index}-unusedIdenticon`" />
-                </q-item-side>
-                <q-item-main>
-                    <q-item-tile class="monospace ellipsis" label>{{ address.address }}</q-item-tile>
-                    <q-item-tile sublabel>Sub-address (Index {{ address.address_index }})</q-item-tile>
-                </q-item-main>
-                <q-item-side>
-                    <q-btn
-                        color="primary" style="width:25px;"
-                        size="sm" icon="file_copy"
-                        @click="copyAddress(address.address, $event)">
-                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Copy address
-                        </q-tooltip>
-                    </q-btn>
-                </q-item-side>
+            <q-list class="item-group" no-border v-for="address in address_list.unused" @click.native="details(address)" :key="address.address">
+                <q-item>
+                    <q-item-main>
+                        <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
+                        <q-item-tile sublabel>Sub-address (Index {{ address.address_index }})</q-item-tile>
+                    </q-item-main>
+                    <q-item-side>
+                        <q-btn
+                            flat
+                            style="width:25px;"
+                            size="md" icon="file_copy"
+                            @click="copyAddress(address.address, $event)">
+                            <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                                Copy address
+                            </q-tooltip>
+                        </q-btn>
+                    </q-item-side>
+                </q-item>
 
                 <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
@@ -131,15 +140,10 @@
                                 @click.native="copyAddress(address.address, $event)">
                             <q-item-main label="Copy address" />
                         </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="$refs[`${index}-unusedIdenticon`][0].saveIdenticon()">
-                            <q-item-main label="Save identicon to file" />
-                        </q-item>
                     </q-list>
                 </q-context-menu>
 
-           </q-item>
+           </q-list>
         </template>
 
     </q-list>
@@ -147,10 +151,8 @@
 </q-page>
 </template>
 
-<style>
-</style>
-
 <script>
+
 const { clipboard } = require("electron")
 import { mapState } from "vuex"
 import Identicon from "components/identicon"
@@ -160,6 +162,18 @@ export default {
         theme: state => state.gateway.app.config.appearance.theme,
         address_list: state => state.gateway.wallet.address_list
     }),
+    filters: {
+        toString: function (value) {
+            if (typeof value !== "number") return "N/A";
+            return String(value);
+        },
+        currency: function (value) {
+            if (typeof value !== "number") return "N/A";
+
+            const amount = value / 1e9
+            return amount.toLocaleString()
+        }
+    },
     methods: {
         details (address) {
             this.$refs.addressDetails.address = address;
@@ -187,3 +201,33 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.receive {
+    .q-item-label {
+        font-weight: 400;
+    }
+
+    .q-item-sublabel, .q-list-header {
+        font-size: 13px;
+    }
+
+    .item-group {
+        cursor: pointer;
+
+        margin: 0 16px;
+        // padding: 14px;
+        border-radius: 3px;
+
+        + .item-group {
+            margin-top: 10px;
+        }
+
+        .q-item-side {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+</style>

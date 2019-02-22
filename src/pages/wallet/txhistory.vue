@@ -1,26 +1,27 @@
 <template>
 <q-page>
 
-    <div class="row q-pt-sm q-mx-md q-mb-sm items-center non-selectable">
+    <div class="row q-pt-sm q-mx-md q-mb-sm items-end non-selectable">
 
         <div class="col-5">
-            <q-icon name="history" size="24px" /> Transaction history
+            Transactions
         </div>
 
-        <div class="col-5 q-px-sm">
+        <LokiField class="col-5 q-px-sm" label="Filter by txid">
             <q-input v-model="tx_txid"
-                     stack-label="Filter by txid"
                      :dark="theme=='dark'"
+                     placeholder="Enter an ID"
+                     hide-underline
                      />
-        </div>
+        </LokiField>
 
-        <div class="col-2">
+        <LokiField class="col-2" label="Filter by transaction type">
             <q-select :dark="theme=='dark'"
                       v-model="tx_type"
-                      float-label="Filter by transaction type"
                       :options="tx_type_options"
+                      hide-underline
                       />
-        </div>
+        </LokiField>
 
     </div>
     <TxList :type="tx_type" :txid="tx_txid" />
@@ -30,6 +31,7 @@
 <script>
 import { mapState } from "vuex"
 import TxList from "components/tx_list"
+import LokiField from "components/loki_field"
 export default {
     data () {
         return {
@@ -39,8 +41,10 @@ export default {
                 {label: "All", value: "all"},
                 {label: "Incoming", value: "in"},
                 {label: "Outgoing", value: "out"},
-                {label: "Pending incoming", value: "pool"},
-                {label: "Pending outgoing", value: "pending"},
+                {label: "Pending", value: "all_pending"},
+                {label: "Miner", value: "miner"},
+                {label: "Service Node", value: "snode"},
+                {label: "Governance", value: "gov"},
                 {label: "Failed", value: "failed"},
             ]
 
@@ -52,7 +56,8 @@ export default {
     }),
 
     components: {
-        TxList
+        TxList,
+        LokiField
     }
 
 }

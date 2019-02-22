@@ -89,7 +89,8 @@ module.exports = function (ctx) {
                 "QInnerLoading",
                 "QInfiniteScroll",
                 "QDatetime",
-                "QContextMenu"
+                "QContextMenu",
+                "QScrollArea"
             ],
             directives: [
                 "Ripple",
@@ -117,7 +118,7 @@ module.exports = function (ctx) {
                 display: "standalone",
                 orientation: "portrait",
                 background_color: "#ffffff",
-                theme_color: "#027be3",
+                theme_color: "#43BD43",
                 icons: [{
                     "src": "statics/icons/icon-128x128.png",
                     "sizes": "128x128",

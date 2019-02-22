@@ -1,5 +1,5 @@
 <template>
-<q-modal v-model="isVisible" maximized :content-css="{padding: '50px'}">
+<q-modal v-model="isVisible" maximized>
     <q-modal-layout>
         <q-toolbar slot="header" color="dark" inverted>
             <q-btn
@@ -85,9 +85,6 @@
                 <q-list no-border>
                     <q-list-header class="q-px-none">Incoming transaction sent to:</q-list-header>
                     <q-item class="q-px-none">
-                        <q-item-side>
-                            <Identicon :address="in_tx_address_used.address" ref="identicon" />
-                        </q-item-side>
                         <q-item-main>
                             <q-item-tile label>{{ in_tx_address_used.address_index_text }}</q-item-tile>
                             <q-item-tile class="monospace ellipsis" sublabel>{{ in_tx_address_used.address }}</q-item-tile>
@@ -98,11 +95,6 @@
                                 <q-item v-close-overlay
                                         @click.native="copyAddress(in_tx_address_used.address, $event)">
                                     <q-item-main label="Copy address" />
-                                </q-item>
-
-                                <q-item v-close-overlay
-                                        @click.native="$refs.identicon.saveIdenticon()">
-                                    <q-item-main label="Save identicon to file" />
                                 </q-item>
                             </q-list>
                         </q-context-menu>
@@ -116,25 +108,16 @@
                     <q-list-header class="q-px-none">Outgoing transaction sent to:</q-list-header>
                     <template v-if="out_destinations">
                         <q-item class="q-px-none" v-for="destination in out_destinations">
-                            <q-item-side>
-                                <Identicon :address="destination.address" ref="identicon" />
-                            </q-item-side>
                             <q-item-main>
                                 <q-item-tile label>{{ destination.name }}</q-item-tile>
                                 <q-item-tile class="monospace ellipsis" sublabel>{{ destination.address }}</q-item-tile>
                                 <q-item-tile sublabel><FormatLoki :amount="destination.amount" /></q-item-tile>
                             </q-item-main>
-
                             <q-context-menu>
                                 <q-list link separator style="min-width: 150px; max-height: 300px;">
                                     <q-item v-close-overlay
                                             @click.native="copyAddress(destination.address, $event)">
                                         <q-item-main label="Copy address" />
-                                    </q-item>
-
-                                    <q-item v-close-overlay
-                                            @click.native="$refs.identicon.saveIdenticon()">
-                                        <q-item-main label="Save identicon to file" />
                                     </q-item>
                                 </q-list>
                             </q-context-menu>
@@ -143,9 +126,6 @@
                     </template>
                     <template v-else>
                         <q-item class="q-px-none">
-                            <q-item-side>
-                                <Identicon address="" />
-                            </q-item-side>
                             <q-item-main>
                                 <q-item-tile label>Destination unknown</q-item-tile>
                             </q-item-main>
@@ -180,7 +160,6 @@ const { clipboard } = require("electron")
 import { mapState } from "vuex"
 import { date } from "quasar"
 const { formatDate } = date
-import Identicon from "components/identicon"
 import TxTypeIcon from "components/tx_type_icon"
 import FormatLoki from "components/format_loki"
 export default {
@@ -296,7 +275,6 @@ export default {
         }
     },
     components: {
-        Identicon,
         TxTypeIcon,
         FormatLoki
     }

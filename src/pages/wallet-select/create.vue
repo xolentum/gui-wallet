@@ -1,32 +1,43 @@
 <template>
-<q-page>
-    <div class="q-mx-md">
-        <q-field class="q-mt-none">
+<q-page class="create-wallet">
+    <div class="fields q-mx-md q-mt-md">
+        <LokiField label="Wallet name" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
-                float-label="Wallet name"
                 @blur="$v.wallet.name.$touch"
-                :error="$v.wallet.name.$error"
                 :dark="theme=='dark'"
-                />
-        </q-field>
+                placeholder="A name for your wallet"
+                hide-underline
+            />
+        </LokiField>
 
-        <q-field>
+        <LokiField label="Seed Language">
             <q-select
                 v-model="wallet.language"
-                float-label="Seed language"
                 :options="languageOptions"
                 :dark="theme=='dark'"
-                />
-        </q-field>
+                hide-underline
+            />
+        </LokiField>
 
-        <q-field>
-            <q-input v-model="wallet.password" type="password" float-label="Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField label="Password" optional>
+            <q-input
+                v-model="wallet.password"
+                type="password"
+                :dark="theme=='dark'"
+                placeholder="An optional password for the wallet"
+                hide-underline
+            />
+        </LokiField>
 
-        <q-field>
-            <q-input v-model="wallet.password_confirm" type="password" float-label="Confirm Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField label="Confirm Password">
+            <q-input
+                v-model="wallet.password_confirm"
+                type="password"
+                :dark="theme=='dark'"
+                hide-underline
+            />
+        </LokiField>
 
         <q-field>
             <q-btn color="primary" @click="create" label="Create wallet" />
@@ -39,6 +50,7 @@
 <script>
 import { required } from "vuelidate/lib/validators"
 import { mapState } from "vuex"
+import LokiField from "components/loki_field"
 export default {
     data () {
         return {
@@ -130,9 +142,19 @@ export default {
         cancel() {
             this.$router.replace({ path: "/wallet-select" });
         }
+    },
+    components: {
+        LokiField
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+.create-wallet {
+    .fields {
+        > * {
+            margin-bottom: 16px;
+        }
+    }
+}
 </style>

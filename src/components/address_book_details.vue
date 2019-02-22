@@ -15,72 +15,52 @@
             <q-btn class="q-ml-sm" color="primary" @click="save()" label="Save" />
 
         </q-toolbar>
-        <div>
+        <div class="address-book-modal q-mx-md">
+            <LokiField label="Address" :error="$v.newEntry.address.$error">
+                <q-input
+                    v-model="newEntry.address"
+                    :placeholder="address_placeholder"
+                    @blur="$v.newEntry.address.$touch"
+                    :dark="theme=='dark'"
+                    hide-underline
+                    />
+                <q-checkbox
+                    v-model="newEntry.starred"
+                    checked-icon="star"
+                    unchecked-icon="star_border"
+                    class="star-entry"
+                    dark
+                    />
+            </LokiField>
+            <LokiField label="Name">
+                <q-input
+                    v-model="newEntry.name"
+                    :dark="theme=='dark'"
+                    hide-underline
+                    />
+            </LokiField>
+            <LokiField label="Payment ID" :error="$v.newEntry.payment_id.$error" optional>
+                <q-input
+                    v-model="newEntry.payment_id"
+                    placeholder="16 or 64 hexadecimal characters"
+                    @blur="$v.newEntry.payment_id.$touch"
+                    :dark="theme=='dark'"
+                    hide-underline
+                    />
+            </LokiField>
+            <LokiField label="Notes" optional>
+                <q-input
+                    v-model="newEntry.description"
+                    placeholder="Additional notes"
+                    type="textarea"
+                    :dark="theme=='dark'"
+                    hide-underline
+                    />
+            </LokiField>
 
-            <q-list no-border :dark="theme=='dark'">
-
-                <q-item>
-                    <q-item-side class="self-start">
-                        <Identicon :address="newEntry.address" menu />
-                    </q-item-side>
-                    <q-item-main>
-                        <q-field>
-                            <q-input v-model="newEntry.address" float-label="Address"
-                                     @blur="$v.newEntry.address.$touch"
-                                     :error="$v.newEntry.address.$error"
-                                     :dark="theme=='dark'"
-                                     />
-                        </q-field>
-                    </q-item-main>
-                </q-item>
-
-                <q-item>
-                    <q-item-main>
-                        <q-field>
-                            <q-input v-model="newEntry.name" float-label="Name" :dark="theme=='dark'" />
-                        </q-field>
-                    </q-item-main>
-                    <q-item-side class="self-start q-pa-sm">
-                        <q-checkbox
-                            v-model="newEntry.starred"
-                            checked-icon="star"
-                            unchecked-icon="star_border"
-                            class="star-entry"
-                            />
-                    </q-item-side>
-                </q-item>
-
-                <q-item>
-                    <q-item-main>
-                        <q-field>
-                            <q-input v-model="newEntry.payment_id" float-label="Payment ID (optional)"
-                                     @blur="$v.newEntry.payment_id.$touch"
-                                     :error="$v.newEntry.payment_id.$error"
-                                     :dark="theme=='dark'"
-                                     />
-                        </q-field>
-                    </q-item-main>
-                </q-item>
-
-                <q-item>
-                    <q-item-main>
-                        <q-field>
-                            <q-input v-model="newEntry.description" type="textarea" float-label="Notes (optional)" :dark="theme=='dark'" />
-                        </q-field>
-                    </q-item-main>
-                </q-item>
-
-
-                <q-item v-if="mode=='edit'">
-                    <q-item-main>
-                        <q-field>
-                            <q-btn class="float-right" color="red" @click="deleteEntry()" label="Delete" />
-                        </q-field>
-                    </q-item-main>
-                </q-item>
-
-
-            </q-list>
+            <q-field v-if="mode=='edit'">
+                <q-btn class="float-right" color="red" @click="deleteEntry()" label="Delete" />
+            </q-field>
         </div>
     </q-modal-layout>
 
@@ -119,7 +99,7 @@
                         <span class="vertical-middle q-ml-xs">Recent transactions with this address</span>
                     </div>
 
-                    <TxList type="in" :limit="5" :to-outgoing-address="entry.address" />
+                    <TxList type="all_in" :limit="5" :to-outgoing-address="entry.address" :key="entry.address"/>
 
                 </div>
 
@@ -137,6 +117,7 @@ import { mapState } from "vuex"
 import Identicon from "components/identicon"
 import AddressHeader from "components/address_header"
 import TxList from "components/tx_list"
+import LokiField from "components/loki_field"
 import { payment_id, address } from "src/validators/common"
 import { required } from "vuelidate/lib/validators"
 export default {
@@ -161,11 +142,27 @@ export default {
         view_only: state => state.gateway.wallet.info.view_only,
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
+        },
+        address_placeholder (state) {
+            const wallet = state.gateway.wallet.info;
+            const prefix = (wallet && wallet.address && wallet.address[0]) || "L";
+            return `${prefix}..`;
         }
     }),
     validations: {
         newEntry: {
-            address: { required, address },
+            address: {
+                required,
+                isAddress(value) {
+                    if (value === '') return true
+
+                    return new Promise(resolve => {
+                        address(value, this.$gateway)
+                            .then(() => resolve(true))
+                            .catch(e => resolve(false))
+                    });
+                }
+            },
             payment_id: { payment_id }
         }
     },
@@ -235,7 +232,8 @@ export default {
     components: {
         AddressHeader,
         Identicon,
-        TxList
+        TxList,
+        LokiField
     }
 }
 </script>
@@ -243,12 +241,14 @@ export default {
 <style lang="scss">
 .address-book-details {
 
-    .q-field {
-        margin: 0 10px 20px;
-    }
-    .q-checkbox.star-entry .q-checkbox-icon {
-        font-size:40px;
-        margin-left: 10px;
+    .address-book-modal {
+        > .loki-field {
+            margin-top: 16px;
+        }
+
+        .star-entry {
+            padding: 4px;
+        }
     }
 }
 </style>

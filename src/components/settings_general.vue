@@ -1,9 +1,9 @@
 <template>
 <div class="settings-general">
     <div class="row justify-between q-mb-md">
+        <div><q-radio v-model="config_daemon.type" val="remote" label="Remote Daemon Only" /></div>
         <div><q-radio v-model="config_daemon.type" val="local_remote" label="Local + Remote Daemon" /></div>
         <div><q-radio v-model="config_daemon.type" val="local" label="Local Daemon Only" /></div>
-        <div><q-radio v-model="config_daemon.type" val="remote" label="Remote Daemon Only" /></div>
     </div>
 
     <p v-if="config_daemon.type == 'local_remote'">
@@ -12,122 +12,131 @@
     <p v-if="config_daemon.type == 'local'">
         Full security, wallet will download the full blockchain. You will not be able to transact until sync is completed.
     </p>
-    <p v-if="config_daemon.type == 'remote'">
+    <p v-if="is_remote">
         Less security, wallet will connect to a remote node to make all transactions.
     </p>
 
-    <q-field v-if="config_daemon.type != 'remote'">
-        <div class="row gutter-sm">
-            <div class="col-8">
-                <q-input v-model="config_daemon.rpc_bind_ip" float-label="Local Daemon IP"
-                         :dark="theme=='dark'" disable />
-            </div>
-            <div class="col-4">
-                <q-input v-model="config_daemon.rpc_bind_port" float-label="Local Daemon Port (RPC)" type="number" :decimals="0" :step="1" min="1024" max="65535" :dark="theme=='dark'" />
-            </div>
+    <template v-if="config_daemon.type != 'remote'">
+        <div class="row pl-sm">
+            <LokiField class="col-8" label="Local Daemon IP" disable>
+                <q-input
+                    v-model="config_daemon.rpc_bind_ip"
+                    :placeholder="daemon_defaults.rpc_bind_ip"
+                    :dark="theme=='dark'"
+                    disable
+                    hide-underline
+                />
+            </LokiField>
+            <LokiField class="col-4" label="Local Daemon Port (RPC)">
+                <q-input
+                    v-model="config_daemon.rpc_bind_port"
+                    :placeholder="toString(daemon_defaults.rpc_bind_port)"
+                    type="number"
+                    :decimals="0"
+                    :step="1"
+                    min="1024"
+                    max="65535"
+                    :dark="theme=='dark'"
+                    hide-underline
+                />
+            </LokiField>
         </div>
-    </q-field>
+    </template>
 
-    <q-field v-if="config_daemon.type != 'local'">
-        <div class="row gutter-sm">
-            <div class="col-8">
-                <q-input v-model="config_daemon.remote_host" float-label="Remote Node Host" :dark="theme=='dark'" />
-            </div>
-            <div class="col-4">
-                <q-input v-model="config_daemon.remote_port" float-label="Remote Node Port" type="number" :decimals="0" :step="1" min="1024" max="65535" :dark="theme=='dark'" />
-            </div>
+    <template v-if="config_daemon.type != 'local'">
+        <div class="row q-mt-md pl-sm">
+            <LokiField class="col-8" label="Remote Node Host">
+                <q-input
+                    v-model="config_daemon.remote_host"
+                    :placeholder="daemon_defaults.remote_host"
+                    :dark="theme=='dark'"
+                    hide-underline
+                />
+                <!-- Remote node presets -->
+                <q-btn-dropdown class="remote-dropdown" v-if="config.app.net_type === 'main'" flat>
+                    <q-list link dark no-border>
+                        <q-item v-for="option in remotes" :key="option.host" @click.native="setPreset(option)" v-close-overlay>
+                            <q-item-main>
+                                <q-item-tile label>{{ option.host }}:{{ option.port }}</q-item-tile>
+                            </q-item-main>
+                        </q-item>
+                    </q-list>
+                </q-btn-dropdown>
+            </LokiField>
+            <LokiField class="col-4" label="Remote Node Port">
+                <q-input
+                    v-model="config_daemon.remote_port"
+                    :placeholder="toString(daemon_defaults.remote_port)"
+                    type="number"
+                    :decimals="0"
+                    :step="1"
+                    min="1024"
+                    max="65535"
+                    :dark="theme=='dark'"
+                    hide-underline
+                />
+            </LokiField>
         </div>
 
-    </q-field>
+    </template>
 
-    <q-field>
-        <div class="row gutter-sm">
-            <div class="col-8">
-                <q-input v-model="config.app.data_dir" stack-label="Data Storage Path" disable :dark="theme=='dark'" />
-                <input type="file" webkitdirectory directory id="dataPath" v-on:change="setDataPath" ref="fileInput" hidden />
-            </div>
-            <div class="col-4">
-                <q-btn v-on:click="selectPath" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
-            </div>
-        </div>
-    </q-field>
-
-    <div v-if="(config_daemon.type !== 'local') && (config.app.net_type === 'main')">
-        <hr>
-        <div class="presets">
-            <div class="q-body-1">Remote Node Presets</div>
-            <q-field>
-                <div class="row gutter-sm">
-                    <div class="col-8">
-                    <q-select
-                        v-model="select"
-                        :options="remoteOptions"
-                        :dark="theme=='dark'"
-                        />
-                    </div>
-                    <div class="col-4">
-                        <q-btn v-on:click="loadPreset" :text-color="theme=='dark'?'white':'dark'">Load Preset</q-btn>
-                    </div>
-                </div>
-            </q-field>
-        </div>
+    <div class="col q-mt-md">
+        <LokiField label="Data Storage Path" disable-hover>
+            <q-input v-model="config.app.data_dir" disable :dark="theme=='dark'" hide-underline/>
+            <input type="file" webkitdirectory directory id="dataPath" v-on:change="setDataPath" ref="fileInput" hidden />
+            <q-btn color="secondary" v-on:click="selectPath" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
+        </LokiField>
     </div>
 
-    <q-collapsible label="Advanced Options" header-class="non-selectable row reverse advanced-options-label">
+    <q-collapsible label="Advanced Options" header-class="q-mt-sm non-selectable row reverse advanced-options-label">
 
-        <q-field>
-            <div class="row gutter-sm">
-                <div class="col-6">
-                    <q-input v-model="config_daemon.log_level" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Daemon Log Level" type="number" :decimals="0" :step="1" min="0" max="4" />
-                </div>
-                <div class="col-6">
-                    <q-input v-model="config.wallet.log_level" :dark="theme=='dark'"
-                             float-label="Wallet Log Level" type="number" :decimals="0" :step="1" min="0" max="4" />
-                </div>
-            </div>
-        </q-field>
+        <div class="row pl-sm q-mt-sm">
+            <LokiField class="col-6" label="Daemon Log Level" :disable="is_remote">
+                <q-input v-model="config_daemon.log_level" :placeholder="toString(daemon_defaults.log_level)" :disable="is_remote" :dark="theme=='dark'"
+                            type="number" :decimals="0" :step="1" min="0" max="4" hide-underline />
+            </LokiField>
+            <LokiField class="col-6" label="Wallet Log Level">
+                <q-input v-model="config.wallet.log_level" :placeholder="toString(defaults.wallet.log_level)" :dark="theme=='dark'"
+                            type="number" :decimals="0" :step="1" min="0" max="4" hide-underline />
+            </LokiField>
+        </div>
 
-        <q-field>
-            <div class="row gutter-sm">
-                <div class="col-3">
-                    <q-input v-model="config_daemon.in_peers" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Max Incoming Peers" type="number" :decimals="0" :step="1" min="-1" max="65535" />
-                </div>
-                <div class="col-3">
-                    <q-input v-model="config_daemon.out_peers" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Max Outgoing Peers" type="number" :decimals="0" :step="1" min="-1" max="65535" />
-                </div>
-                <div class="col-3">
-                    <q-input v-model="config_daemon.limit_rate_up" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Limit Upload Rate" type="number" suffix="Kb/s" :decimals="0" :step="1" min="-1" max="65535" />
-                </div>
-                <div class="col-3">
-                    <q-input v-model="config_daemon.limit_rate_down" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Limit Download Rate" type="number" suffix="Kb/s" :decimals="0" :step="1" min="-1" max="65535" />
-                </div>
-            </div>
-        </q-field>
-        <q-field>
-            <div class="row gutter-sm">
-                <div class="col-3">
-                    <q-input v-model="config_daemon.p2p_bind_port" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Daemon P2P Port" type="number" :decimals="0" :step="1" min="1024" max="65535" />
-                </div>
-                <div class="col-3">
-                    <q-input v-model="config_daemon.zmq_rpc_bind_port" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Daemon ZMQ Port" type="number" :decimals="0" :step="1" min="1024" max="65535" />
-                </div>
-                <div class="col-3">
-                    <q-input v-model="config.app.ws_bind_port" :dark="theme=='dark'"
-                             float-label="Internal Wallet Port" type="number" :decimals="0" :step="1" min="1024" max="65535" />
-                </div>
-                <div class="col-3">
-                    <q-input v-model="config.wallet.rpc_bind_port" :disable="config_daemon.type == 'remote'" :dark="theme=='dark'"
-                             float-label="Wallet RPC Port" type="number" :decimals="0" :step="1" min="1024" max="65535" />
-                </div>
-            </div>
-        </q-field>
+        <div class="row pl-sm q-mt-md">
+            <LokiField class="col-3" label="Max Incoming Peers" :disable="is_remote">
+                <q-input v-model="config_daemon.in_peers" :placeholder="toString(daemon_defaults.in_peers)" :disable="is_remote" :dark="theme=='dark'"
+                            type="number" :decimals="0" :step="1" min="-1" max="65535" hide-underline />
+            </LokiField>
+            <LokiField class="col-3" label="Max Outgoing Peers" :disable="is_remote">
+                <q-input v-model="config_daemon.out_peers" :placeholder="toString(daemon_defaults.out_peers)" :disable="is_remote" :dark="theme=='dark'"
+                            type="number" :decimals="0" :step="1" min="-1" max="65535" hide-underline />
+            </LokiField>
+            <LokiField class="col-3" label="Limit Upload Rate" :disable="is_remote">
+                <q-input v-model="config_daemon.limit_rate_up" :placeholder="toString(daemon_defaults.limit_rate_up)" :disable="is_remote" :dark="theme=='dark'"
+                            type="number" suffix="Kb/s" :decimals="0" :step="1" min="-1" max="65535" hide-underline />
+            </LokiField>
+            <LokiField class="col-3" label="Limit Download Rate" :disable="is_remote">
+                <q-input v-model="config_daemon.limit_rate_down" :placeholder="toString(daemon_defaults.limit_rate_down)" :disable="is_remote" :dark="theme=='dark'"
+                            type="number" suffix="Kb/s" :decimals="0" :step="1" min="-1" max="65535" hide-underline />
+            </LokiField>
+        </div>
+        <div class="row pl-sm q-mt-md">
+            <LokiField class="col-3" label="Daemon P2P Port" :disable="is_remote">
+                <q-input v-model="config_daemon.p2p_bind_port" :placeholder="toString(daemon_defaults.p2p_bind_port)" :disable="is_remote" :dark="theme=='dark'"
+                            float- type="number" :decimals="0" :step="1" min="1024" max="65535" hide-underline />
+            </LokiField>
+            <LokiField class="col-3" label="Daemon ZMQ Port" :disable="is_remote">
+                <q-input v-model="config_daemon.zmq_rpc_bind_port" :placeholder="toString(daemon_defaults.zmq_rpc_bind_port)" :disable="is_remote" :dark="theme=='dark'"
+                            float- type="number" :decimals="0" :step="1" min="1024" max="65535" hide-underline />
+            </LokiField>
+            <LokiField class="col-3" label="Internal Wallet Port">
+                <q-input v-model="config.app.ws_bind_port" :placeholder="toString(defaults.app.ws_bind_port)" :dark="theme=='dark'"
+                            float- type="number" :decimals="0" :step="1" min="1024" max="65535" hide-underline />
+            </LokiField>
+            <LokiField class="col-3" label="Wallet RPC Port" :disable="is_remote">
+                <q-input v-model="config.wallet.rpc_bind_port" :placeholder="toString(defaults.wallet.rpc_bind_port)" :disable="is_remote" :dark="theme=='dark'"
+                            float- type="number" :decimals="0" :step="1" min="1024" max="65535" hide-underline />
+            </LokiField>
+        </div>
          <q-field helper="Choose a network" label="Network" orientation="vertical">
              <q-option-group
                 type="radio"
@@ -146,21 +155,23 @@
 
 <script>
 import { mapState } from "vuex"
+import LokiField from "components/loki_field"
 export default {
     name: "SettingsGeneral",
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
         remotes: state => state.gateway.app.remotes,
-        remoteOptions (state) {
-            return this.remotes.map((r, index) => ({
-                label: `${r.host}:${r.port}`,
-                value: index,
-            }));
-        },
         config: state => state.gateway.app.pending_config,
         config_daemon (state) {
             return this.config.daemons[this.config.app.net_type]
         },
+        is_remote (state) {
+            return this.config_daemon.type === 'remote'
+        },
+        defaults: state => state.gateway.app.defaults,
+        daemon_defaults (state) {
+            return this.defaults.daemons[this.config.app.net_type]
+        }
     }),
     methods: {
         selectPath () {
@@ -169,19 +180,26 @@ export default {
         setDataPath (file) {
             this.config.app.data_dir = file.target.files[0].path
         },
-        loadPreset () {
-            if (!this.remotes || this.remotes.length === 0) return;
+        setPreset (option) {
+            if (!option) return;
 
-            const { host, port } = this.remotes[this.select];
-            this.config_daemon.remote_host = host;
-            this.config_daemon.remote_port = port;
+            const { host, port } = option;
+            if (host) this.config_daemon.remote_host = host;
+            if (port) this.config_daemon.remote_port = port;
         },
+        toString (value) {
+            if (!value && typeof value !== "number") return ""
+            return String(value);
+        }
     },
     data () {
         return {
             select: 0,
         }
     },
+    components: {
+        LokiField,
+    }
 }
 </script>
 
@@ -203,8 +221,14 @@ export default {
         padding: 0;
     }
 
-    .presets {
-        margin-top: 20px;
+    .row.pl-sm {
+        > * + * {
+            padding-left: 16px;
+        }
+    }
+
+    .remote-dropdown {
+        padding: 0 !important;
     }
 }
 </style>

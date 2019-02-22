@@ -4,7 +4,7 @@
   "daemonVersion": "0.3.2.0",
   "description": "Modern GUI interface for Loki Currency",
   "productName": "Loki Wallet Atom",
-  "cordovaId": "com.ryo-currency.ryo-gui-wallet",
+  "cordovaId": "com.lokinetwork.wallet",
   "author": "Loki",
   "private": true,
   "scripts": {
@@ -44,8 +44,8 @@
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
     "eslint-plugin-vue": "^4.3.0",
-    "node-sass": "^4.9.3",
-    "quasar-cli": "^0.17.23",
+    "node-sass": "^4.11.0",
+    "quasar-cli": "^0.17.24",
     "sass-loader": "^7.1.0",
     "strip-ansi": "^3.0.1"
   },
