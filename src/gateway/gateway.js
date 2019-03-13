@@ -100,6 +100,9 @@ export class Gateway extends EventEmitter {
             !decrypted_data.hasOwnProperty("data")) { return }
 
         switch (decrypted_data.event) {
+        case "set_has_password":
+            this.emit("has_password", decrypted_data.data)
+            break
         case "set_valid_address":
             this.emit("validate_address", decrypted_data.data)
             break
@@ -124,8 +127,12 @@ export class Gateway extends EventEmitter {
             this.app.store.commit("gateway/set_tx_status", decrypted_data.data)
             break
 
-        case "set_stake_status":
-            this.app.store.commit("gateway/set_stake_status", decrypted_data.data)
+        case "set_snode_status":
+            this.app.store.commit("gateway/set_snode_status", decrypted_data.data)
+            break
+
+        case "set_old_gui_import_status":
+            this.app.store.commit("gateway/set_old_gui_import_status", decrypted_data.data)
             break
 
         case "wallet_list":

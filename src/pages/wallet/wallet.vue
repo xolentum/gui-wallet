@@ -1,3 +1,7 @@
+/**
+    This is an unused class in LOKI
+ */
+
 <template>
 <q-page padding>
 

@@ -45,6 +45,7 @@ export default {
                 {label: "Miner", value: "miner"},
                 {label: "Service Node", value: "snode"},
                 {label: "Governance", value: "gov"},
+                {label: "Stake", value: "stake"},
                 {label: "Failed", value: "failed"},
             ]
 

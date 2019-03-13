@@ -99,7 +99,7 @@ export default {
                 seed: "",
                 refresh_type: "date",
                 refresh_start_height: 0,
-                refresh_start_date: 1492486495000, // timestamp of block 1
+                refresh_start_date: 1525305600000, // timestamp of block 1
                 password: "",
                 password_confirm: ""
             },
@@ -161,7 +161,11 @@ export default {
                 return
             }
 
-            let seed = this.wallet.seed.trim().replace(/\s{2,}/g, " ").split(" ")
+            let seed = this.wallet.seed.trim()
+                .replace(/\n/g, " ")
+                .replace(/\t/g, " ")
+                .replace(/\s{2,}/g, " ")
+                .split(" ")
             if(seed.length !== 14 && seed.length !== 24 && seed.length !== 25 && seed.length !== 26) {
                 this.$q.notify({
                     type: "negative",

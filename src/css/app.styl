@@ -77,7 +77,7 @@ footer,
 }
 
 .q-item-sublabel {
-    colr: #cecece;
+    color: #cecece;
 }
 
 .advanced-options-label .q-item-side-right {
@@ -307,6 +307,12 @@ footer,
         }
     }
 
+    .q-item.tx-stake {
+        .amount span {
+            color: goldenrod;
+        }
+    }
+
     .q-item.tx-out,
     .q-item.tx-pending {
         .amount span {
@@ -431,7 +437,7 @@ footer,
         }
     }
 
-    .q-item:hover {
+    .q-item:hover, .q-item.selected {
         background: $primary !important;
 
         .wallet-icon {
@@ -439,6 +445,10 @@ footer,
             g,path {
                 fill: $loki-green-solid;
             }
+        }
+
+        .q-icon {
+            color: white;
         }
 
         .q-item-sublabel {
@@ -550,11 +560,28 @@ footer,
     }
 }
 
-.service-node-page {
+.service-node-staking {
     .address-type {
         color: $loki-green-solid;
         &.not-ours {
             color: goldenrod;
         }
+    }
+}
+
+.service-node-registration {
+    .description{
+        color: #b7b7b7;
+        font-style: normal;
+        b {
+            color: white;
+            font-style: italic;
+        }
+    }
+}
+
+.welcome {
+    .q-layout-footer {
+        background: $secondary
     }
 }

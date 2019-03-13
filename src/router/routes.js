@@ -72,6 +72,12 @@ export default [
                 name: "wallet-created",
                 component: () =>
                     import("pages/wallet-select/created")
+            },
+            {
+                path: "import-old-gui",
+                name: "wallet-import-old-gui",
+                component: () =>
+                    import("pages/wallet-select/import-old-gui")
             }
         ]
     },

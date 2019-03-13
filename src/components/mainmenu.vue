@@ -34,6 +34,7 @@
             <img class="q-mb-md" src="statics/loki.svg" height="42" />
 
             <p class="q-my-sm">Version: ATOM v{{version}}-v{{daemonVersion}}</p>
+            <p class="q-my-sm">Copyright (c) 2018-2019, Loki Project</p>
             <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
             <p class="q-my-sm">All rights reserved.</p>
 
@@ -45,7 +46,7 @@
                     <a @click="openExternal('https://t.me/joinchat/DeNvR0JJ4JPn6TVSQjCsZQ')" href="#">Telegram</a> -
                     <a @click="openExternal('https://discordapp.com/invite/67GXfD6')" href="#">Discord</a> -
                     <a @click="openExternal('https://www.reddit.com/r/LokiProject/')" href="#">Reddit</a> -
-                    <a @click="openExternal('https://github.com')" href="#">Github</a>
+                    <a @click="openExternal('https://github.com/loki-project/loki-electron-wallet')" href="#">Github</a>
                 </p>
             </div>
 
@@ -103,7 +104,7 @@ export default {
                 title: "Switch wallet",
                 message: "Are you sure you want to close the current wallet?",
                 ok: {
-                    label: "CLOSE"
+                    label: "OK"
                 },
                 cancel: {
                     flat: true,

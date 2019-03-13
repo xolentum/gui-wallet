@@ -1,7 +1,7 @@
 <template>
 <q-page class="welcome">
 
-    <q-stepper class="no-shadow" ref="stepper" :color="theme == 'dark' ? 'light' : 'dark'" dark>
+    <q-stepper class="no-shadow" ref="stepper" :color="theme == 'dark' ? 'light' : 'dark'" dark @step="onStep">
 
         <q-step default title="Welcome" class="first-step">
 
@@ -11,14 +11,13 @@
 
                 <h6 class="q-mb-md" style="font-weight: 300">Select language:</h6>
 
-                <q-btn-toggle
-                    v-model="choose_lang"
-                    toggle-color="primary"
+                <q-btn
+                    color="primary"
                     size="md"
-                    :options="[
-                            {label: 'English', value: 'EN', icon: 'language'},
-                            ]"
-                    />
+                    icon="language"
+                    label="English"
+                    @click="clickNext()"
+                />
 
                 <p class="q-mt-md">More languages coming soon</p>
             </div>
@@ -26,31 +25,28 @@
         </q-step>
 
         <q-step title="Configure">
-
-            <SettingsGeneral ref="settingsGeneral"></SettingsGeneral>
-
+            <SettingsGeneral randomise_remote ref="settingsGeneral" />
         </q-step>
     </q-stepper>
 
-    <q-layout-footer class="no-shadow q-pa-sm">
+     <q-layout-footer v-if="!is_first_page" class="no-shadow q-pa-sm">
         <div class="row justify-end">
             <div>
-	        <q-btn
-	            flat
-	            @click="clickPrev()"
-	            label="Back"
-	            />
+                <q-btn
+                    flat
+                    @click="clickPrev()"
+                    label="Back"
+                    />
             </div>
             <div>
-	        <q-btn
+                <q-btn
                     class="q-ml-sm"
                     color="primary"
-	            @click="clickNext()"
-	            label="Next"
-	            />
+                    @click="clickNext()"
+                    label="Next"
+                    />
             </div>
         </div>
-
     </q-layout-footer>
 
 </q-page>
@@ -70,6 +66,7 @@ export default {
     }),
     data() {
         return {
+            is_first_page: true,
             choose_lang: "EN",
             version: "",
             daemonVersion: ""
@@ -88,6 +85,9 @@ export default {
         });
     },
     methods: {
+        onStep () {
+            this.is_first_page = this.$refs.stepper.steps[0].active
+        },
         clickNext () {
             if(this.$refs.stepper.steps[this.$refs.stepper.length-1].active) {
                 this.$gateway.send("core", "save_config_init", this.pending_config);

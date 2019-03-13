@@ -15,7 +15,14 @@ export default {
     },
     wallets: {
         list: [],
-        legacy: []
+        legacy: [],
+
+        // List of wallets that are in a sub folder (format of the old GUI)
+        directories: []
+    },
+    old_gui_import_status: {
+        code: 0, // Success
+        failed_wallets: []
     },
     wallet: {
         status: {
@@ -48,10 +55,22 @@ export default {
         code: 0,
         message: ""
     },
-    stake_status: {
-        code: 0,
-        message: "",
-        sending: false
+    service_node_status: {
+        stake: {
+            code: 0,
+            message: "",
+            sending: false
+        },
+        registration: {
+            code: 0,
+            message: "",
+            sending: false
+        },
+        unlock: {
+            code: 0,
+            message: "",
+            sending: false
+        }
     },
     daemon: {
         info: {

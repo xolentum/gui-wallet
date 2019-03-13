@@ -11,7 +11,7 @@ export class Daemon {
         this.heartbeat = null
         this.heartbeat_slow = null
         this.id = 0
-        this.net_type = "main"
+        this.net_type = "mainnet"
         this.local = false // do we have a local daemon ?
 
         this.agent = new http.Agent({keepAlive: true, maxSockets: 1})
@@ -36,6 +36,23 @@ export class Daemon {
                     if (error) { resolve(false) }
                     resolve(stdout)
                 })
+            }
+        })
+    }
+
+    checkRemote (daemon) {
+        if (daemon.type === "local") {
+            return Promise.resolve({})
+        }
+
+        return this.sendRPC("get_info", {}, {
+            protocol: "http://",
+            hostname: daemon.remote_host,
+            port: daemon.remote_port
+        }).then(data => {
+            if (data.error) return { error: data.error }
+            return {
+                net_type: data.result.nettype
             }
         })
     }
@@ -81,17 +98,17 @@ export class Daemon {
             ]
 
             const dirs = {
-                "main": options.app.data_dir,
-                "staging": path.join(options.app.data_dir, "staging"),
-                "test": path.join(options.app.data_dir, "testnet")
+                "mainnet": options.app.data_dir,
+                "stagenet": path.join(options.app.data_dir, "stagenet"),
+                "testnet": path.join(options.app.data_dir, "testnet")
             }
 
             const { net_type } = options.app
             this.net_type = net_type
 
-            if (net_type === "test") {
+            if (net_type === "testnet") {
                 args.push("--testnet")
-            } else if (net_type === "staging") {
+            } else if (net_type === "stagenet") {
                 args.push("--stagenet")
             }
 
@@ -100,7 +117,7 @@ export class Daemon {
             if (daemon.rpc_bind_ip !== "127.0.0.1") { args.push("--confirm-external-bind") }
 
             // TODO: Check if we need to push this command for staging too
-            if (daemon.type === "local_remote" && net_type === "main") {
+            if (daemon.type === "local_remote" && net_type === "mainnet") {
                 args.push(
                     "--bootstrap-daemon-address",
                     `${daemon.remote_host}:${daemon.remote_port}`
@@ -328,10 +345,15 @@ export class Daemon {
         this.backend.send(method, data)
     }
 
-    sendRPC (method, params = {}) {
+    sendRPC (method, params = {}, options = {}) {
         let id = this.id++
-        let options = {
-            uri: `${this.protocol}${this.hostname}:${this.port}/json_rpc`,
+
+        const protocol = options.protocol || this.protocol
+        const hostname = options.hostname || this.hostname
+        const port = options.port || this.port
+
+        let requestOptions = {
+            uri: `${protocol}${hostname}:${port}/json_rpc`,
             method: "POST",
             json: {
                 jsonrpc: "2.0",
@@ -341,11 +363,11 @@ export class Daemon {
             agent: this.agent
         }
         if (Object.keys(params).length !== 0) {
-            options.json.params = params
+            requestOptions.json.params = params
         }
 
         return this.queue.add(() => {
-            return request(options)
+            return request(requestOptions)
                 .then((response) => {
                     if (response.hasOwnProperty("error")) {
                         return {

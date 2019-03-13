@@ -65,6 +65,18 @@
                 </LokiField>
             </div>
 
+            <!-- Notes -->
+            <div class="col q-mt-sm">
+                <LokiField label="Notes" optional>
+                     <q-input v-model="newTx.note"
+                        type="textarea"
+                        :dark="theme=='dark'"
+                        placeholder="Additional notes to attach to the transaction"
+                        hide-underline
+                    />
+                </LokiField>
+            </div>
+
             <!-- Save to address book -->
             <q-field>
                 <q-checkbox v-model="newTx.address_book.save" label="Save to address book" :dark="theme=='dark'" />
@@ -113,7 +125,9 @@ import { required, decimal } from "vuelidate/lib/validators"
 import { payment_id, address, greater_than_zero } from "src/validators/common"
 import Identicon from "components/identicon"
 import LokiField from "components/loki_field"
+import WalletPassword from "src/mixins/wallet_password"
 const objectAssignDeep = require("object-assign-deep");
+
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
@@ -147,10 +161,11 @@ export default {
                 }
             },
             priorityOptions: [
-                {label: "Normal (x1 fee)", value: 0},
-                {label: "Slow (x0.25 fee)", value: 1},
-                {label: "Fast (x5 fee)", value: 2},
-                {label: "Fastest (x41.5 fee)", value: 3},
+                {label: "Automatic", value: 0},
+                {label: "Slow (x0.2 fee)", value: 1},
+                {label: "Normal (x1 fee)", value: 2},
+                {label: "Fast (x5 fee)", value: 3},
+                {label: "Fastest (x200 fee)", value: 4},
             ],
         }
     },
@@ -197,7 +212,8 @@ export default {
                                 save: false,
                                 name: "",
                                 description: ""
-                            }
+                            },
+                            note: ""
                         }
                         break;
                     case -1:
@@ -230,7 +246,6 @@ export default {
         },
 
         send: function () {
-
             this.$v.newTx.$touch()
 
             if(this.newTx.amount < 0) {
@@ -282,21 +297,12 @@ export default {
                 return
             }
 
-            this.$q.dialog({
+            this.showPasswordConfirmation({
                 title: "Transfer",
-                message: "Enter wallet password to continue.",
-                prompt: {
-                    model: "",
-                    type: "password"
-                },
+                noPasswordMessage: "Do you want to send the transaction?",
                 ok: {
                     label: "SEND"
                 },
-                cancel: {
-                    flat: true,
-                    label: "CANCEL",
-                    color: this.theme=="dark"?"white":"dark"
-                }
             }).then(password => {
                 this.$store.commit("gateway/set_tx_status", {
                     code: 1,
@@ -309,6 +315,7 @@ export default {
             })
         }
     },
+    mixins: [WalletPassword],
     components: {
         Identicon,
         LokiField

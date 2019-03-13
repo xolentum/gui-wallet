@@ -2,7 +2,11 @@
 <q-layout view="hHh Lpr lFf">
     <q-layout-header class="shift-title">
         <main-menu />
-
+        <q-toolbar-title>
+            <div class="flex items-center justify-center" style="margin-top:7px">
+                <img src="statics/loki.svg" height="32">
+            </div>
+        </q-toolbar-title>
     </q-layout-header>
 
     <q-page-container>
@@ -96,9 +100,10 @@ export default {
 
 <style lang="scss">
 .navigation {
-    padding: 12px;
+    padding: 8px 12px;
 
     > * {
+        margin: 2px 0;
         margin-right: 12px;
     }
 

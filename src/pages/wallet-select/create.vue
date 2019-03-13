@@ -133,11 +133,31 @@ export default {
                 return
             }
 
-            this.$q.loading.show({
-                delay: 0
-            })
+            // Warn user if no password is set
+            let passwordPromise = Promise.resolve();
+            if (!this.wallet.password) {
+                passwordPromise = this.$q.dialog({
+                    title: "No password set",
+                    message: "Are you sure you want to create a wallet with no password?",
+                    ok: {
+                        label: "YES",
+                    },
+                    cancel: {
+                        flat: true,
+                        label: "CANCEL",
+                        color: this.theme === "dark" ? "white" : "dark"
+                    },
+                })
+            }
 
-            this.$gateway.send("wallet", "create_wallet", this.wallet);
+            passwordPromise
+                .then(() => {
+                    this.$q.loading.show({
+                        delay: 0
+                    })
+                    this.$gateway.send("wallet", "create_wallet", this.wallet)
+                })
+                .catch(() => {})
         },
         cancel() {
             this.$router.replace({ path: "/wallet-select" });

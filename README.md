@@ -22,6 +22,7 @@ quasar build -m electron -t mat
 
 ### LICENSE
 
+Copyright (c) 2018-2019, Loki Project
 Copyright (c) 2018, Ryo Currency Project
 
 Portions of this software are available under BSD-3 license. Please see ORIGINAL-LICENSE for details

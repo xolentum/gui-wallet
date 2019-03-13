@@ -3,7 +3,7 @@ const request = require("request-promise")
 const queue = require("promise-queue")
 const http = require("http")
 const os = require("os")
-const fs = require("fs")
+const fs = require("fs-extra")
 const path = require("path")
 const crypto = require("crypto")
 
@@ -14,7 +14,7 @@ export class WalletRPC {
         this.wallet_dir = null
         this.auth = []
         this.id = 0
-        this.net_type = "main"
+        this.net_type = "mainnet"
         this.heartbeat = null
         this.wallet_state = {
             open: false,
@@ -23,7 +23,7 @@ export class WalletRPC {
             balance: null,
             unlocked_balance: null
         }
-
+        this.dirs = null
         this.last_height_send_time = Date.now()
 
         this.height_regex1 = /Processed block: <([a-f0-9]+)>, height (\d+)/
@@ -63,31 +63,32 @@ export class WalletRPC {
                     "--log-level", "*:WARNING,net*:FATAL,net.http:DEBUG,global:INFO,verify:FATAL,stacktrace:INFO"
                 ]
 
-                const { net_type } = options.app
+                const { net_type, wallet_data_dir, data_dir } = options.app
                 this.net_type = net_type
-                this.data_dir = options.app.data_dir
+                this.data_dir = data_dir
+                this.wallet_data_dir = wallet_data_dir
 
-                const dirs = {
-                    "main": this.data_dir,
-                    "staging": path.join(this.data_dir, "staging"),
-                    "test": path.join(this.data_dir, "testnet")
+                this.dirs = {
+                    "mainnet": this.wallet_data_dir,
+                    "stagenet": path.join(this.wallet_data_dir, "stagenet"),
+                    "testnet": path.join(this.wallet_data_dir, "testnet")
                 }
 
-                this.wallet_dir = path.join(dirs[net_type], "wallets")
+                this.wallet_dir = path.join(this.dirs[net_type], "wallets")
                 args.push("--wallet-dir", this.wallet_dir)
 
-                const log_file = path.join(dirs[net_type], "logs", "wallet-rpc.log")
+                const log_file = path.join(this.dirs[net_type], "logs", "wallet-rpc.log")
                 args.push("--log-file", log_file)
 
-                if (net_type === "test") {
+                if (net_type === "testnet") {
                     args.push("--testnet")
-                } else if (net_type === "staging") {
+                } else if (net_type === "stagenet") {
                     args.push("--stagenet")
                 }
 
                 if (fs.existsSync(log_file)) { fs.truncateSync(log_file, 0) }
 
-                if (!fs.existsSync(this.wallet_dir)) { fs.mkdirSync(this.wallet_dir) }
+                if (!fs.existsSync(this.wallet_dir)) { fs.mkdirpSync(this.wallet_dir) }
 
                 if (process.platform === "win32") {
                     this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc.exe"), args)
@@ -160,8 +161,16 @@ export class WalletRPC {
         let params = data.data
 
         switch (data.method) {
+        case "has_password":
+            this.hasPassword()
+            break
+
         case "validate_address":
             this.validateAddress(params.address)
+            break
+
+        case "copy_old_gui_wallets":
+            this.copyOldGuiWallets(params.wallets || [])
             break
 
         case "list_wallets":
@@ -199,8 +208,16 @@ export class WalletRPC {
             this.stake(params.password, params.amount, params.key, params.destination)
             break
 
+        case "register_service_node":
+            this.registerSnode(params.password, params.string)
+            break
+
+        case "unlock_stake":
+            this.unlockStake(params.password, params.service_node_key, params.confirmed || false)
+            break
+
         case "transfer":
-            this.transfer(params.password, params.amount, params.address, params.payment_id, params.priority, params.address_book)
+            this.transfer(params.password, params.amount, params.address, params.payment_id, params.priority, params.note || "", params.address_book)
             break
 
         case "add_address_book":
@@ -246,6 +263,18 @@ export class WalletRPC {
         }
     }
 
+    hasPassword () {
+        crypto.pbkdf2("", this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
+            if (err) {
+                this.sendGateway("set_has_password", false)
+                return
+            }
+
+            // If the pass hash doesn't match empty string then we don't have a password
+            this.sendGateway("set_has_password", this.wallet_state.password_hash !== password_hash.toString("hex"))
+        })
+    }
+
     validateAddress (address) {
         this.sendRPC("validate_address", {
             address
@@ -260,12 +289,7 @@ export class WalletRPC {
 
             const { valid, nettype } = data.result
 
-            // Check if the net types match
-            let ourNetType = "mainnet"
-            if (this.net_type === "test") ourNetType = "testnet"
-            if (this.net_type === "staging") ourNetType = "stagenet"
-
-            const netMatches = ourNetType === nettype
+            const netMatches = this.net_type === nettype
             const isValid = valid && netMatches
 
             this.sendGateway("set_valid_address", {
@@ -620,18 +644,22 @@ export class WalletRPC {
     stake (password, amount, service_node_key, destination) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("set_stake_status", {
-                    code: -1,
-                    message: "Internal error",
-                    sending: false
+                this.sendGateway("set_snode_status", {
+                    stake: {
+                        code: -1,
+                        message: "Internal error",
+                        sending: false
+                    }
                 })
                 return
             }
             if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
-                this.sendGateway("set_stake_status", {
-                    code: -1,
-                    message: "Invalid password",
-                    sending: false
+                this.sendGateway("set_snode_status", {
+                    stake: {
+                        code: -1,
+                        message: "Invalid password",
+                        sending: false
+                    }
                 })
                 return
             }
@@ -645,24 +673,150 @@ export class WalletRPC {
             }).then((data) => {
                 if (data.hasOwnProperty("error")) {
                     let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
-                    this.sendGateway("set_stake_status", {
-                        code: -1,
-                        message: error,
-                        sending: false
+                    this.sendGateway("set_snode_status", {
+                        stake: {
+                            code: -1,
+                            message: error,
+                            sending: false
+                        }
                     })
                     return
                 }
 
-                this.sendGateway("set_stake_status", {
-                    code: 0,
-                    message: "Successfully staked",
-                    sending: false
+                this.sendGateway("set_snode_status", {
+                    stake: {
+                        code: 0,
+                        message: "Successfully staked",
+                        sending: false
+                    }
                 })
             })
         })
     }
 
-    transfer (password, amount, address, payment_id, priority, address_book = {}) {
+    registerSnode (password, register_service_node_str) {
+        crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
+            if (err) {
+                this.sendGateway("set_snode_status", {
+                    registration: {
+                        code: -1,
+                        message: "Internal error",
+                        sending: false
+                    }
+                })
+                return
+            }
+
+            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+                this.sendGateway("set_snode_status", {
+                    registration: {
+                        code: -1,
+                        message: "Invalid password",
+                        sending: false
+                    }
+                })
+                return
+            }
+
+            this.sendRPC("register_service_node", {
+                register_service_node_str
+            }).then((data) => {
+                if (data.hasOwnProperty("error")) {
+                    const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
+                    this.sendGateway("set_snode_status", {
+                        registration: {
+                            code: -1,
+                            message: error,
+                            sending: false
+                        }
+                    })
+                    return
+                }
+
+                this.sendGateway("set_snode_status", {
+                    registration: {
+                        code: 0,
+                        message: "Successfully registered service node",
+                        sending: false
+                    }
+                })
+            })
+        })
+    }
+
+    unlockStake (password, service_node_key, confirmed = false) {
+        // Unlock code 0 means success, 1 means can unlock, -1 means error
+        crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
+            if (err) {
+                this.sendGateway("set_snode_status", {
+                    unlock: {
+                        code: -1,
+                        message: "Internal error",
+                        sending: false
+                    }
+                })
+                return
+            }
+
+            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+                this.sendGateway("set_snode_status", {
+                    unlock: {
+                        code: -1,
+                        message: "Invalid password",
+                        sending: false
+                    }
+                })
+                return
+            }
+
+            const sendRPC = (path) => {
+                return this.sendRPC(path, {
+                    service_node_key
+                }).then(data => {
+                    if (data.hasOwnProperty("error")) {
+                        const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
+                        this.sendGateway("set_snode_status", {
+                            unlock: {
+                                code: -1,
+                                message: error,
+                                sending: false
+                            }
+                        })
+                        return null
+                    }
+                    return data
+                })
+            }
+
+            if (confirmed) {
+                sendRPC("request_stake_unlock").then((data) => {
+                    if (!data) return
+
+                    const unlock = {
+                        code: data.unlocked ? 0 : -1,
+                        message: data.msg,
+                        sending: false
+                    }
+
+                    this.sendGateway("set_snode_status", { unlock })
+                })
+            } else {
+                sendRPC("can_request_stake_unlock").then((data) => {
+                    if (!data) return
+
+                    const unlock = {
+                        code: data.can_unlock ? 1 : -1,
+                        message: data.msg,
+                        sending: false
+                    }
+
+                    this.sendGateway("set_snode_status", { unlock })
+                })
+            }
+        })
+    }
+
+    transfer (password, amount, address, payment_id, priority, note, address_book = {}) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
                 this.sendGateway("set_tx_status", {
@@ -685,64 +839,47 @@ export class WalletRPC {
 
             let sweep_all = amount == this.wallet_state.unlocked_balance
 
-            if (sweep_all) {
-                let params = {
-                    "address": address,
-                    "account_index": 0,
-                    "priority": priority,
-                    "mixin": 9 // Always force a ring size of 10 (ringsize = mixin + 1)
-                }
-
-                if (payment_id) {
-                    params.payment_id = payment_id
-                }
-
-                this.sendRPC("sweep_all", params).then((data) => {
-                    if (data.hasOwnProperty("error")) {
-                        let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
-                        this.sendGateway("set_tx_status", {
-                            code: -1,
-                            message: error,
-                            sending: false
-                        })
-                        return
-                    }
-
-                    this.sendGateway("set_tx_status", {
-                        code: 0,
-                        message: "Transaction successfully sent",
-                        sending: false
-                    })
-                })
-            } else {
-                let params = {
-                    "destinations": [{"amount": amount, "address": address}],
-                    "priority": priority,
-                    "mixin": 9
-                }
-
-                if (payment_id) {
-                    params.payment_id = payment_id
-                }
-
-                this.sendRPC("transfer_split", params).then((data) => {
-                    if (data.hasOwnProperty("error")) {
-                        let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
-                        this.sendGateway("set_tx_status", {
-                            code: -1,
-                            message: error,
-                            sending: false
-                        })
-                        return
-                    }
-
-                    this.sendGateway("set_tx_status", {
-                        code: 0,
-                        message: "Transaction successfully sent",
-                        sending: false
-                    })
-                })
+            const rpc_endpoint = sweep_all ? "sweep_all" : "transfer_split"
+            const params = sweep_all ? {
+                "address": address,
+                "account_index": 0,
+                "priority": priority,
+                "mixin": 9 // Always force a ring size of 10 (ringsize = mixin + 1)
+            } : {
+                "destinations": [{"amount": amount, "address": address}],
+                "priority": priority,
+                "mixin": 9
             }
+
+            if (payment_id) {
+                params.payment_id = payment_id
+            }
+
+            this.sendRPC(rpc_endpoint, params).then((data) => {
+                if (data.hasOwnProperty("error")) {
+                    let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
+                    this.sendGateway("set_tx_status", {
+                        code: -1,
+                        message: error,
+                        sending: false
+                    })
+                    return
+                }
+
+                this.sendGateway("set_tx_status", {
+                    code: 0,
+                    message: "Transaction successfully sent",
+                    sending: false
+                })
+
+                if (data.result) {
+                    const hash_list = data.result.tx_hash_list || []
+                    // Save notes
+                    if (note && note !== "") {
+                        hash_list.forEach(txid => this.saveTxNotes(txid, note))
+                    }
+                }
+            })
 
             if (address_book.hasOwnProperty("save") && address_book.save) { this.addAddressBook(address, payment_id, address_book.description, address_book.name) }
         })
@@ -891,10 +1028,10 @@ export class WalletRPC {
                     }
                 }
 
-                const types = ["in", "out", "pending", "failed", "pool", "miner", "snode", "gov"]
+                const types = ["in", "out", "pending", "failed", "pool", "miner", "snode", "gov", "stake"]
                 types.forEach(type => {
                     if (data.result.hasOwnProperty(type)) {
-                        wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result[type]);
+                        wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result[type])
                     }
                 })
 
@@ -1063,9 +1200,71 @@ export class WalletRPC {
         })
     }
 
+    copyOldGuiWallets (wallets) {
+        this.sendGateway("set_old_gui_import_status", { code: 1, failed_wallets: [] })
+
+        const failed_wallets = []
+
+        for (const wallet of wallets) {
+            const { type, directory } = wallet
+
+            const old_gui_path = path.join(this.wallet_dir, "old-gui")
+            const dir_path = path.join(this.wallet_dir, directory)
+            const stat = fs.statSync(dir_path)
+            if (!stat.isDirectory()) continue
+
+            // Make sure the directory has the regular and keys file
+            const wallet_file = path.join(dir_path, directory)
+            const key_file = wallet_file + ".keys"
+
+            // If we don't have them then don't bother copying
+            if (!(fs.existsSync(wallet_file) && fs.existsSync(key_file))) {
+                failed_wallets.push(directory)
+                continue
+            }
+
+            // Copy out the file into the relevant directory
+            const destination = path.join(this.dirs[type], "wallets")
+            if (!fs.existsSync(destination)) fs.mkdirpSync(destination)
+
+            const new_path = path.join(destination, directory)
+
+            try {
+                // Copy into temp file
+                if (fs.existsSync(new_path + ".atom") || fs.existsSync(new_path + ".atom.keys")) {
+                    failed_wallets.push(directory)
+                    continue
+                }
+
+                fs.copyFileSync(wallet_file, new_path + ".atom", fs.constants.COPYFILE_EXCL)
+                fs.copyFileSync(key_file, new_path + ".atom.keys", fs.constants.COPYFILE_EXCL)
+
+                // Move the folder into a subfolder
+                if (!fs.existsSync(old_gui_path)) fs.mkdirpSync(old_gui_path)
+                fs.moveSync(dir_path, path.join(old_gui_path, directory), { overwrite: true })
+            } catch (e) {
+                // Cleanup the copied files if an error
+                if (fs.existsSync(new_path + ".atom")) fs.unlinkSync(new_path + ".atom")
+                if (fs.existsSync(new_path + ".atom.keys")) fs.unlinkSync(new_path + ".atom.keys")
+                failed_wallets.push(directory)
+                continue
+            }
+
+            // Rename the imported wallets if we can
+            if (!fs.existsSync(new_path) && !fs.existsSync(new_path + ".keys")) {
+                fs.renameSync(new_path + ".atom", new_path)
+                fs.renameSync(new_path + ".atom.keys", new_path + ".keys")
+            }
+        }
+
+        this.sendGateway("set_old_gui_import_status", { code: 0, failed_wallets })
+        this.listWallets()
+    }
+
     listWallets (legacy = false) {
         let wallets = {
-            list: []
+            list: [],
+            directories: []
         }
 
         fs.readdirSync(this.wallet_dir).forEach(filename => {
@@ -1083,6 +1282,22 @@ export class WalletRPC {
             case ".Trashes":
             case "ehthumbs.db":
             case "Thumbs.db":
+            case "old-gui":
+                return
+            }
+
+            // If it's a directory then check if it's an old gui wallet
+            const name = path.join(this.wallet_dir, filename)
+            const stat = fs.statSync(name)
+            if (stat.isDirectory()) {
+                // Make sure the directory has the regular and keys file
+                const wallet_file = path.join(name, filename)
+                const key_file = wallet_file + ".keys"
+
+                // If we have them then it is an old gui wallet
+                if (fs.existsSync(wallet_file) && fs.existsSync(key_file)) {
+                    wallets.directories.push(filename)
+                }
                 return
             }
 

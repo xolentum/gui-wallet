@@ -5,7 +5,7 @@ import { dialog } from "electron"
 
 const WebSocket = require("ws")
 const os = require("os")
-const fs = require("fs")
+const fs = require("fs-extra")
 const path = require("path")
 const objectAssignDeep = require("object-assign-deep")
 
@@ -17,6 +17,7 @@ export class Backend {
         this.wss = null
         this.token = null
         this.config_dir = null
+        this.wallet_dir = null
         this.config_file = null
         this.config_data = {}
         this.scee = new SCEE()
@@ -24,16 +25,19 @@ export class Backend {
 
     init (config) {
         if (os.platform() === "win32") {
-            this.config_dir = "C:\\ProgramData\\loki-wallet"
+            this.config_dir = "C:\\ProgramData\\loki"
+            this.wallet_dir = `${os.homedir()}\\Documents\\Loki`
         } else {
-            this.config_dir = path.join(os.homedir(), ".loki-wallet")
+            this.config_dir = path.join(os.homedir(), ".loki")
+            this.wallet_dir = path.join(os.homedir(), "Loki")
         }
+
         if (!fs.existsSync(this.config_dir)) {
-            fs.mkdirSync(this.config_dir)
+            fs.mkdirpSync(this.config_dir)
         }
 
         if (!fs.existsSync(path.join(this.config_dir, "gui"))) {
-            fs.mkdirSync(path.join(this.config_dir, "gui"))
+            fs.mkdirpSync(path.join(this.config_dir, "gui"))
         }
 
         this.config_file = path.join(this.config_dir, "gui", "config.json")
@@ -54,19 +58,19 @@ export class Backend {
         }
 
         const daemons = {
-            main: {
+            mainnet: {
                 ...daemon,
                 remote_host: "doopool.xyz",
                 remote_port: 22020
             },
-            staging: {
+            stagenet: {
                 ...daemon,
                 type: "local",
                 p2p_bind_port: 38153,
                 rpc_bind_port: 38154,
                 zmq_rpc_bind_port: 38155
             },
-            test: {
+            testnet: {
                 ...daemon,
                 type: "local",
                 p2p_bind_port: 38156,
@@ -80,8 +84,9 @@ export class Backend {
             daemons: objectAssignDeep({}, daemons),
             app: {
                 data_dir: this.config_dir,
+                wallet_data_dir: this.wallet_dir,
                 ws_bind_port: 12213,
-                net_type: "main"
+                net_type: "mainnet"
             },
             wallet: {
                 rpc_bind_port: 18082,
@@ -103,20 +108,12 @@ export class Backend {
                 port: "22020"
             },
             {
-                host: "rpc.nodes.rentals",
-                port: "22023"
-            },
-            {
                 host: "daemons.cryptopool.space",
                 port: "22023"
             },
             {
                 host: "node.loki-pool.com",
                 port: "18081"
-            },
-            {
-                host: "uk.loki.cash",
-                port: "22020"
             },
             {
                 host: "imaginary.stream",
@@ -214,7 +211,7 @@ export class Backend {
             // Validate deamon data
             this.config_data = {
                 ...this.config_data,
-                ...validated,
+                ...validated
             }
 
             fs.writeFile(this.config_file, JSON.stringify(this.config_data, null, 4), "utf8", () => {
@@ -307,27 +304,60 @@ export class Backend {
             }
 
             // save config file back to file, so updated options are stored on disk
-            fs.writeFile(this.config_file, JSON.stringify(this.config_data, null, 4), "utf8")
+            fs.writeFile(this.config_file, JSON.stringify(this.config_data, null, 4), "utf8", () => {})
 
             this.send("set_app_data", {
                 config: this.config_data,
                 pending_config: this.config_data
             })
 
+            // Make the wallet dir
+            const { wallet_data_dir, data_dir } = this.config_data.app
+            if (!fs.existsSync(wallet_data_dir)) { fs.mkdirpSync(wallet_data_dir) }
+
+            // Check to see if data and wallet directories exist
+            const dirs_to_check = [{
+                path: data_dir,
+                error: "Data storge path not found"
+            },
+            {
+                path: wallet_data_dir,
+                error: "Wallet data storge path not found"
+            }]
+
+            for (const dir of dirs_to_check) {
+                // Check to see if dir exists
+                if (!fs.existsSync(dir.path)) {
+                    this.send("show_notification", {
+                        type: "negative",
+                        message: `Error: ${dir.error}`,
+                        timeout: 2000
+                    })
+
+                    // Go back to config
+                    this.send("set_app_data", {
+                        status: {
+                            code: -1 // Return to config screen
+                        }
+                    })
+                    return
+                }
+            }
+
             const { net_type } = this.config_data.app
 
             const dirs = {
-                "main": this.config_data.app.data_dir,
-                "staging": path.join(this.config_data.app.data_dir, "staging"),
-                "test": path.join(this.config_data.app.data_dir, "testnet")
+                "mainnet": this.config_data.app.data_dir,
+                "stagenet": path.join(this.config_data.app.data_dir, "stagenet"),
+                "testnet": path.join(this.config_data.app.data_dir, "testnet")
             }
 
             // Make sure we have the directories we need
             const net_dir = dirs[net_type]
-            if (!fs.existsSync(net_dir)) { fs.mkdirSync(net_dir) }
+            if (!fs.existsSync(net_dir)) { fs.mkdirpSync(net_dir) }
 
             const log_dir = path.join(net_dir, "logs")
-            if (!fs.existsSync(log_dir)) { fs.mkdirSync(log_dir) }
+            if (!fs.existsSync(log_dir)) { fs.mkdirpSync(log_dir) }
 
             this.daemon = new Daemon(this)
             this.walletd = new WalletRPC(this)
@@ -338,71 +368,126 @@ export class Backend {
                 }
             })
 
-            this.daemon.checkVersion().then((version) => {
-                if (version) {
-                    this.send("set_app_data", {
-                        status: {
-                            code: 4,
-                            message: version
-                        }
-                    })
-                } else {
-                    // daemon not found, probably removed by AV, set to remote node
-                    this.config_data.daemons[net_type].type = "remote"
-                    this.send("set_app_data", {
-                        status: {
-                            code: 5
-                        },
-                        config: this.config_data,
-                        pending_config: this.config_data
-                    })
+            // Make sure the remote node provided is accessible
+            const config_daemon = this.config_data.daemons[net_type]
+            this.daemon.checkRemote(config_daemon).then(data => {
+                if (data.error) {
+                    // If we can default to local then we do so, otherwise we tell the user  to re-set the node
+                    if (config_daemon.type === "local_remote") {
+                        this.config_data.daemons[net_type].type = "local"
+                        this.send("set_app_data", {
+                            config: this.config_data,
+                            pending_config: this.config_data
+                        })
+                        this.send("show_notification", {
+                            type: "warning",
+                            textColor: "black",
+                            message: "Warning: Could not access remote node, switching to local only",
+                            timeout: 2000
+                        })
+                    } else {
+                        this.send("show_notification", {
+                            type: "negative",
+                            message: "Error: Could not access remote node, please try another remote node",
+                            timeout: 2000
+                        })
+
+                        // Go back to config
+                        this.send("set_app_data", {
+                            status: {
+                                code: -1 // Return to config screen
+                            }
+                        })
+                        return
+                    }
                 }
 
-                this.daemon.start(this.config_data).then(() => {
-                    this.send("set_app_data", {
-                        status: {
-                            code: 6 // Starting wallet
-                        }
+                // If we got a net type back then check if ours match
+                if (data.net_type && data.net_type !== net_type) {
+                    this.send("show_notification", {
+                        type: "negative",
+                        message: "Error: Remote node is using a different nettype",
+                        timeout: 2000
                     })
 
-                    this.walletd.start(this.config_data).then(() => {
+                    // Go back to config
+                    this.send("set_app_data", {
+                        status: {
+                            code: -1 // Return to config screen
+                        }
+                    })
+                    return
+                }
+
+                this.daemon.checkVersion().then((version) => {
+                    if (version) {
                         this.send("set_app_data", {
                             status: {
-                                code: 7 // Reading wallet list
+                                code: 4,
+                                message: version
+                            }
+                        })
+                    } else {
+                        // daemon not found, probably removed by AV, set to remote node
+                        this.config_data.daemons[net_type].type = "remote"
+                        this.send("set_app_data", {
+                            status: {
+                                code: 5
+                            },
+                            config: this.config_data,
+                            pending_config: this.config_data
+                        })
+                    }
+
+                    this.daemon.start(this.config_data).then(() => {
+                        this.send("set_app_data", {
+                            status: {
+                                code: 6 // Starting wallet
                             }
                         })
 
-                        this.walletd.listWallets(true)
+                        this.walletd.start(this.config_data).then(() => {
+                            this.send("set_app_data", {
+                                status: {
+                                    code: 7 // Reading wallet list
+                                }
+                            })
 
-                        this.send("set_app_data", {
-                            status: {
-                                code: 0 // Ready
-                            }
+                            this.walletd.listWallets(true)
+
+                            this.send("set_app_data", {
+                                status: {
+                                    code: 0 // Ready
+                                }
+                            })
+                        // eslint-disable-next-line
+                        }).catch(error => {
+                            this.send("set_app_data", {
+                                status: {
+                                    code: -1 // Return to config screen
+                                }
+                            })
                         })
+                    // eslint-disable-next-line
                     }).catch(error => {
+                        if (this.config_data.daemons[net_type].type == "remote") {
+                            this.send("show_notification", {type: "negative", message: "Remote daemon cannot be reached", timeout: 2000})
+                        } else {
+                            this.send("show_notification", {type: "negative", message: "Local daemon internal error", timeout: 2000})
+                        }
                         this.send("set_app_data", {
                             status: {
                                 code: -1 // Return to config screen
                             }
                         })
                     })
+                // eslint-disable-next-line
                 }).catch(error => {
-                    if (this.config_data.daemons[net_type].type == "remote") {
-                        this.send("show_notification", {type: "negative", message: "Remote daemon cannot be reached", timeout: 2000})
-                    } else {
-                        this.send("show_notification", {type: "negative", message: "Local daemon internal error", timeout: 2000})
-                    }
                     this.send("set_app_data", {
                         status: {
                             code: -1 // Return to config screen
                         }
                     })
-                })
-            }).catch(error => {
-                this.send("set_app_data", {
-                    status: {
-                        code: -1 // Return to config screen
-                    }
                 })
             })
         })
@@ -423,7 +508,7 @@ export class Backend {
 
     // Replace any invalid value with default values
     validate_values (values, defaults) {
-        const isDictionary = (v) => typeof v === "object" && v !== null && !(v instanceof Array) && !(v instanceof Date);
+        const isDictionary = (v) => typeof v === "object" && v !== null && !(v instanceof Array) && !(v instanceof Date)
         const modified = { ...values }
 
         // Make sure we have valid defaults

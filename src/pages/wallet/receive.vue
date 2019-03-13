@@ -13,9 +13,21 @@
                     <q-btn
                         flat
                         style="width:25px;"
+                        size="md"
+                        @click="showQR(address.address, $event)"
+                    >
+                        <img src="statics/qr-code.svg" height="20" />
+                        <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
+                            Show QR code
+                        </q-tooltip>
+                    </q-btn>
+                    <q-btn
+                        flat
+                        style="width:25px;"
                         size="md" icon="file_copy"
-                        @click="copyAddress(address.address, $event)">
-                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                        @click="copyAddress(address.address, $event)"
+                    >
+                        <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
                             Copy address
                         </q-tooltip>
                     </q-btn>
@@ -65,9 +77,20 @@
                         <q-btn
                             flat
                             style="width:25px;"
+                            size="md"
+                            @click="showQR(address.address, $event)"
+                        >
+                            <img src="statics/qr-code-grey.svg" height="20" />
+                            <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
+                                Show QR code
+                            </q-tooltip>
+                        </q-btn>
+                        <q-btn
+                            flat
+                            style="width:25px;"
                             size="md" icon="file_copy"
                             @click="copyAddress(address.address, $event)">
-                            <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                            <q-tooltip anchor="bottom right" self="top right" :offset="[5, 10]">
                                 Copy address
                             </q-tooltip>
                         </q-btn>
@@ -120,9 +143,20 @@
                         <q-btn
                             flat
                             style="width:25px;"
+                            size="md"
+                            @click="showQR(address.address, $event)"
+                        >
+                            <img src="statics/qr-code-grey.svg" height="20" />
+                            <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
+                                Show QR code
+                            </q-tooltip>
+                        </q-btn>
+                        <q-btn
+                            flat
+                            style="width:25px;"
                             size="md" icon="file_copy"
                             @click="copyAddress(address.address, $event)">
-                            <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
+                            <q-tooltip anchor="bottom right" self="top right" :offset="[5, 10]">
                                 Copy address
                             </q-tooltip>
                         </q-btn>
@@ -148,15 +182,44 @@
 
     </q-list>
     <AddressDetails ref="addressDetails" />
+
+    <!-- QR Code -->
+    <template v-if="QR.address != null">
+        <q-modal v-model="QR.visible" minimized :content-css="{padding: '25px'}">
+
+            <div class="text-center q-mb-sm q-pa-md" style="background: white;">
+                <qrcode-vue :value="QR.address" size="240" ref="qr">
+                </qrcode-vue>
+                <q-context-menu>
+                    <q-list link separator style="min-width: 150px; max-height: 300px;">
+                        <q-item v-close-overlay @click.native="copyQR()">
+                            <q-item-main label="Copy QR code" />
+                        </q-item>
+                        <q-item v-close-overlay @click.native="saveQR()">
+                            <q-item-main label="Save QR code to file" />
+                        </q-item>
+                    </q-list>
+                </q-context-menu>
+            </div>
+
+            <q-btn
+                 color="primary"
+                 @click="QR.visible = false"
+                 label="Close"
+             />
+        </q-modal>
+    </template>
 </q-page>
 </template>
 
 <script>
 
-const { clipboard } = require("electron")
+const { clipboard, nativeImage } = require("electron")
 import { mapState } from "vuex"
+import QrcodeVue from "qrcode.vue";
 import Identicon from "components/identicon"
 import AddressDetails from "components/address_details"
+
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
@@ -174,10 +237,37 @@ export default {
             return amount.toLocaleString()
         }
     },
+    data () {
+        return {
+            QR: {
+                visible: false,
+                address: null,
+            }
+        }
+    },
     methods: {
         details (address) {
             this.$refs.addressDetails.address = address;
             this.$refs.addressDetails.isVisible = true;
+        },
+        showQR (address, event) {
+            event.stopPropagation()
+            this.QR.visible = true
+            this.QR.address = address
+        },
+        copyQR () {
+            const data = this.$refs.qr.$el.childNodes[0].toDataURL()
+            const img = nativeImage.createFromDataURL(data)
+            clipboard.writeImage(img)
+             this.$q.notify({
+                type: "positive",
+                timeout: 1000,
+                message: "Copied QR code to clipboard"
+            })
+        },
+        saveQR () {
+            let img = this.$refs.qr.$el.childNodes[0].toDataURL()
+            this.$gateway.send("core", "save_png", {img, type: "QR Code"})
         },
         copyAddress (address, event) {
             event.stopPropagation()
@@ -198,6 +288,7 @@ export default {
     components: {
         Identicon,
         AddressDetails,
+        QrcodeVue
     }
 }
 </script>

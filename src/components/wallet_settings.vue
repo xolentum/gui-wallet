@@ -38,7 +38,7 @@
     </q-btn>
 
     <!-- Modals -->
-    <q-modal minimized v-model="modals.private_keys.visible" @hide="closePrivateKeys()">
+    <q-modal minimized class="private-key-modal" v-model="modals.private_keys.visible" @hide="closePrivateKeys()">
         <div class="modal-header">Show private keys</div>
         <div class="q-ma-lg">
 
@@ -50,6 +50,7 @@
                     </div>
                     <div class="col-auto">
                         <q-btn
+                            class="copy-btn"
                             color="primary" style="width:25px;"
                             size="sm" icon="file_copy"
                             @click="copyPrivateKey('mnemonic', $event)">
@@ -69,6 +70,7 @@
                     </div>
                     <div class="col-auto">
                         <q-btn
+                            class="copy-btn"
                             color="primary" style="width:25px;"
                             size="sm" icon="file_copy"
                             @click="copyPrivateKey('view_key', $event)">
@@ -88,6 +90,7 @@
                     </div>
                     <div class="col-auto">
                         <q-btn
+                            class="copy-btn"
                             color="primary" style="width:25px;"
                             size="sm" icon="file_copy"
                             @click="copyPrivateKey('spend_key', $event)">
@@ -226,6 +229,7 @@
 <script>
 const { clipboard } = require("electron")
 import { mapState } from "vuex"
+import WalletPassword from "src/mixins/wallet_password"
 
 export default {
     name: "WalletSettings",
@@ -348,21 +352,12 @@ export default {
         },
         getPrivateKeys () {
             if(!this.is_ready) return
-            this.$q.dialog({
+            this.showPasswordConfirmation({
                 title: "Show private keys",
-                message: "Enter wallet password to continue.",
-                prompt: {
-                    model: "",
-                    type: "password"
-                },
+                noPasswordMessage: "Do you want to view your private keys?",
                 ok: {
                     label: "SHOW"
                 },
-                cancel: {
-                    flat: true,
-                    label: "CANCEL",
-                    color: this.theme=="dark"?"white":"dark"
-                }
             }).then(password => {
                 this.$gateway.send("wallet", "get_private_keys", {password})
             }).catch(() => {
@@ -417,21 +412,12 @@ export default {
         doKeyImages () {
             this.hideModal("key_image")
 
-            this.$q.dialog({
+            this.showPasswordConfirmation({
                 title: this.modals.key_image.type + " key images",
-                message: "Enter wallet password to continue.",
-                prompt: {
-                    model: "",
-                    type: "password"
-                },
+                noPasswordMessage: `Do you want to ${this.modals.key_image.type.toLowerCase()} key images?`,
                 ok: {
                     label: this.modals.key_image.type
                 },
-                cancel: {
-                    flat: true,
-                    label: "CANCEL",
-                    color: this.theme=="dark"?"white":"dark"
-                }
             }).then(password => {
                 if(this.modals.key_image.type == "Export")
                     this.$gateway.send("wallet", "export_key_images", {password: password, path: this.modals.key_image.export_path})
@@ -484,7 +470,10 @@ export default {
                     color: this.theme=="dark"?"white":"dark"
                 }
             }).then(() => {
-                this.$q.dialog({
+                return this.hasPassword()
+            }).then(hasPassword => {
+                if (!hasPassword) return ""
+                return this.$q.dialog({
                     title: "Delete wallet",
                     message: "Enter wallet password to continue.",
                     prompt: {
@@ -500,17 +489,22 @@ export default {
                         label: "CANCEL",
                         color: this.theme=="dark"?"white":"dark"
                     }
-                }).then(password => {
-                    this.$gateway.send("wallet", "delete_wallet", {password})
-                }).catch(() => {
                 })
+            }).then(password => {
+                this.$gateway.send("wallet", "delete_wallet", {password})
             }).catch(() => {
             })
         }
     },
+    mixins: [WalletPassword],
 }
 </script>
 
 <style lang="scss">
+.private-key-modal {
+    .copy-btn {
+        margin-left: 8px;
+    }
+}
 </style>
 

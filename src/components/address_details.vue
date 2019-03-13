@@ -107,6 +107,9 @@
                 </qrcode-vue>
                 <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
+                        <q-item v-close-overlay @click.native="copyQR()">
+                            <q-item-main label="Copy QR code" />
+                        </q-item>
                         <q-item v-close-overlay @click.native="saveQR()">
                             <q-item-main label="Save QR code to file" />
                         </q-item>
@@ -127,7 +130,7 @@
 
 <script>
 import { mapState } from "vuex"
-const {clipboard} = require("electron")
+const { clipboard, nativeImage } = require("electron")
 import AddressHeader from "components/address_header"
 import FormatLoki from "components/format_loki"
 import QrcodeVue from "qrcode.vue";
@@ -144,6 +147,16 @@ export default {
         }
     },
     methods: {
+         copyQR () {
+            const data = this.$refs.qr.$el.childNodes[0].toDataURL()
+            const img = nativeImage.createFromDataURL(data)
+            clipboard.writeImage(img)
+             this.$q.notify({
+                type: "positive",
+                timeout: 1000,
+                message: "Copied QR code to clipboard"
+            })
+        },
         saveQR() {
             let img = this.$refs.qr.$el.childNodes[0].toDataURL()
             this.$gateway.send("core", "save_png", {img, type: "QR Code"})

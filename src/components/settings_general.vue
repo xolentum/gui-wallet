@@ -53,7 +53,7 @@
                     hide-underline
                 />
                 <!-- Remote node presets -->
-                <q-btn-dropdown class="remote-dropdown" v-if="config.app.net_type === 'main'" flat>
+                <q-btn-dropdown class="remote-dropdown" v-if="config.app.net_type === 'mainnet'" flat>
                     <q-list link dark no-border>
                         <q-item v-for="option in remotes" :key="option.host" @click.native="setPreset(option)" v-close-overlay>
                             <q-item-main>
@@ -80,10 +80,15 @@
 
     </template>
 
-    <div class="col q-mt-md">
+    <div class="col q-mt-md pt-sm">
         <LokiField label="Data Storage Path" disable-hover>
             <q-input v-model="config.app.data_dir" disable :dark="theme=='dark'" hide-underline/>
             <input type="file" webkitdirectory directory id="dataPath" v-on:change="setDataPath" ref="fileInput" hidden />
+            <q-btn color="secondary" v-on:click="selectPath" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
+        </LokiField>
+        <LokiField label="Wallet Storage Path" disable-hover>
+            <q-input v-model="config.app.wallet_data_dir" disable :dark="theme=='dark'" hide-underline/>
+            <input type="file" webkitdirectory directory id="dataPath" v-on:change="setWalletDataPath" ref="fileInput" hidden />
             <q-btn color="secondary" v-on:click="selectPath" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
         </LokiField>
     </div>
@@ -142,9 +147,9 @@
                 type="radio"
                 v-model="config.app.net_type"
                 :options="[
-                { label: 'Main Net', value: 'main' },
-                { label: 'Stage Net', value: 'staging' },
-                { label: 'Test Net', value: 'test' }
+                { label: 'Main Net', value: 'mainnet' },
+                { label: 'Stage Net', value: 'stagenet' },
+                { label: 'Test Net', value: 'testnet' }
                 ]"
             />
         </q-field>
@@ -158,6 +163,13 @@ import { mapState } from "vuex"
 import LokiField from "components/loki_field"
 export default {
     name: "SettingsGeneral",
+    props: {
+        randomise_remote: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+    },
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
         remotes: state => state.gateway.app.remotes,
@@ -173,12 +185,21 @@ export default {
             return this.defaults.daemons[this.config.app.net_type]
         }
     }),
+    mounted () {
+        if(this.randomise_remote && this.remotes.length > 0 && this.config.app.net_type === "mainnet") {
+            const index = Math.floor(Math.random() * Math.floor(this.remotes.length));
+            this.setPreset(this.remotes[index]);
+        }
+    },
     methods: {
         selectPath () {
             this.$refs.fileInput.click()
         },
         setDataPath (file) {
             this.config.app.data_dir = file.target.files[0].path
+        },
+        setWalletDataPath (file) {
+            this.config.app.wallet_data_dir = file.target.files[0].path
         },
         setPreset (option) {
             if (!option) return;
@@ -224,6 +245,12 @@ export default {
     .row.pl-sm {
         > * + * {
             padding-left: 16px;
+        }
+    }
+
+    .col.pt-sm {
+        > * + * {
+            padding-top: 16px;
         }
     }
 

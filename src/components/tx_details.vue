@@ -198,7 +198,11 @@ export default {
                 for(j=0; j < address_book.length; j++) {
                     console.log(destination.address, address_book[j].address)
                     if(destination.address == address_book[j].address) {
-                        destination.name = address_book[j].description
+                        let name = address_book[j].description
+                        if (name === "") {
+                            name = address_book[j].name
+                        }
+                        destination.name = name
                         break;
                     }
                 }

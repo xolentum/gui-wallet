@@ -64,6 +64,7 @@ import Identicon from "components/identicon"
 import TxTypeIcon from "components/tx_type_icon"
 import TxDetails from "components/tx_details"
 import FormatLoki from "components/format_loki"
+
 export default {
     name: "TxList",
     props: {
@@ -119,8 +120,12 @@ export default {
             }
         },
         tx_list: {
-            handler(val, old){
-                if(val.length == old.length) return
+            handler(val, old ) {
+                // Check if anything changed in the tx list
+                if(val.length == old.length) {
+                    const changed = val.filter((v, i) => v.note !== old[i].note)
+                    if (changed.length === 0) return
+                }
                 this.filterTxList()
                 this.pageTxList()
             }
@@ -170,6 +175,8 @@ export default {
                     return "Service Node"
                 case "gov":
                     return "Governance"
+                case "stake":
+                    return "Stake"
                 default:
                     return "-"
             }
@@ -177,9 +184,9 @@ export default {
     },
     methods: {
         filterTxList () {
-            const all_in = ['in', 'pool', "miner", "snode", "gov"]
-            const all_out = ['out', 'pending']
-            const all_pending = ['pending', 'pool']
+            const all_in = ["in", "pool", "miner", "snode", "gov"]
+            const all_out = ["out", "pending", "stake"]
+            const all_pending = ["pending", "pool"]
             this.tx_list_filtered = this.tx_list.filter((tx) => {
                 let valid = true
 
@@ -306,6 +313,10 @@ export default {
         .main {
             margin: 0;
             padding: 8px 10px;
+            div {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
 
         .type {
