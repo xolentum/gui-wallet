@@ -162,10 +162,10 @@ export default {
             },
             priorityOptions: [
                 {label: "Automatic", value: 0},
-                {label: "Slow (x0.2 fee)", value: 1},
-                {label: "Normal (x1 fee)", value: 2},
-                {label: "Fast (x5 fee)", value: 3},
-                {label: "Fastest (x200 fee)", value: 4},
+                {label: "Slow", value: 1},
+                {label: "Normal", value: 2},
+                {label: "Fast", value: 3},
+                {label: "Fastest", value: 4},
             ],
         }
     },
