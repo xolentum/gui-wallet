@@ -9,6 +9,7 @@ Loki GUI wallet
 
 #### Commands
 ```
+nvm use 11.9.0
 npm install -g quasar-cli
 git clone https://github.com/loki-project/loki-electron-wallet
 cd loki-electron-wallet
