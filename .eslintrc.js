@@ -25,12 +25,17 @@ module.exports = {
     },
     // add your custom rules here
     "rules": {
+        "indent": ["error", 4],
+        "quotes": ["error", "double"],
+
         // allow async-await
         "generator-star-spacing": "off",
 
         // allow paren-less arrow functions
         "arrow-parens": 0,
         "one-var": 0,
+
+        "camelcase": 0,
 
         "import/first": 0,
         "import/named": 2,

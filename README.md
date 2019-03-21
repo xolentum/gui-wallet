@@ -4,12 +4,16 @@ Loki GUI wallet
 
 ### Building from source
 
+#### Pre-requisite
+- Download latest [Lokid](https://github.com/loki-project/loki/releases)
+
+#### Commands
 ```
 npm install -g quasar-cli
-git clone https://github.com/ryo-currency/ryo-wallet
-cd ryo-wallet
-cp /path/to/ryo/binaries/ryod bin/
-cp /path/to/ryo/binaries/ryo-wallet-rpc bin/
+git clone https://github.com/loki-project/loki-electron-wallet
+cd loki-electron-wallet
+cp path_to_loki_binaries/lokid bin/
+cp path_to_loki_binaries/loki-wallet-rpc bin/
 npm install
 quasar build -m electron -t mat
 ```
@@ -18,6 +22,7 @@ quasar build -m electron -t mat
 
 ### LICENSE
 
+Copyright (c) 2018-2019, Loki Project
 Copyright (c) 2018, Ryo Currency Project
 
 Portions of this software are available under BSD-3 license. Please see ORIGINAL-LICENSE for details

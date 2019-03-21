@@ -1,118 +1,109 @@
 <template>
-<q-page>
+<q-page class="send">
     <template v-if="view_only">
-
-        <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
-
-            <div class="col-8">
-                <q-icon name="call_made" size="24px" /> Send Ryo
-            </div>
-
-            <div class="col-4">
-            </div>
-
-        </div>
-
         <div class="q-pa-md">
 
             View-only mode. Please load full wallet in order to send coins.
 
         </div>
-
     </template>
     <template v-else>
 
-        <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
-
-            <div class="col-8">
-                <q-icon name="call_made" size="24px" /> Send Ryo
-            </div>
-
-            <div class="col-4">
-            </div>
-
-        </div>
-
         <div class="q-pa-md">
 
-
-            <div class="row items-end gutter-md">
-
-                <div class="col">
-                    <q-field class="q-ma-none">
-                        <q-input v-model="newTx.amount" float-label="Amount" :dark="theme=='dark'"
-                                 type="number" min="0" :max="unlocked_balance / 1e9" />
-                    </q-field>
-                </div>
-
-                <div>
-                    <q-btn @click="newTx.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">All coins</q-btn>
-                </div>
-
-            </div>
-
-            <q-item class="q-pa-none">
-                <q-item-side>
-                    <Identicon :address="newTx.address" menu />
-                </q-item-side>
-                <q-item-main>
-                    <q-field>
-                        <q-input v-model="newTx.address" float-label="Address"
-                                 :dark="theme=='dark'"
-                                 @blur="$v.newTx.address.$touch"
-                                 :error="$v.newTx.address.$error"
-                                 />
-                    </q-field>
-                </q-item-main>
-            </q-item>
-
-            <q-field style="margin-top:0">
-                <q-input v-model="newTx.payment_id" float-label="Payment ID (optional)"
-                         :dark="theme=='dark'"
-                         @blur="$v.newTx.payment_id.$touch"
-                         :error="$v.newTx.payment_id.$error"
-                         />
-            </q-field>
-
             <div class="row gutter-md">
-
+                <!-- Amount -->
                 <div class="col-6">
-                    <q-field>
-                        <q-select :dark="theme=='dark'"
-                                  v-model="newTx.mixin"
-                                  float-label="Mixin"
-                                  :options="mixinOptions"
-                                  />
-                    </q-field>
-                </div>
-                <div class="col-6">
-                    <q-field>
-                        <q-select :dark="theme=='dark'"
-                                  v-model="newTx.priority"
-                                  float-label="Priority"
-                                  :options="priorityOptions"
-                                  />
-                    </q-field>
+                    <LokiField label="Amount" :error="$v.newTx.amount.$error">
+                        <q-input v-model="newTx.amount"
+                            :dark="theme=='dark'"
+                            type="number"
+                            min="0"
+                            :max="unlocked_balance / 1e9"
+                            placeholder="0"
+                            @blur="$v.newTx.amount.$touch"
+                            hide-underline
+                        />
+                        <q-btn color="secondary" @click="newTx.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">All</q-btn>
+                    </LokiField>
                 </div>
 
+                <!-- Priority -->
+                <div class="col-6">
+                    <LokiField label="Priority">
+                        <q-select :dark="theme=='dark'"
+                            v-model="newTx.priority"
+                            :options="priorityOptions"
+                            hide-underline
+                        />
+                    </LokiField>
+                </div>
             </div>
 
+            <!-- Address -->
+            <div class="col q-mt-sm">
+                <LokiField label="Address" :error="$v.newTx.address.$error">
+                     <q-input v-model="newTx.address"
+                        :dark="theme=='dark'"
+                        @blur="$v.newTx.address.$touch"
+                        :placeholder="address_placeholder"
+                        hide-underline
+                    />
+                    <q-btn color="secondary" :text-color="theme=='dark'?'white':'dark'" to="addressbook">Contacts</q-btn>
+                </LokiField>
+            </div>
 
+            <!-- Payment ID -->
+            <div class="col q-mt-sm">
+                <LokiField label="Payment id" :error="$v.newTx.payment_id.$error" optional>
+                     <q-input v-model="newTx.payment_id"
+                        :dark="theme=='dark'"
+                        @blur="$v.newTx.payment_id.$touch"
+                        placeholder="16 or 64 hexadecimal characters"
+                        hide-underline
+                    />
+                </LokiField>
+            </div>
+
+            <!-- Notes -->
+            <div class="col q-mt-sm">
+                <LokiField label="Notes" optional>
+                     <q-input v-model="newTx.note"
+                        type="textarea"
+                        :dark="theme=='dark'"
+                        placeholder="Additional notes to attach to the transaction"
+                        hide-underline
+                    />
+                </LokiField>
+            </div>
+
+            <!-- Save to address book -->
             <q-field>
                 <q-checkbox v-model="newTx.address_book.save" label="Save to address book" :dark="theme=='dark'" />
             </q-field>
 
             <div v-if="newTx.address_book.save">
-                <q-field>
-                    <q-input v-model="newTx.address_book.name" float-label="Name" :dark="theme=='dark'" />
-                </q-field>
-                <q-field>
-                    <q-input v-model="newTx.address_book.description" type="textarea" rows="2" float-label="Notes" :dark="theme=='dark'" />
-                </q-field>
+                <LokiField label="Name" optional>
+                     <q-input v-model="newTx.address_book.name"
+                        :dark="theme=='dark'"
+                        placeholder="Name that belongs to this address"
+                        hide-underline
+                    />
+                </LokiField>
+                <LokiField class="q-mt-sm" label="Notes" optional>
+                     <q-input v-model="newTx.address_book.description"
+                        type="textarea"
+                        rows="2"
+                        :dark="theme=='dark'"
+                        placeholder="Additional notes"
+                        hide-underline
+                    />
+                </LokiField>
             </div>
 
             <q-field class="q-pt-sm">
                 <q-btn
+                    class="send-btn"
                     :disable="!is_able_to_send"
                     color="primary" @click="send()" label="Send" />
             </q-field>
@@ -131,9 +122,12 @@
 <script>
 import { mapState } from "vuex"
 import { required, decimal } from "vuelidate/lib/validators"
-import { payment_id, address } from "src/validators/common"
+import { payment_id, address, greater_than_zero } from "src/validators/common"
 import Identicon from "components/identicon"
+import LokiField from "components/loki_field"
+import WalletPassword from "src/mixins/wallet_password"
 const objectAssignDeep = require("object-assign-deep");
+
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
@@ -145,6 +139,11 @@ export default {
         },
         is_able_to_send (state) {
             return this.$store.getters["gateway/isAbleToSend"]
+        },
+        address_placeholder (state) {
+            const wallet = state.gateway.wallet.info;
+            const prefix = (wallet && wallet.address && wallet.address[0]) || "L";
+            return `${prefix}..`;
         }
     }),
     data () {
@@ -154,7 +153,6 @@ export default {
                 amount: 0,
                 address: "",
                 payment_id: "",
-                mixin: 12,
                 priority: 0,
                 address_book: {
                     save: false,
@@ -162,17 +160,12 @@ export default {
                     description: ""
                 }
             },
-            mixinOptions: [
-                {label: "12 mixins (default)", value: 12},
-                {label: "48 mixins (top secret)", value: 48},
-                {label: "96 mixins (paranoid)", value: 60},
-            ],
             priorityOptions: [
-                {label: "Normal (x1 fee)", value: 0},
-                {label: "High (x2 fee)", value: 1},
-                {label: "High (x4 fee)", value: 2},
-                {label: "High (x20 fee)", value: 3},
-                {label: "Highest (x144 fee)", value: 4},
+                {label: "Automatic", value: 0},
+                {label: "Slow", value: 1},
+                {label: "Normal", value: 2},
+                {label: "Fast", value: 3},
+                {label: "Fastest", value: 4},
             ],
         }
     },
@@ -180,9 +173,21 @@ export default {
         newTx: {
             amount: {
                 required,
-                decimal
+                decimal,
+                greater_than_zero
             },
-            address: { required, address },
+            address: {
+            required,
+            isAddress(value) {
+                    if (value === '') return true
+
+                    return new Promise(resolve => {
+                        address(value, this.$gateway)
+                            .then(() => resolve(true))
+                            .catch(e => resolve(false))
+                    });
+                }
+            },
             payment_id: { payment_id }
         }
     },
@@ -202,13 +207,13 @@ export default {
                             amount: 0,
                             address: "",
                             payment_id: "",
-                            mixin: 12,
                             priority: 0,
                             address_book: {
                                 save: false,
                                 name: "",
                                 description: ""
-                            }
+                            },
+                            note: ""
                         }
                         break;
                     case -1:
@@ -241,7 +246,6 @@ export default {
         },
 
         send: function () {
-
             this.$v.newTx.$touch()
 
             if(this.newTx.amount < 0) {
@@ -293,38 +297,36 @@ export default {
                 return
             }
 
-            this.$q.dialog({
+            this.showPasswordConfirmation({
                 title: "Transfer",
-                message: "Enter wallet password to continue.",
-                prompt: {
-                    model: "",
-                    type: "password"
-                },
+                noPasswordMessage: "Do you want to send the transaction?",
                 ok: {
                     label: "SEND"
                 },
-                cancel: {
-                    flat: true,
-                    label: "CANCEL",
-                    color: this.theme=="dark"?"white":"dark"
-                }
             }).then(password => {
                 this.$store.commit("gateway/set_tx_status", {
                     code: 1,
                     message: "Sending transaction",
                     sending: true
                 })
-                let newTx = objectAssignDeep.noMutate(this.newTx, {password})
+                const newTx = objectAssignDeep.noMutate(this.newTx, {password})
                 this.$gateway.send("wallet", "transfer", newTx)
             }).catch(() => {
             })
         }
     },
+    mixins: [WalletPassword],
     components: {
-        Identicon
+        Identicon,
+        LokiField
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+.send {
+    .send-btn {
+        width: 200px;
+    }
+}
 </style>

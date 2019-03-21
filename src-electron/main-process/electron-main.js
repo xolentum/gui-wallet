@@ -19,30 +19,30 @@ let mainWindow, backend
 let showConfirmClose = true
 let forceQuit = false
 
-const portInUse = function(port, callback) {
-    var server = net.createServer(function(socket) {
-        socket.write("Echo server\r\n");
-        socket.pipe(socket);
-    });
+const portInUse = function (port, callback) {
+    var server = net.createServer(function (socket) {
+        socket.write("Echo server\r\n")
+        socket.pipe(socket)
+    })
 
-    server.listen(port, "127.0.0.1");
+    server.listen(port, "127.0.0.1")
     server.on("error", function (e) {
-        callback(true);
-    });
+        callback(true)
+    })
     server.on("listening", function (e) {
-        server.close();
-        callback(false);
-    });
-};
+        server.close()
+        callback(false)
+    })
+}
 
-function createWindow() {
+function createWindow () {
     /**
      * Initial window options
      */
 
     let mainWindowState = windowStateKeeper({
-        defaultWidth: 800,
-        defaultHeight: 650
+        defaultWidth: 900,
+        defaultHeight: 700
     })
 
     mainWindow = new BrowserWindow({
@@ -93,11 +93,9 @@ function createWindow() {
     })
 
     mainWindow.webContents.on("did-finish-load", () => {
-
         require("crypto").randomBytes(64, (err, buffer) => {
-
             // if err, then we may have to use insecure token generation perhaps
-            if (err) throw err;
+            if (err) throw err
 
             let config = {
                 port: 12213,
@@ -112,20 +110,16 @@ function createWindow() {
                 } else {
                     dialog.showMessageBox(mainWindow, {
                         title: "Startup error",
-                        message: `Ryo Wallet is already open, or port ${config.port} is in use`,
+                        message: `Loki Wallet is already open, or port ${config.port} is in use`,
                         type: "error",
                         buttons: ["ok"]
                     }, () => {
                         showConfirmClose = false
                         app.quit()
                     })
-
                 }
-
             })
-
         })
-
     })
 
     mainWindow.loadURL(process.env.APP_URL)

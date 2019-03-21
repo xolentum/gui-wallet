@@ -1,4 +1,5 @@
 // app global css
+@import '~variables'
 
 @font-face {
     font-family: 'RobotoMono-Light';
@@ -12,16 +13,11 @@
     background: #63c9f3;
 }
 
-:root {
-    --q-color-primary: #497dc6;
-}
-
 * {
-
-    scrollbar-track-color: #fff;
-    scrollbar-arrow-color: #fff;
-    &::-webkit-scrollbar-corner { background-color: #fff;}
-    &::-webkit-scrollbar-track-piece { background-color: #fff;}
+    scrollbar-track-color: #111;
+    scrollbar-arrow-color: #111;
+    &::-webkit-scrollbar-corner { background-color: #111;}
+    &::-webkit-scrollbar-track-piece { background-color: #111;}
 
     scrollbar-face-color: #646464;
     scrollbar-base-color: #646464;
@@ -81,7 +77,7 @@ footer,
 }
 
 .q-item-sublabel {
-    color: #121212;
+    color: #cecece;
 }
 
 .advanced-options-label .q-item-side-right {
@@ -89,14 +85,15 @@ footer,
     text-align: left;
 }
 
-.q-layout-page {
-    min-height: 0 !important;
+.q-layout {
+    background: $loki-black-80;
+    color:white;
 }
 
 .q-layout-header {
-    background: white;
+    background: #0A0A0A;
     box-shadow: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #333;
     height: 48px;
 
     .q-toolbar-title {
@@ -154,7 +151,10 @@ footer,
         }
 
     }
+}
 
+.q-layout-page {
+    min-height: 0 !important;
 }
 
 .infoBox {
@@ -169,7 +169,7 @@ footer,
         right: 10px;
         top: 10px;
         width: 64px;
-        color: #212529;
+        color: #cecece;
 
         svg {
             width: 60px;
@@ -183,7 +183,7 @@ footer,
         .text {
             font-size: 13px;
             margin-top: 8px;
-            color: #212529;
+            color: #cecece;
             text-transform: uppercase;
         }
 
@@ -191,7 +191,7 @@ footer,
             font-size: 24px;
             margin-top: 4px;
             font-weight: 800;
-            color: #212529;
+            color: #cecece;
             font-weight:300;
         }
     }
@@ -213,27 +213,44 @@ footer,
     background-position: center center;
     background-repeat: no-repeat;
     background-color: #cb8fe1;
-    box-shadow: inset rgba(255, 255, 255, 0.6) 0 2px 2px, inset rgba(0, 0, 0, 0.3) 0 -2px 6px;
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0 2px 2px, inset rgba(0, 0, 0, 0.3) 0 -2px 6px;
     border-radius: 2px;
 }
 
 .q-layout-footer.status-footer {
-    border-top: 1px solid #ccc;
+    background: #000000;
+    color: rgba(255, 255, 255, 0.51);
+    border-top: 1px solid #333;
     padding-top: 2px;
-    background: #fff;
     box-shadow: none;
     font-size: 12px;
 
     .status-line {
+        padding: 8px;
         margin-bottom: 5px;
 
-        div {
-            display: inline-block;
-            padding: 0 8px;
+        .status {
+            flex: 1;
+            span {
+                margin-right: 4px;
+            }
+
+            .status-text {
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .ready {
+              color: $loki-green-solid;
+            }
+
+            .scanning, .syncing {
+                color: goldenrod;
+            }
         }
 
-        div:last-child {
-            float:right;
+        div {
+            padding: 0 8px;
         }
     }
 
@@ -244,17 +261,27 @@ footer,
             position: absolute;
             bottom: 0;
             left: 0;
+            -webkit-transition: width 0.5s ease-out;
             transition: width 0.5s ease-out;
         }
 
         div:first-child {
-            background-color: goldenrod;
+            background-color: $loki-green-dark-solid;
         }
 
         div:last-child {
-            background-color: green;
+            background-color: $loki-green-solid;
+        }
+    }
+
+    .status-bars.syncing, .status-bars.scanning {
+        div:first-child {
+            background-color: #bc8f1c;
         }
 
+        div:last-child {
+            background-color:goldenrod;
+        }
     }
 
 }
@@ -262,219 +289,292 @@ footer,
 
 .tx-list {
 
+    .meta {
+        text-align:right;
+    }
+
     .q-item.tx-in,
-    .q-item.tx-pool {
-        .q-icon {
-            color: #333;
-        }
-        .q-item-label {
-            color: green;
-        }
-        &>div:last-child {
-            text-align:right;
-            &>div:first-child {
-                span {
-                    color: green;
-                    &:before {
-                        content: "+";
-                        color: green;
-                    }
-                }
+    .q-item.tx-pool,
+    .q-item.tx-miner,
+    .q-item.tx-snode,
+    .q-item.tx-gov {
+        .amount span {
+            color: #43bd43;
+            &:before {
+                content: "+";
+                color: #43bd43;
             }
+        }
+    }
+
+    .q-item.tx-stake {
+        .amount span {
+            color: goldenrod;
         }
     }
 
     .q-item.tx-out,
     .q-item.tx-pending {
-        .q-icon {
-            color: #333;
-        }
-        .q-item-label {
-            color: purple;
-        }
-        &>div:last-child {
-            text-align:right;
-            &>div:first-child {
-                span {
-                    color: purple;
-                    &:before {
-                        content: "-";
-                        color: purple;
-                    }
-                }
+        .amount span {
+            color: white;
+            &:before {
+                content: "-";
+                font-weight: bold;
+                color: white;
             }
+        }
+    }
+
+    .q-item.tx-failed {
+        .amount span {
+            color: orangered;
         }
     }
 }
 
+.q-list-dark .q-item,
+.q-item-dark .q-item,
+.q-list-header {
+    color: #cecece;
+}
 
-body.dark {
+.q-stepper-tab.step-waiting,
+.q-stepper-step-content{
+    color: #cecece;
+}
 
-    &, * {
-        scrollbar-track-color: #111;
-        scrollbar-arrow-color: #111;
-        &::-webkit-scrollbar-corner { background-color: #111;}
-        &::-webkit-scrollbar-track-piece { background-color: #111;}
-    }
+.q-popover {
+    background: #222;
+    color:#cecece;
 
-    .q-item-sublabel {
-        color: #cecece;
-    }
-    .infoBoxIcon {
-        color: #cecece;
-    }
-
-    .infoBoxContent {
-        .text {
-            color: #cecece;
-        }
-        .value {
-            color: #cecece;
-        }
-    }
-
-    .identicon {
-        box-shadow: inset rgba(0, 0, 0, 0.1) 0 2px 2px, inset rgba(0, 0, 0, 0.3) 0 -2px 6px;
-        border-radius: 2px;
-    }
-
-
-    .q-layout {
-        background: #111;
-        color:#cecece;
-
-
-        .q-layout-header {
-            background: #111;
-            box-shadow: none;
-            border-bottom: 1px solid #333;
-
-        }
-    }
-
-    .q-layout-footer.status-footer {
-        background: #111;
-        color: #cecece;
+    .q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-item-separator {
         border-top: 1px solid #333;
     }
+}
 
-    .q-list-dark .q-item,
-    .q-item-dark .q-item,
-    .q-list-header {
-        color: #cecece;
+.header-popover.q-popover {
+    background: $primary;
+    color: white;
+
+    .q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-item-separator {
+        border-top: 1px solid $loki-green-dark-solid;
     }
+}
 
-    .q-stepper-tab.step-waiting,
-    .q-stepper-step-content{
-        color: #cecece;
+.modal.minimized {
+    .q-input {
+        .q-input-target {
+            color: #cecece;
+        }
+        &.q-if:hover:before {
+            color: #cecece;
+        }
     }
+}
 
+.modal {
 
-    .q-popover {
-        background: #222;
+    .modal-content,
+    .modal-body {
+        background: $loki-black-80;
         color:#cecece;
-
-        .q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-item-separator {
-            border-top: 1px solid #333;
-        }
-
     }
 
-    .modal.minimized {
-        .q-input {
-            .q-input-target {
-                color: #cecece;
-            }
-            &.q-if:hover:before {
+    .q-layout-header {
+
+        .q-toolbar {
+            &>* {
                 color: #cecece;
             }
         }
     }
 
-    .modal {
+}
 
-        .modal-content,
-        .modal-body {
-            background: #111;
-            color:#cecece;
+.loki-green {
+    background: $loki-green;
+    color: white;
+}
+
+.startup-icons {
+    .solid {
+        color:$loki-green-solid;
+        g,path {
+            fill: $loki-green-solid;
         }
+    }
+}
 
-        .q-layout-header {
-            background: #111;
-            box-shadow: none;
-            border-bottom: 1px solid #333;
+.hr-separator {
+    height: 2px;
+    background: $secondary;
+    opacity: 0.4;
+}
 
-            .q-toolbar {
-                &>* {
-                    color: #cecece;
-                }
-            }
-        }
-
+.navigation {
+    .q-btn {
+        color: white;
+        background: $loki-black-90;
     }
 
+    .router-link-exact-active > .q-btn {
+        background: $loki-green;
+    }
 
-    .tx-list {
+}
+.wallet-list {
+    .q-item-label {
+        color: white;
+    }
 
-        .q-item.tx-in,
-        .q-item.tx-pool {
-            .q-icon {
-                color: #cecece;
-            }
-            .q-item-label {
-                color: lightgreen;
-            }
-            &>div:last-child {
-                text-align:right;
-                &>div:first-child {
-                    span {
-                        color: lightgreen;
-                        &:before {
-                            content: "+";
-                            color: lightgreen;
-                        }
-                    }
-                }
-            }
-        }
-
-        .q-item.tx-out,
-        .q-item.tx-pending {
-            .q-icon {
-                color: #cecece;
-            }
-            .q-item-label {
-                color: mediumpurple;
-            }
-            &>div:last-child {
-                text-align:right;
-                &>div:first-child {
-                    span {
-                        color: mediumpurple;
-                        &:before {
-                            content: "-";
-                            color: mediumpurple;
-                        }
-                    }
-                }
+    .q-item {
+        background: $secondary;
+        .wallet-icon {
+            color: $tertiary;
+            g,path {
+                fill: $tertiary;
             }
         }
     }
 
-    .q-layout-footer.status-footer {
+    .q-item:hover, .q-item.selected {
+        background: $primary !important;
 
-        .status-bars {
-
-            div:first-child {
-                background-color: goldenrod;
+        .wallet-icon {
+            color:$loki-green-solid;
+            g,path {
+                fill: $loki-green-solid;
             }
-
-            div:last-child {
-                background-color: #497dc6;
-            }
-
         }
 
+        .q-icon {
+            color: white;
+        }
+
+        .q-item-sublabel {
+            color: white
+        }
+    }
+}
+
+.receive {
+    .q-list-header {
+        color: #FFFFFF;
+    }
+    .q-item-sublabel {
+        color: $loki-black-50;
     }
 
+    .q-item-separator-component {
+        background-color: $secondary;
+        opacity: 0.4;
+    }
+
+    .primary-address {
+        background: #3eb13e !important;
+
+        .q-item, .q-item-side {
+            color: white;
+        }
+
+        .q-item-sublabel {
+            color: rgba(255,255,255,0.9);
+        }
+    }
+
+    .primary-address:hover {
+        background: $loki-green-solid !important;
+    }
+
+}
+
+.loki-list {
+    .loki-list-item {
+        background: #313131;
+        -webkit-transition: background-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in;
+
+        margin: 0 16px;
+        border-radius: 3px;
+
+        + .loki-list-item {
+            margin-top: 10px;
+        }
+    }
+
+    .loki-list-item:hover {
+        background: rgba(117,117,117,0.3);
+    }
+
+}
+
+.tx-list {
+    .transaction .main {
+            border-left: 1px solid #252525;
+    }
+}
+
+.loki-field {
+    .content {
+        border: 1px solid #484848;
+
+        -webkit-transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in, border-color 0.2s ease-in;
+    }
+
+    &:not(.disable):not(.disable-hover) {
+        .content:hover {
+            background: #2e2e2e;
+        }
+    }
+
+    &.disable {
+        .content {
+            border-color: #404040 !important;
+        }
+    }
+
+    .content.error {
+        border-color: red;
+    }
+
+    .label {
+        color: white;
+
+        .optional {
+            color: #7C7C7C;
+        }
+    }
+}
+
+.service-node-staking {
+    .address-type {
+        color: $loki-green-solid;
+        &.not-ours {
+            color: goldenrod;
+        }
+    }
+}
+
+.service-node-registration {
+    .description{
+        color: #b7b7b7;
+        font-style: normal;
+        b {
+            color: white;
+            font-style: italic;
+        }
+    }
+}
+
+.welcome {
+    .q-layout-footer {
+        background: $secondary
+    }
+}
+
+.address-book, .address-header {
+    .q-item-label {
+        color: white;
+    }
 }

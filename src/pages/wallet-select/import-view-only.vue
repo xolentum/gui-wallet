@@ -137,7 +137,18 @@ export default {
     validations: {
         wallet: {
             name: { required },
-            address: { required, address },
+            address: {
+                required,
+                isAddress(value) {
+                    if (value === '') return true
+
+                    return new Promise(resolve => {
+                        address(value, this.$gateway)
+                            .then(() => resolve(true))
+                            .catch(e => resolve(false))
+                    });
+                }
+            },
             viewkey: { required, privkey },
             refresh_start_height: { numeric }
         }

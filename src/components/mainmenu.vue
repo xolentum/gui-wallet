@@ -1,6 +1,6 @@
 <template>
 <div>
-    <q-btn class="menu" icon="menu" label="" size="md" flat>
+    <q-btn class="menu" icon="menu" size="md" flat>
         <q-popover>
             <q-list separator link>
                 <q-item v-close-overlay @click.native="switchWallet" v-if="!disableSwitchWallet">
@@ -20,7 +20,7 @@
                 </q-item>
                 <q-item v-close-overlay @click.native="exit">
                     <q-item-main>
-                        <q-item-tile label>Exit Ryo GUI Wallet</q-item-tile>
+                        <q-item-tile label>Exit Loki GUI Wallet</q-item-tile>
                     </q-item-main>
                 </q-item>
             </q-list>
@@ -31,20 +31,22 @@
     <q-modal minimized ref="aboutModal">
         <div class="about-modal">
 
-            <img class="q-mb-md" src="statics/ryo-wallet.svg" height="42" />
+            <img class="q-mb-md" src="statics/loki.svg" height="42" />
 
             <p class="q-my-sm">Version: ATOM v{{version}}-v{{daemonVersion}}</p>
+            <p class="q-my-sm">Copyright (c) 2018-2019, Loki Project</p>
             <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
             <p class="q-my-sm">All rights reserved.</p>
 
             <div class="q-mt-md q-mb-lg external-links">
                 <p>
-                    <a @click="openExternal('https://ryo-currency.com/')" href="#">https://ryo-currency.com/</a>
+                    <a @click="openExternal('https://loki.network/')" href="#">https://loki.network/</a>
                 </p>
                 <p>
-                    <a @click="openExternal('https://t.me/ryocurrency')" href="#">Telegram</a> -
-                    <a @click="openExternal('https://discord.gg/GFQmFtx')" href="#">Discord</a> -
-                    <a @click="openExternal('https://www.reddit.com/r/ryocurrency/')" href="#">Reddit</a>
+                    <a @click="openExternal('https://t.me/joinchat/DeNvR0JJ4JPn6TVSQjCsZQ')" href="#">Telegram</a> -
+                    <a @click="openExternal('https://discordapp.com/invite/67GXfD6')" href="#">Discord</a> -
+                    <a @click="openExternal('https://www.reddit.com/r/LokiProject/')" href="#">Reddit</a> -
+                    <a @click="openExternal('https://github.com/loki-project/loki-electron-wallet')" href="#">Github</a>
                 </p>
             </div>
 
@@ -102,7 +104,7 @@ export default {
                 title: "Switch wallet",
                 message: "Are you sure you want to close the current wallet?",
                 ok: {
-                    label: "CLOSE"
+                    label: "OK"
                 },
                 cancel: {
                     flat: true,

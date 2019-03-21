@@ -1,46 +1,43 @@
 <template>
-<q-page>
-    <div class="q-mx-md">
-        <q-field class="q-mt-none">
+<q-page class="create-wallet">
+    <div class="fields q-mx-md q-mt-md">
+        <LokiField label="Wallet name" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
-                float-label="Wallet name"
                 @blur="$v.wallet.name.$touch"
-                :error="$v.wallet.name.$error"
                 :dark="theme=='dark'"
-                />
-        </q-field>
+                placeholder="A name for your wallet"
+                hide-underline
+            />
+        </LokiField>
 
-        <q-field>
+        <LokiField label="Seed Language">
             <q-select
                 v-model="wallet.language"
-                float-label="Seed language"
                 :options="languageOptions"
                 :dark="theme=='dark'"
-                />
-        </q-field>
+                hide-underline
+            />
+        </LokiField>
 
-        <q-field>
-            <div class="row gutter-md">
-                <div><q-radio v-model="wallet.type" val="long" label="Long address" /></div>
-                <div><q-radio v-model="wallet.type" val="kurz" label="Short (kurz) address" /></div>
-            </div>
-        </q-field>
+        <LokiField label="Password" optional>
+            <q-input
+                v-model="wallet.password"
+                type="password"
+                :dark="theme=='dark'"
+                placeholder="An optional password for the wallet"
+                hide-underline
+            />
+        </LokiField>
 
-        <p v-if="wallet.type == 'long'">
-            Create both public/private view & spend keys.  Allows creation of view-only wallets.
-        </p>
-        <p v-if="wallet.type == 'kurz'">
-            Create shorter style address with only private view & spend keys. Does NOT support view-only wallets.
-        </p>
-
-        <q-field>
-            <q-input v-model="wallet.password" type="password" float-label="Password" :dark="theme=='dark'" />
-        </q-field>
-
-        <q-field>
-            <q-input v-model="wallet.password_confirm" type="password" float-label="Confirm Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField label="Confirm Password">
+            <q-input
+                v-model="wallet.password_confirm"
+                type="password"
+                :dark="theme=='dark'"
+                hide-underline
+            />
+        </LokiField>
 
         <q-field>
             <q-btn color="primary" @click="create" label="Create wallet" />
@@ -53,13 +50,13 @@
 <script>
 import { required } from "vuelidate/lib/validators"
 import { mapState } from "vuex"
+import LokiField from "components/loki_field"
 export default {
     data () {
         return {
             wallet: {
                 name: "",
                 language: "English",
-                type: "long",
                 password: "",
                 password_confirm: ""
             },
@@ -136,18 +133,48 @@ export default {
                 return
             }
 
-            this.$q.loading.show({
-                delay: 0
-            })
+            // Warn user if no password is set
+            let passwordPromise = Promise.resolve();
+            if (!this.wallet.password) {
+                passwordPromise = this.$q.dialog({
+                    title: "No password set",
+                    message: "Are you sure you want to create a wallet with no password?",
+                    ok: {
+                        label: "YES",
+                    },
+                    cancel: {
+                        flat: true,
+                        label: "CANCEL",
+                        color: this.theme === "dark" ? "white" : "dark"
+                    },
+                })
+            }
 
-            this.$gateway.send("wallet", "create_wallet", this.wallet);
+            passwordPromise
+                .then(() => {
+                    this.$q.loading.show({
+                        delay: 0
+                    })
+                    this.$gateway.send("wallet", "create_wallet", this.wallet)
+                })
+                .catch(() => {})
         },
         cancel() {
             this.$router.replace({ path: "/wallet-select" });
         }
+    },
+    components: {
+        LokiField
     }
 }
 </script>
 
-<style>
+<style lang="scss">
+.create-wallet {
+    .fields {
+        > * {
+            margin-bottom: 16px;
+        }
+    }
+}
 </style>

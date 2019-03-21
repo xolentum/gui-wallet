@@ -1,12 +1,12 @@
 <template>
 <span>
-    {{ value }} Ryo
+    {{ value }} LOKI
 </span>
 </template>
 
 <script>
 export default {
-    name: "FormatRyo",
+    name: "FormatLoki",
     props: {
         amount: {
             required: true

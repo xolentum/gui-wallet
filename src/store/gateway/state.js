@@ -5,15 +5,24 @@ export default {
         },
         config: {
             appearance: {
-                theme: "light"
+                theme: "dark"
             }
         },
         pending_config: {
+        },
+        remotes: {
         }
     },
     wallets: {
         list: [],
-        legacy: []
+        legacy: [],
+
+        // List of wallets that are in a sub folder (format of the old GUI)
+        directories: []
+    },
+    old_gui_import_status: {
+        code: 0, // Success
+        failed_wallets: []
     },
     wallet: {
         status: {
@@ -34,17 +43,34 @@ export default {
             spend_key: ""
         },
         transactions: {
-            tx_list: [],
+            tx_list: []
         },
         address_list: {
             used: [],
             unused: [],
-            address_book: [],
+            address_book: []
         }
     },
     tx_status: {
         code: 0,
         message: ""
+    },
+    service_node_status: {
+        stake: {
+            code: 0,
+            message: "",
+            sending: false
+        },
+        registration: {
+            code: 0,
+            message: "",
+            sending: false
+        },
+        unlock: {
+            code: 0,
+            message: "",
+            sending: false
+        }
     },
     daemon: {
         info: {

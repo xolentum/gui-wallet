@@ -1,74 +1,83 @@
 <template>
 <q-page>
     <div class="q-mx-md">
-        <q-field class="q-mt-none">
+        <LokiField class="q-mt-md" label="Wallet name" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
-                float-label="Wallet name"
+                placeholder="A name for your wallet"
                 @blur="$v.wallet.name.$touch"
-                :error="$v.wallet.name.$error"
                 :dark="theme=='dark'"
+                hide-underline
                 />
-        </q-field>
+        </LokiField>
 
-        <q-field>
+        <LokiField class="q-mt-md" label="Mnemonic seed" :error="$v.wallet.seed.$error">
             <q-input
                 v-model="wallet.seed"
-                float-label="Mnemonic seed"
+                placeholder="25 (or 24) word mnemonic seed"
                 type="textarea"
                 @blur="$v.wallet.seed.$touch"
-                :error="$v.wallet.seed.$error"
                 :dark="theme=='dark'"
+                hide-underline
                 />
-        </q-field>
+        </LokiField>
 
-        <q-field>
-            <div class="row items-center gutter-sm">
-                <div class="col">
-                    <template v-if="wallet.refresh_type=='date'">
-                        <q-datetime v-model="wallet.refresh_start_date" type="date"
-                                    float-label="Restore from date"
-                                    modal :min="1492486495000" :max="Date.now()"
-                                    :dark="theme=='dark'"
-                                    />
-                    </template>
-                    <template v-else-if="wallet.refresh_type=='height'">
-                        <q-input v-model="wallet.refresh_start_height" type="number"
-                                 min="0" float-label="Restore from block height"
-                                 @blur="$v.wallet.refresh_start_height.$touch"
-                                 :error="$v.wallet.refresh_start_height.$error"
-                                 :dark="theme=='dark'"
-                                 />
-                    </template>
-                </div>
-                <div class="col-auto">
-                    <template v-if="wallet.refresh_type=='date'">
-                        <q-btn @click="wallet.refresh_type='height'" class="float-right" :text-color="theme=='dark'?'white':'dark'" flat>
-                            <div style="width: 80px;" class="text-center">
-                                <q-icon class="block" name="clear_all" />
-                                <div style="font-size:10px">Switch to<br/>height select</div>
-                            </div>
-                        </q-btn>
-                    </template>
-                    <template v-else-if="wallet.refresh_type=='height'">
-                        <q-btn @click="wallet.refresh_type='date'" class="float-right" :text-color="theme=='dark'?'white':'dark'" flat>
-                            <div style="width: 80px;" class="text-center">
-                                <q-icon class="block" name="today" />
-                                <div style="font-size:10px">Switch to<br/>date select</div>
-                            </div>
-                        </q-btn>
-                    </template>
-                </div>
+        <div class="row items-end q-mt-md">
+            <div class="col">
+                <LokiField v-if="wallet.refresh_type=='date'" label="Restore from date">
+                    <q-datetime v-model="wallet.refresh_start_date" type="date"
+                                modal :min="1492486495000" :max="Date.now()"
+                                :dark="theme=='dark'"
+                                hide-underline
+                                />
+                </LokiField>
+                <LokiField v-else-if="wallet.refresh_type=='height'" label="Restore from block height" :error="$v.wallet.refresh_start_height.$error">
+                    <q-input v-model="wallet.refresh_start_height" type="number"
+                                min="0"
+                                @blur="$v.wallet.refresh_start_height.$touch"
+                                :dark="theme=='dark'"
+                                hide-underline
+                                />
+                </LokiField>
             </div>
-        </q-field>
+            <div class="col-auto q-ml-sm">
+                <template v-if="wallet.refresh_type=='date'">
+                    <q-btn @click="wallet.refresh_type='height'" class="float-right" :text-color="theme=='dark'?'white':'dark'" flat>
+                        <div style="width: 80px;" class="text-center">
+                            <q-icon class="block" name="clear_all" />
+                            <div style="font-size:10px">Switch to<br/>height select</div>
+                        </div>
+                    </q-btn>
+                </template>
+                <template v-else-if="wallet.refresh_type=='height'">
+                    <q-btn @click="wallet.refresh_type='date'" class="float-right" :text-color="theme=='dark'?'white':'dark'" flat>
+                        <div style="width: 80px;" class="text-center">
+                            <q-icon class="block" name="today" />
+                            <div style="font-size:10px">Switch to<br/>date select</div>
+                        </div>
+                    </q-btn>
+                </template>
+            </div>
+        </div>
 
-        <q-field>
-            <q-input v-model="wallet.password" type="password" float-label="Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField class="q-mt-md" label="Password">
+            <q-input
+                v-model="wallet.password"
+                placeholder="An optional password for the wallet"
+                type="password"
+                :dark="theme=='dark'"
+                hide-underline
+                />
+        </LokiField>
 
-        <q-field>
-            <q-input v-model="wallet.password_confirm" type="password" float-label="Confirm Password" :dark="theme=='dark'" />
-        </q-field>
+        <LokiField class="q-mt-md" label="Confirm Password">
+            <q-input
+                v-model="wallet.password_confirm"
+                type="password"
+                :dark="theme=='dark'"
+                hide-underline
+                />
+        </LokiField>
 
         <q-field>
             <q-btn color="primary" @click="restore_wallet" label="Restore wallet" />
@@ -81,6 +90,7 @@
 <script>
 import { required, numeric } from "vuelidate/lib/validators"
 import { mapState } from "vuex"
+import LokiField from "components/loki_field"
 export default {
     data () {
         return {
@@ -89,7 +99,7 @@ export default {
                 seed: "",
                 refresh_type: "date",
                 refresh_start_height: 0,
-                refresh_start_date: 1492486495000, // timestamp of block 1
+                refresh_start_date: 1525305600000, // timestamp of block 1
                 password: "",
                 password_confirm: ""
             },
@@ -151,7 +161,11 @@ export default {
                 return
             }
 
-            let seed = this.wallet.seed.trim().replace(/\s{2,}/g, " ").split(" ")
+            let seed = this.wallet.seed.trim()
+                .replace(/\n/g, " ")
+                .replace(/\t/g, " ")
+                .replace(/\s{2,}/g, " ")
+                .split(" ")
             if(seed.length !== 14 && seed.length !== 24 && seed.length !== 25 && seed.length !== 26) {
                 this.$q.notify({
                     type: "negative",
@@ -187,6 +201,9 @@ export default {
         cancel() {
             this.$router.replace({ path: "/wallet-select" });
         }
+    },
+    components: {
+        LokiField
     }
 }
 </script>

@@ -11,9 +11,9 @@
                    @click="cancel()" />
         </template>
 
-        <q-toolbar-title v-if="page_title=='Ryo'">
-            <div style="margin-top:7px">
-                <img src="statics/ryo-wallet.svg" height="32">
+        <q-toolbar-title v-if="page_title=='Loki'">
+            <div class="flex items-center justify-center" style="margin-top:7px">
+                <img src="statics/loki.svg" height="32">
             </div>
         </q-toolbar-title>
         <q-toolbar-title v-else>
@@ -59,12 +59,14 @@ export default {
                     return "Restore view-only wallet"
                 case "wallet-import-legacy":
                     return "Import wallet from legacy gui"
+                case "wallet-import-old-gui":
+                    return "Import wallets from old GUI"
                 case "wallet-created":
                     return "Wallet created/restored"
 
                 default:
                 case "wallet-select":
-                    return "Ryo"
+                    return "Loki"
             }
         }
     },

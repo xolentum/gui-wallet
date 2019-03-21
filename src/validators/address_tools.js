@@ -1945,13 +1945,12 @@ return{_strlen:lb,_ge_mul8:Va,_keccak:db,_ge_scalarmult:Ta,_ge_fromfe_frombytes_
 
 
 
-var ryoConfig = {
-    coinUnitPlaces: 9,
-    coinSymbol: 'RYO',
-    coinName: 'Ryo',
-    coinUriPrefix: 'ryo:',
-    longAddrPrefix: 0x2ce192,
-    kurzAddrPrefix: 0x2c6192
+var lokiConfig = {
+    coinUnitPlaces: 12,
+    coinSymbol: 'LOKI',
+    coinName: 'Loki',
+    coinUriPrefix: 'loki:',
+    addressPrefix: 114,
 };
 
 var cnUtilGen = function(initConfig) {
@@ -1962,7 +1961,7 @@ var cnUtilGen = function(initConfig) {
     var HASH_STATE_BYTES = 200;
     var HASH_SIZE = 32;
     var ADDRESS_CHECKSUM_SIZE = 4;
-    var CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = config.longAddrPrefix;
+    var CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX = config.addressPrefix;
     var UINT64_MAX = new JSBigInt(2).pow(64);
     var CURRENT_TX_VERSION = 1;
     var TX_EXTRA_NONCE_MAX_COUNT = 255;
@@ -2092,13 +2091,13 @@ var cnUtilGen = function(initConfig) {
 
     this.pubkeys_to_string = function(spend, view, use_kurz) {
         if(!use_kurz) {
-            var prefix = this.encode_varint(config.longAddrPrefix);
+            var prefix = this.encode_varint(config.addressPrefix);
             var data = prefix + spend + view;
             var checksum = this.cn_fast_hash(data);
             return cnBase58.encode(data + checksum.slice(0, ADDRESS_CHECKSUM_SIZE * 2));
         }
         else {
-            var prefix = this.encode_varint(config.kurzAddrPrefix);
+            var prefix = this.encode_varint(config.addressPrefix);
             var data = prefix + spend;
             var checksum = this.cn_fast_hash(data);
             return cnBase58.encode(data + checksum.slice(0, ADDRESS_CHECKSUM_SIZE * 2));
@@ -2390,7 +2389,7 @@ var cnUtilGen = function(initConfig) {
 
     return this;
 };
-var cnUtil = cnUtilGen(ryoConfig);
+var cnUtil = cnUtilGen(lokiConfig);
 /*
  mnemonic.js : Converts between 4-byte aligned strings and a human-readable
  sequence of words. Uses 1626 common words taken from wikipedia article:
