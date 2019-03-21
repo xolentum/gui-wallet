@@ -1,9 +1,9 @@
 <template>
 <q-page class="receive">
-    <q-list link no-border :dark="theme=='dark'">
+    <q-list link no-border :dark="theme=='dark'" class="loki-list">
 
         <q-list-header>My primary address</q-list-header>
-        <q-list class="item-group primary-address" no-border v-for="address in address_list.primary" :key="address.address" @click.native="details(address)">
+        <q-list class="loki-list-item primary-address" no-border v-for="address in address_list.primary" :key="address.address" @click.native="details(address)">
             <q-item>
                 <q-item-main>
                     <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
@@ -67,7 +67,7 @@
 
         <template v-if="address_list.used.length">
             <q-list-header>My used addresses</q-list-header>
-            <q-list class="item-group" no-border v-for="address in address_list.used" @click.native="details(address)" :key="address.address">
+            <q-list class="loki-list-item" no-border v-for="address in address_list.used" @click.native="details(address)" :key="address.address">
                 <q-item>
                     <q-item-main>
                         <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
@@ -133,7 +133,7 @@
 
         <template v-if="address_list.unused.length">
             <q-list-header>My unused addresses</q-list-header>
-            <q-list class="item-group" no-border v-for="address in address_list.unused" @click.native="details(address)" :key="address.address">
+            <q-list class="loki-list-item" no-border v-for="address in address_list.unused" @click.native="details(address)" :key="address.address">
                 <q-item>
                     <q-item-main>
                         <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
@@ -303,21 +303,29 @@ export default {
         font-size: 13px;
     }
 
-    .item-group {
+    .loki-list-item {
         cursor: pointer;
 
-        margin: 0 16px;
-        // padding: 14px;
-        border-radius: 3px;
-
-        + .item-group {
-            margin-top: 10px;
+        .q-item {
+            padding-top: 4px;
+            padding-bottom: 4px;
         }
 
         .q-item-side {
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .info {
+            span {
+                font-size: 14px;
+            }
+
+             .value {
+                font-size: 16px;
+                font-weight: bold;
+            }
         }
     }
 }

@@ -470,30 +470,8 @@ footer,
         opacity: 0.4;
     }
 
-    .item-group {
-        background: #313131;
-
-        -webkit-transition: background-color 0.2s ease-in;
-        transition: background-color 0.2s ease-in;
-
-        .info {
-            span {
-                font-size: 14px;
-            }
-
-             .value {
-                font-size: 16px;
-                font-weight: bold;
-            }
-        }
-    }
-
-    .item-group:hover {
-        background: rgba(117,117,117,0.3);
-    }
-
     .primary-address {
-        background: #3eb13e;
+        background: #3eb13e !important;
 
         .q-item, .q-item-side {
             color: white;
@@ -505,25 +483,34 @@ footer,
     }
 
     .primary-address:hover {
-        background: $loki-green-solid;
+        background: $loki-green-solid !important;
+    }
+
+}
+
+.loki-list {
+    .loki-list-item {
+        background: #313131;
+        -webkit-transition: background-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in;
+
+        margin: 0 16px;
+        border-radius: 3px;
+
+        + .loki-list-item {
+            margin-top: 10px;
+        }
+    }
+
+    .loki-list-item:hover {
+        background: rgba(117,117,117,0.3);
     }
 
 }
 
 .tx-list {
-    .transaction {
-        background: #313131;
-
-        -webkit-transition: background-color 0.2s ease-in;
-        transition: background-color 0.2s ease-in;
-
-        .main {
+    .transaction .main {
             border-left: 1px solid #252525;
-        }
-    }
-
-    .transaction:hover {
-        background: rgba(117,117,117,0.3);
     }
 }
 
@@ -583,5 +570,11 @@ footer,
 .welcome {
     .q-layout-footer {
         background: $secondary
+    }
+}
+
+.address-book, .address-header {
+    .q-item-label {
+        color: white;
     }
 }

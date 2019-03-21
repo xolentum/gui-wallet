@@ -1,27 +1,16 @@
 <template>
-<q-page>
+<q-page class="address-book">
 
     <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
-
-        <div class="col-8">
-            <q-icon name="person" size="24px" /> Address book
-        </div>
-
-        <div class="col-4">
-        </div>
-
+            Address book
     </div>
 
-    <template v-if="address_book_starred.length || address_book.length">
-        <q-list link no-border :dark="theme=='dark'">
-
-            <q-item v-for="(entry, index) in address_book_starred" @click.native="details(entry)">
-                <q-item-side>
-                    <Identicon :address="entry.address" :ref="`${index}-starredIdenticon`" />
-                </q-item-side>
+    <template v-if="address_book_combined.length">
+        <q-list link no-border :dark="theme=='dark'" class="loki-list">
+            <q-item class="loki-list-item" v-for="(entry, index) in address_book_combined" @click.native="details(entry)" :key="entry.address">
                 <q-item-main>
-                    <q-item-tile class="monospace ellipsis" label>{{ entry.address }}</q-item-tile>
                     <q-item-tile sublabel>{{ entry.name }}</q-item-tile>
+                    <q-item-tile class="ellipsis" label>{{ entry.address }}</q-item-tile>
                 </q-item-main>
                 <q-item-side>
                     <q-btn
@@ -33,7 +22,7 @@
                             Send coins
                         </q-tooltip>
                     </q-btn>
-                    <q-icon size="24px" name="star" />
+                    <q-icon size="24px" :name="entry.starred ? 'star' : 'star_border'" />
                 </q-item-side>
 
                 <q-context-menu>
@@ -51,57 +40,6 @@
                         <q-item v-close-overlay
                                 @click.native="copyAddress(entry, $event)">
                             <q-item-main label="Copy address" />
-                        </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="$refs[`${index}-starredIdenticon`][0].saveIdenticon()">
-                            <q-item-main label="Save identicon to file" />
-                        </q-item>
-                    </q-list>
-                </q-context-menu>
-
-            </q-item>
-            <q-item v-for="(entry, index) in address_book" @click.native="details(entry)">
-                <q-item-side>
-                    <Identicon :address="entry.address" :ref="`${index}-normalIdenticon`" />
-                </q-item-side>
-                <q-item-main>
-                    <q-item-tile class="monospace ellipsis" label>{{ entry.address }}</q-item-tile>
-                    <q-item-tile sublabel>{{ entry.name }}</q-item-tile>
-                </q-item-main>
-                <q-item-side>
-                    <q-btn
-                        color="primary" style="width:25px; margin-right: 10px;"
-                        size="sm" icon="call_made"
-                        :disabled="view_only"
-                        @click="sendToAddress(entry, $event)">
-                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Send coins
-                        </q-tooltip>
-                    </q-btn>
-                    <q-icon size="24px" name="star_border" />
-                </q-item-side>
-
-                <q-context-menu>
-                    <q-list link separator style="min-width: 150px; max-height: 300px;">
-                        <q-item v-close-overlay
-                                @click.native="details(entry)">
-                            <q-item-main label="Show details" />
-                        </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="sendToAddress(entry, $event)">
-                            <q-item-main label="Send to this address" />
-                        </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="copyAddress(entry, $event)">
-                            <q-item-main label="Copy address" />
-                        </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="$refs[`${index}-normalIdenticon`][0].saveIdenticon()">
-                            <q-item-main label="Save identicon to file" />
                         </q-item>
                     </q-list>
                 </q-context-menu>
@@ -140,6 +78,13 @@ export default {
         address_book_starred: state => state.gateway.wallet.address_list.address_book_starred,
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
+        },
+        address_book_combined (state) {
+            const starred = this.address_book_starred.map(a => ({ ...a, starred: true }));
+            return [
+                ...starred,
+                ...this.address_book
+            ]
         }
     }),
     methods: {
@@ -209,5 +154,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.address-book {
+    .q-item-label {
+        font-weight: 400;
+    }
+
+    .q-item-sublabel, .q-list-header {
+        font-size: 14px;
+        margin-top: 0px;
+    }
+}
 </style>

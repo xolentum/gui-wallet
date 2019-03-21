@@ -7,8 +7,8 @@
 
     <template v-else>
         <q-infinite-scroll :handler="loadMore" ref="scroller">
-            <q-list link no-border :dark="theme=='dark'" class="tx-list">
-                <q-item class="transaction" v-for="(tx, index) in tx_list_paged" :key="tx.txid"
+            <q-list link no-border :dark="theme=='dark'" class="loki-list tx-list">
+                <q-item class="loki-list-item transaction" v-for="(tx, index) in tx_list_paged" :key="tx.txid"
                         @click.native="details(tx)" :class="'tx-'+tx.type">
                     <q-item-side class="type">
                         <div>{{ tx.type | typeToString }}</div>
@@ -288,28 +288,11 @@ export default {
 
 <style lang="scss">
 .tx-list {
+    .loki-list-item {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
     .transaction {
-        margin: 0 16px;
-        padding: 0;
-        border-radius: 3px;
-
-        > * {
-            margin-top: 8px;
-            margin-bottom: 8px;
-
-            &:first-child {
-                margin-left: 16px;
-            }
-
-            &:last-child {
-                margin-right: 16px;
-            }
-        }
-
-        + .transaction {
-            margin-top: 10px;
-        }
-
         .main {
             margin: 0;
             padding: 8px 10px;
