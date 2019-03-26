@@ -118,6 +118,10 @@ export class Backend {
             {
                 host: "imaginary.stream",
                 port: "22023"
+            },
+            {
+                host: "nodes.hashvault.pro",
+                port: "22023"
             }
         ]
 
