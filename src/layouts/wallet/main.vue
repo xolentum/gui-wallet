@@ -13,54 +13,56 @@
         <!-- <AddressHeader :address="info.address" :title="info.name" /> -->
         <WalletDetails />
 
-        <div class="navigation row items-end">
-            <router-link to="/wallet">
-                <q-btn
-                    class="single-icon"
-                    size="md"
-                    icon="swap_horiz"
-                />
-            </router-link>
-            <router-link to="/wallet/send">
-                <q-btn
-                    class="large-btn"
-                    label="Send"
-                    size="md"
-                    icon-right="arrow_right_alt"
-                    align="left"
-                />
-            </router-link>
-            <router-link to="/wallet/receive">
-                <q-btn
-                    class="large-btn"
-                    label="Receive"
-                    size="md"
-                    icon-right="save_alt"
-                    align="left"
-                />
-            </router-link>
-            <router-link to="/wallet/servicenode">
-                <q-btn
-                    class="large-btn"
-                    label="Service node"
-                    size="md"
-                    icon-right="router"
-                    align="left"
-                />
-            </router-link>
-            <router-link to="/wallet/addressbook" class="address">
-                <q-btn
-                    class="single-icon"
-                    size="md"
-                    icon="person"
-                />
-            </router-link>
+        <div class="app-content">
+            <div class="navigation row items-end">
+                <router-link to="/wallet">
+                    <q-btn
+                        class="single-icon"
+                        size="md"
+                        icon="swap_horiz"
+                    />
+                </router-link>
+                <router-link to="/wallet/send">
+                    <q-btn
+                        class="large-btn"
+                        label="Send"
+                        size="md"
+                        icon-right="arrow_right_alt"
+                        align="left"
+                    />
+                </router-link>
+                <router-link to="/wallet/receive">
+                    <q-btn
+                        class="large-btn"
+                        label="Receive"
+                        size="md"
+                        icon-right="save_alt"
+                        align="left"
+                    />
+                </router-link>
+                <router-link to="/wallet/servicenode">
+                    <q-btn
+                        class="large-btn"
+                        label="Service node"
+                        size="md"
+                        icon-right="router"
+                        align="left"
+                    />
+                </router-link>
+                <router-link to="/wallet/addressbook" class="address">
+                    <q-btn
+                        class="single-icon"
+                        size="md"
+                        icon="person"
+                    />
+                </router-link>
 
+            </div>
+            <div class="hr-separator" />
+            <keep-alive>
+                <router-view />
+            </keep-alive>
         </div>
-        <div class="hr-separator" />
-        <keep-alive>
-            <router-view />
-        </keep-alive>
     </q-page-container>
 
     <status-footer />
