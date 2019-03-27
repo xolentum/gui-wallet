@@ -249,14 +249,14 @@ export class Backend {
         case "save_png":
             let filename = dialog.showSaveDialog(this.mainWindow, {
                 title: "Save " + params.type,
-                filters: [{name: "PNG", extensions: ["png"]}],
+                filters: [{ name: "PNG", extensions: ["png"] }],
                 defaultPath: os.homedir()
             })
             if (filename) {
                 let base64Data = params.img.replace(/^data:image\/png;base64,/, "")
                 let binaryData = new Buffer(base64Data, "base64").toString("binary")
                 fs.writeFile(filename, binaryData, "binary", (err) => {
-                    if (err) { this.send("show_notification", {type: "negative", message: "Error saving " + params.type, timeout: 2000}) } else { this.send("show_notification", {message: params.type + " saved to " + filename, timeout: 2000}) }
+                    if (err) { this.send("show_notification", { type: "negative", message: "Error saving " + params.type, timeout: 2000 }) } else { this.send("show_notification", { message: params.type + " saved to " + filename, timeout: 2000 }) }
                 })
             }
             break
@@ -475,9 +475,9 @@ export class Backend {
                     // eslint-disable-next-line
                     }).catch(error => {
                         if (this.config_data.daemons[net_type].type == "remote") {
-                            this.send("show_notification", {type: "negative", message: "Remote daemon cannot be reached", timeout: 2000})
+                            this.send("show_notification", { type: "negative", message: "Remote daemon cannot be reached", timeout: 2000 })
                         } else {
-                            this.send("show_notification", {type: "negative", message: "Local daemon internal error", timeout: 2000})
+                            this.send("show_notification", { type: "negative", message: "Local daemon internal error", timeout: 2000 })
                         }
                         this.send("set_app_data", {
                             status: {

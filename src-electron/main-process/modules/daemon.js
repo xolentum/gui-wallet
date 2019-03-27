@@ -14,7 +14,7 @@ export class Daemon {
         this.net_type = "mainnet"
         this.local = false // do we have a local daemon ?
 
-        this.agent = new http.Agent({keepAlive: true, maxSockets: 1})
+        this.agent = new http.Agent({ keepAlive: true, maxSockets: 1 })
         this.queue = new queue(1, Infinity)
     }
 
@@ -32,7 +32,7 @@ export class Daemon {
                 let lokid_path = path.join(__ryo_bin, "lokid")
                 let lokid_version_cmd = `"${lokid_path}" --version`
                 if (!fs.existsSync(lokid_path)) { resolve(false) }
-                child_process.exec(lokid_version_cmd, {detached: true}, (error, stdout, stderr) => {
+                child_process.exec(lokid_version_cmd, { detached: true }, (error, stdout, stderr) => {
                     if (error) { resolve(false) }
                     resolve(stdout)
                 })
@@ -187,12 +187,12 @@ export class Daemon {
 
         this.sendRPC("set_bans", params).then((data) => {
             if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                this.sendGateway("show_notification", {type: "negative", message: "Error banning peer", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Error banning peer", timeout: 2000 })
                 return
             }
 
             let end_time = new Date(Date.now() + seconds * 1000).toLocaleString()
-            this.sendGateway("show_notification", {message: "Banned " + host + " until " + end_time, timeout: 2000})
+            this.sendGateway("show_notification", { message: "Banned " + host + " until " + end_time, timeout: 2000 })
 
             // Send updated peer and ban list
             this.heartbeatSlowAction()
@@ -220,7 +220,7 @@ export class Daemon {
                 return resolve(pivot[0])
             }
 
-            this.getRPC("block_header_by_height", {height: estimated_height}).then((data) => {
+            this.getRPC("block_header_by_height", { height: estimated_height }).then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
                     if (data.error.code == -2) { // Too big height
                         this.getRPC("last_block_header").then((data) => {
