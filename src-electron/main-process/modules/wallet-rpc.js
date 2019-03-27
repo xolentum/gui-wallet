@@ -1163,16 +1163,23 @@ export class WalletRPC {
                 return
             }
 
-            if (filename == null) { filename = path.join(this.data_dir, "gui", "key_image_export") } else { filename = path.join(filename, "key_image_export") }
+            if (filename == null) {
+                filename = path.join(this.wallet_data_dir, "images", this.wallet_state.name, "key_image_export")
+            } else {
+                filename = path.join(filename, "key_image_export")
+            }
 
-            this.sendRPC("export_key_images", {filename}).then((data) => {
+            const onError = () => this.sendGateway("show_notification", {type: "negative", message: "Error exporting key images", timeout: 2000})
+
+            this.sendRPC("export_key_images").then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                    this.sendGateway("show_notification", {type: "negative", message: "Error exporting key images", timeout: 2000})
+                    onError()
                     return
                 }
 
+                fs.outputJSONSync(filename, data.result.signed_key_images)
                 this.sendGateway("show_notification", {message: "Key images exported to " + filename, timeout: 2000})
-            })
+            }).catch(onError)
         })
     }
 
@@ -1187,16 +1194,20 @@ export class WalletRPC {
                 return
             }
 
-            if (filename == null) { filename = path.join(this.data_dir, "gui", "key_image_export") }
+            if (filename == null) { filename = path.join(this.wallet_data_dir, "images", this.wallet_state.name, "key_image_export") }
 
-            this.sendRPC("import_key_images", {filename}).then((data) => {
-                if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                    this.sendGateway("show_notification", {type: "negative", message: "Error importing key images", timeout: 2000})
-                    return
-                }
+            const onError = (message) => this.sendGateway("show_notification", {type: "negative", message, timeout: 2000})
 
-                this.sendGateway("show_notification", {message: "Key images imported", timeout: 2000})
-            })
+            fs.readJSON(filename).then(signed_key_images => {
+                this.sendRPC("import_key_images", { signed_key_images }).then((data) => {
+                    if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
+                        onError("Error importing key images")
+                        return
+                    }
+
+                    this.sendGateway("show_notification", {message: "Key images imported", timeout: 2000})
+                })
+            }).catch(() => onError("Error reading key images"))
         })
     }
 
