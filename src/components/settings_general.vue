@@ -83,13 +83,13 @@
     <div class="col q-mt-md pt-sm">
         <LokiField label="Data Storage Path" disable-hover>
             <q-input v-model="config.app.data_dir" disable :dark="theme=='dark'" hide-underline/>
-            <input type="file" webkitdirectory directory id="dataPath" v-on:change="setDataPath" ref="fileInput" hidden />
-            <q-btn color="secondary" v-on:click="selectPath" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
+            <input type="file" webkitdirectory directory id="dataPath" v-on:change="setDataPath" ref="fileInputData" hidden />
+            <q-btn color="secondary" v-on:click="selectPath('data')" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
         </LokiField>
         <LokiField label="Wallet Storage Path" disable-hover>
             <q-input v-model="config.app.wallet_data_dir" disable :dark="theme=='dark'" hide-underline/>
-            <input type="file" webkitdirectory directory id="dataPath" v-on:change="setWalletDataPath" ref="fileInput" hidden />
-            <q-btn color="secondary" v-on:click="selectPath" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
+            <input type="file" webkitdirectory directory id="walletPath" v-on:change="setWalletDataPath" ref="fileInputWallet" hidden />
+            <q-btn color="secondary" v-on:click="selectPath('wallet')" :text-color="theme=='dark'?'white':'dark'">Select Location</q-btn>
         </LokiField>
     </div>
 
@@ -192,14 +192,19 @@ export default {
         }
     },
     methods: {
-        selectPath () {
-            this.$refs.fileInput.click()
+        selectPath (type) {
+            const fileInput = type === "data" ? "fileInputData" : "fileInputWallet"
+            this.$refs[fileInput].click()
         },
         setDataPath (file) {
-            this.config.app.data_dir = file.target.files[0].path
+            if (file.target.files && file.target.files.length > 0) {
+                this.config.app.data_dir = file.target.files[0].path
+            }
         },
         setWalletDataPath (file) {
-            this.config.app.wallet_data_dir = file.target.files[0].path
+            if (file.target.files && file.target.files.length > 0) {
+                this.config.app.wallet_data_dir = file.target.files[0].path
+            }
         },
         setPreset (option) {
             if (!option) return;
