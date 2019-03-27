@@ -140,7 +140,7 @@
         </div>
     </q-modal>
 
-    <q-modal minimized v-model="modals.key_image.visible">
+    <q-modal class="key-image-modal" minimized v-model="modals.key_image.visible">
         <div class="modal-header">{{modals.key_image.type}} key images</div>
         <div class="q-ma-lg">
             <div class="row q-mb-md">
@@ -153,33 +153,21 @@
             </div>
 
             <template v-if="modals.key_image.type == 'Export'">
-                <q-field style="width:450px">
-                    <div class="row gutter-sm">
-                        <div class="col-9">
-                            <q-input v-model="modals.key_image.export_path" stack-label="Key image export directory" disable />
-                            <input type="file" webkitdirectory directory id="keyImageExportPath" v-on:change="setKeyImageExportPath" ref="keyImageExportSelect" hidden />
-                        </div>
-                        <div class="col-3">
-                            <q-btn class="float-right" v-on:click="selectKeyImageExportPath">Browse</q-btn>
-                        </div>
-                    </div>
-                </q-field>
+                <LokiField class="q-mt-lg" label="Key image export directory" disable-hover>
+                    <q-input v-model="modals.key_image.export_path" disable hide-underline />
+                    <input type="file" webkitdirectory directory id="keyImageExportPath" v-on:change="setKeyImageExportPath" ref="keyImageExportSelect" hidden />
+                    <q-btn color="secondary" v-on:click="selectKeyImageExportPath">Browse</q-btn>
+                </LokiField>
             </template>
             <template v-if="modals.key_image.type == 'Import'">
-                <q-field style="width:450px">
-                    <div class="row gutter-sm">
-                        <div class="col-9">
-                            <q-input v-model="modals.key_image.import_path" stack-label="Key image import file" disable />
-                            <input type="file" id="keyImageImportPath" v-on:change="setKeyImageImportPath" ref="keyImageImportSelect" hidden />
-                        </div>
-                        <div class="col-3">
-                            <q-btn class="float-right" v-on:click="selectKeyImageImportPath">Browse</q-btn>
-                        </div>
-                    </div>
-                </q-field>
+                <LokiField class="q-mt-lg" label="Key image import file" disable-hover>
+                    <q-input v-model="modals.key_image.import_path" disable hide-underline />
+                    <input type="file" id="keyImageImportPath" v-on:change="setKeyImageImportPath" ref="keyImageImportSelect" hidden />
+                    <q-btn color="secondary" v-on:click="selectKeyImageImportPath">Browse</q-btn>
+                </LokiField>
             </template>
 
-            <div class="q-mt-xl text-right">
+            <div class="q-mt-lg text-right">
                 <q-btn
                     flat class="q-mr-sm"
                     @click="hideModal('key_image')"
@@ -230,6 +218,7 @@
 const { clipboard } = require("electron")
 import { mapState } from "vuex"
 import WalletPassword from "src/mixins/wallet_password"
+import LokiField from "components/loki_field"
 
 export default {
     name: "WalletSettings",
@@ -237,7 +226,7 @@ export default {
         theme: state => state.gateway.app.config.appearance.theme,
         info: state => state.gateway.wallet.info,
         secret: state => state.gateway.wallet.secret,
-        data_dir: state => state.gateway.app.config.app.data_dir,
+        wallet_data_dir: state => state.gateway.app.config.app.wallet_data_dir,
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
         }
@@ -267,10 +256,10 @@ export default {
             }
         }
     },
-    mounted () {
+    created() {
         const path = require("path")
-        this.modals.key_image.export_path = path.join(this.data_dir, "gui")
-        this.modals.key_image.import_path = path.join(this.data_dir, "gui", "key_image_export")
+        this.modals.key_image.export_path = path.join(this.wallet_data_dir, "images", this.info.name)
+        this.modals.key_image.import_path = path.join(this.wallet_data_dir, "images", this.info.name, "key_image_export")
     },
     watch: {
         secret: {
@@ -497,6 +486,9 @@ export default {
         }
     },
     mixins: [WalletPassword],
+    components: {
+        LokiField,
+    }
 }
 </script>
 
@@ -504,6 +496,15 @@ export default {
 .private-key-modal {
     .copy-btn {
         margin-left: 8px;
+    }
+}
+.key-image-modal {
+    .modal-content {
+        min-width: 600px;
+        width: 45vw;
+    }
+    .loki-field {
+        flex: 1,
     }
 }
 </style>
