@@ -30,7 +30,7 @@ export class WalletRPC {
         this.height_regex2 = /Skipped block by height: (\d+)/
         this.height_regex3 = /Skipped block by timestamp, height: (\d+)/
 
-        this.agent = new http.Agent({keepAlive: true, maxSockets: 1})
+        this.agent = new http.Agent({ keepAlive: true, maxSockets: 1 })
         this.queue = new queue(1, Infinity)
     }
 
@@ -309,7 +309,7 @@ export class WalletRPC {
             language
         }).then((data) => {
             if (data.hasOwnProperty("error")) {
-                this.sendGateway("set_wallet_error", {status: data.error})
+                this.sendGateway("set_wallet_error", { status: data.error })
                 return
             }
 
@@ -331,7 +331,7 @@ export class WalletRPC {
 
             this.sendGateway("reset_wallet_error")
             this.backend.daemon.timestampToHeight(timestamp).then((height) => {
-                if (height === false) { this.sendGateway("set_wallet_error", {status: {code: -1, message: "Invalid restore date"}}) } else { this.restoreWallet(filename, password, seed, "height", height) }
+                if (height === false) { this.sendGateway("set_wallet_error", { status: { code: -1, message: "Invalid restore date" } }) } else { this.restoreWallet(filename, password, seed, "height", height) }
             })
             return
         }
@@ -351,7 +351,7 @@ export class WalletRPC {
             restore_height
         }).then((data) => {
             if (data.hasOwnProperty("error")) {
-                this.sendGateway("set_wallet_error", {status: data.error})
+                this.sendGateway("set_wallet_error", { status: data.error })
                 return
             }
 
@@ -372,7 +372,7 @@ export class WalletRPC {
             timestamp = timestamp - (timestamp % 86400000) - 86400000
 
             this.backend.daemon.timestampToHeight(timestamp).then((height) => {
-                if (height === false) { this.sendGateway("set_wallet_error", {status: {code: -1, message: "Invalid restore date"}}) } else { this.restoreViewWallet(filename, password, address, viewkey, "height", height) }
+                if (height === false) { this.sendGateway("set_wallet_error", { status: { code: -1, message: "Invalid restore date" } }) } else { this.restoreViewWallet(filename, password, address, viewkey, "height", height) }
             })
             return
         }
@@ -391,7 +391,7 @@ export class WalletRPC {
             refresh_start_height
         }).then((data) => {
             if (data.hasOwnProperty("error")) {
-                this.sendGateway("set_wallet_error", {status: data.error})
+                this.sendGateway("set_wallet_error", { status: data.error })
                 return
             }
 
@@ -416,12 +416,12 @@ export class WalletRPC {
         }
 
         if (!fs.existsSync(import_path)) {
-            this.sendGateway("set_wallet_error", {status: {code: -1, message: "Invalid wallet path"}})
+            this.sendGateway("set_wallet_error", { status: { code: -1, message: "Invalid wallet path" } })
         } else {
             let destination = path.join(this.wallet_dir, filename)
 
             if (fs.existsSync(destination) || fs.existsSync(destination + ".keys")) {
-                this.sendGateway("set_wallet_error", {status: {code: -1, message: "Wallet with name already exists"}})
+                this.sendGateway("set_wallet_error", { status: { code: -1, message: "Wallet with name already exists" } })
                 return
             }
 
@@ -439,7 +439,7 @@ export class WalletRPC {
                     if (fs.existsSync(destination)) fs.unlinkSync(destination)
                     if (fs.existsSync(destination + ".keys")) fs.unlinkSync(destination + ".keys")
 
-                    this.sendGateway("set_wallet_error", {status: data.error})
+                    this.sendGateway("set_wallet_error", { status: data.error })
                     return
                 }
 
@@ -450,7 +450,7 @@ export class WalletRPC {
 
                 this.finalizeNewWallet(filename)
             }).catch(() => {
-                this.sendGateway("set_wallet_error", {status: {code: -1, message: "An unknown error occured"}})
+                this.sendGateway("set_wallet_error", { status: { code: -1, message: "An unknown error occured" } })
             })
         }
     }
@@ -459,10 +459,10 @@ export class WalletRPC {
         Promise.all([
             this.sendRPC("get_address"),
             this.sendRPC("getheight"),
-            this.sendRPC("getbalance", {account_index: 0}),
-            this.sendRPC("query_key", {key_type: "mnemonic"}),
-            this.sendRPC("query_key", {key_type: "spend_key"}),
-            this.sendRPC("query_key", {key_type: "view_key"})
+            this.sendRPC("getbalance", { account_index: 0 }),
+            this.sendRPC("query_key", { key_type: "mnemonic" }),
+            this.sendRPC("query_key", { key_type: "spend_key" }),
+            this.sendRPC("query_key", { key_type: "view_key" })
         ]).then((data) => {
             let wallet = {
                 info: {
@@ -524,13 +524,13 @@ export class WalletRPC {
             password
         }).then((data) => {
             if (data.hasOwnProperty("error")) {
-                this.sendGateway("set_wallet_error", {status: data.error})
+                this.sendGateway("set_wallet_error", { status: data.error })
                 return
             }
 
             let address_txt_path = path.join(this.wallet_dir, filename + ".address.txt")
             if (!fs.existsSync(address_txt_path)) {
-                this.sendRPC("get_address", {account_index: 0}).then((data) => {
+                this.sendRPC("get_address", { account_index: 0 }).then((data) => {
                     if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
                         return
                     }
@@ -548,7 +548,7 @@ export class WalletRPC {
             this.startHeartbeat()
 
             // Check if we have a view only wallet by querying the spend key
-            this.sendRPC("query_key", {key_type: "spend_key"}).then((data) => {
+            this.sendRPC("query_key", { key_type: "spend_key" }).then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
                     return
                 }
@@ -574,7 +574,7 @@ export class WalletRPC {
     heartbeatAction (extended = false) {
         Promise.all([
             this.sendRPC("getheight", {}, 5000),
-            this.sendRPC("getbalance", {account_index: 0}, 5000)
+            this.sendRPC("getbalance", { account_index: 0 }, 5000)
         ]).then((data) => {
             let wallet = {
                 status: {
@@ -846,7 +846,7 @@ export class WalletRPC {
                 "priority": priority,
                 "mixin": 9 // Always force a ring size of 10 (ringsize = mixin + 1)
             } : {
-                "destinations": [{"amount": amount, "address": address}],
+                "destinations": [{ "amount": amount, "address": address }],
                 "priority": priority,
                 "mixin": 9
             }
@@ -916,9 +916,9 @@ export class WalletRPC {
                 return
             }
             Promise.all([
-                this.sendRPC("query_key", {key_type: "mnemonic"}),
-                this.sendRPC("query_key", {key_type: "spend_key"}),
-                this.sendRPC("query_key", {key_type: "view_key"})
+                this.sendRPC("query_key", { key_type: "mnemonic" }),
+                this.sendRPC("query_key", { key_type: "spend_key" }),
+                this.sendRPC("query_key", { key_type: "view_key" })
             ]).then((data) => {
                 let wallet = {
                     secret: {
@@ -942,8 +942,8 @@ export class WalletRPC {
     getAddressList () {
         return new Promise((resolve, reject) => {
             Promise.all([
-                this.sendRPC("get_address", {account_index: 0}),
-                this.sendRPC("getbalance", {account_index: 0})
+                this.sendRPC("get_address", { account_index: 0 }),
+                this.sendRPC("getbalance", { account_index: 0 })
             ]).then((data) => {
                 for (let n of data) {
                     if (n.hasOwnProperty("error") || !n.hasOwnProperty("result")) {
@@ -1000,7 +1000,7 @@ export class WalletRPC {
                    !wallet.address_list.primary[0].address.startsWith("RYoK") &&
                    !wallet.address_list.primary[0].address.startsWith("RYoH")) {
                     for (let n = wallet.address_list.unused.length; n < num_unused_addresses; n++) {
-                        this.sendRPC("create_address", {account_index: 0}).then((data) => {
+                        this.sendRPC("create_address", { account_index: 0 }).then((data) => {
                             wallet.address_list.unused.push(data.result)
                             if (wallet.address_list.unused.length == num_unused_addresses) {
                                 // should sort them here
@@ -1017,7 +1017,7 @@ export class WalletRPC {
 
     getTransactions () {
         return new Promise((resolve, reject) => {
-            this.sendRPC("get_transfers", {in: true, out: true, pending: true, failed: true, pool: true}).then((data) => {
+            this.sendRPC("get_transfers", { in: true, out: true, pending: true, failed: true, pool: true }).then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
                     resolve({})
                     return
@@ -1103,7 +1103,7 @@ export class WalletRPC {
 
     deleteAddressBook (index = false) {
         if (index !== false) {
-            this.sendRPC("delete_address_book", {index: index}).then(() => {
+            this.sendRPC("delete_address_book", { index: index }).then(() => {
                 this.saveWallet().then(() => {
                     this.getAddressBook().then((data) => {
                         this.sendGateway("set_wallet_data", data)
@@ -1115,7 +1115,7 @@ export class WalletRPC {
 
     addAddressBook (address, payment_id = null, description = "", name = "", starred = false, index = false) {
         if (index !== false) {
-            this.sendRPC("delete_address_book", {index: index}).then((data) => {
+            this.sendRPC("delete_address_book", { index: index }).then((data) => {
                 this.addAddressBook(address, payment_id, description, name, starred)
             })
             return
@@ -1145,7 +1145,7 @@ export class WalletRPC {
     }
 
     saveTxNotes (txid, note) {
-        this.sendRPC("set_tx_notes", {txids: [txid], notes: [note]}).then((data) => {
+        this.sendRPC("set_tx_notes", { txids: [txid], notes: [note] }).then((data) => {
             this.getTransactions().then((wallet) => {
                 this.sendGateway("set_wallet_data", wallet)
             })
@@ -1155,11 +1155,11 @@ export class WalletRPC {
     exportKeyImages (password, filename = null) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", {type: "negative", message: "Internal error", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
             if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
-                this.sendGateway("show_notification", {type: "negative", message: "Invalid password", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
                 return
             }
 
@@ -1169,7 +1169,7 @@ export class WalletRPC {
                 filename = path.join(filename, "key_image_export")
             }
 
-            const onError = () => this.sendGateway("show_notification", {type: "negative", message: "Error exporting key images", timeout: 2000})
+            const onError = () => this.sendGateway("show_notification", { type: "negative", message: "Error exporting key images", timeout: 2000 })
 
             this.sendRPC("export_key_images").then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
@@ -1177,8 +1177,12 @@ export class WalletRPC {
                     return
                 }
 
-                fs.outputJSONSync(filename, data.result.signed_key_images)
-                this.sendGateway("show_notification", {message: "Key images exported to " + filename, timeout: 2000})
+                if (data.result.signed_key_images) {
+                    fs.outputJSONSync(filename, data.result.signed_key_images)
+                    this.sendGateway("show_notification", { message: "Key images exported to " + filename, timeout: 2000 })
+                } else {
+                    this.sendGateway("show_notification", { type: "warning", textColor: "black", message: "No key images found to export", timeout: 2000 })
+                }
             }).catch(onError)
         })
     }
@@ -1186,17 +1190,17 @@ export class WalletRPC {
     importKeyImages (password, filename = null) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", {type: "negative", message: "Internal error", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
             if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
-                this.sendGateway("show_notification", {type: "negative", message: "Invalid password", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
                 return
             }
 
             if (filename == null) { filename = path.join(this.wallet_data_dir, "images", this.wallet_state.name, "key_image_export") }
 
-            const onError = (message) => this.sendGateway("show_notification", {type: "negative", message, timeout: 2000})
+            const onError = (message) => this.sendGateway("show_notification", { type: "negative", message, timeout: 2000 })
 
             fs.readJSON(filename).then(signed_key_images => {
                 this.sendRPC("import_key_images", { signed_key_images }).then((data) => {
@@ -1205,7 +1209,7 @@ export class WalletRPC {
                         return
                     }
 
-                    this.sendGateway("show_notification", {message: "Key images imported", timeout: 2000})
+                    this.sendGateway("show_notification", { message: "Key images imported", timeout: 2000 })
                 })
             }).catch(() => onError("Error reading key images"))
         })
@@ -1357,7 +1361,7 @@ export class WalletRPC {
                 if (fs.existsSync(legacy_wallet_path + ".address.txt")) {
                     legacy_address = fs.readFileSync(legacy_wallet_path + ".address.txt", "utf8")
                 }
-                wallets.legacy.push({path: legacy_wallet_path, address: legacy_address})
+                wallets.legacy.push({ path: legacy_wallet_path, address: legacy_address })
             }
         }
 
@@ -1367,24 +1371,24 @@ export class WalletRPC {
     changeWalletPassword (old_password, new_password) {
         crypto.pbkdf2(old_password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", {type: "negative", message: "Internal error", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
             if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
-                this.sendGateway("show_notification", {type: "negative", message: "Invalid old password", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Invalid old password", timeout: 2000 })
                 return
             }
 
-            this.sendRPC("change_wallet_password", {old_password, new_password}).then((data) => {
+            this.sendRPC("change_wallet_password", { old_password, new_password }).then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                    this.sendGateway("show_notification", {type: "negative", message: "Error changing password", timeout: 2000})
+                    this.sendGateway("show_notification", { type: "negative", message: "Error changing password", timeout: 2000 })
                     return
                 }
 
                 // store hash of the password so we can check against it later when requesting private keys, or for sending txs
                 this.wallet_state.password_hash = crypto.pbkdf2Sync(new_password, this.auth[2], 1000, 64, "sha512").toString("hex")
 
-                this.sendGateway("show_notification", {message: "Password updated", timeout: 2000})
+                this.sendGateway("show_notification", { message: "Password updated", timeout: 2000 })
             })
         })
     }
@@ -1392,11 +1396,11 @@ export class WalletRPC {
     deleteWallet (password) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", {type: "negative", message: "Internal error", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
             if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
-                this.sendGateway("show_notification", {type: "negative", message: "Invalid password", timeout: 2000})
+                this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
                 return
             }
 
