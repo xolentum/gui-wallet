@@ -425,10 +425,15 @@ export class WalletRPC {
                 return
             }
 
-            fs.copyFileSync(import_path, destination, fs.constants.COPYFILE_EXCL)
+            try {
+                fs.copySync(import_path, destination, fs.constants.COPYFILE_EXCL)
 
-            if (fs.existsSync(import_path + ".keys")) {
-                fs.copyFileSync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL)
+                if (fs.existsSync(import_path + ".keys")) {
+                    fs.copySync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL)
+                }
+            } catch (e) {
+                this.sendGateway("set_wallet_error", { status: { code: -1, message: "Failed to copy wallet" } })
+                return
             }
 
             this.sendRPC("open_wallet", {
