@@ -85,7 +85,7 @@ export class Backend {
             app: {
                 data_dir: this.config_dir,
                 wallet_data_dir: this.wallet_dir,
-                ws_bind_port: 12213,
+                ws_bind_port: 12313,
                 net_type: "mainnet"
             },
             wallet: {
