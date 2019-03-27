@@ -1,6 +1,6 @@
 {
   "name": "loki-wallet-atom",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "daemonVersion": "0.3.2.0",
   "description": "Modern GUI interface for Loki Currency",
   "productName": "Loki Wallet Atom",
