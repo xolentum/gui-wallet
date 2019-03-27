@@ -197,6 +197,11 @@ module.exports = function (ctx) {
                     background: "src-electron/build/ryo-dmg.tiff"
                 },
 
+                nsis: {
+                    oneClick: false,
+                    allowToChangeInstallationDirectory: true
+                },
+
                 extraResources: [
                     "bin"
                 ]
