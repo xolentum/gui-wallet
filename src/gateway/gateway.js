@@ -152,6 +152,14 @@ export class Gateway extends EventEmitter {
             Notify.create(Object.assign(notification, decrypted_data.data))
             break
 
+        case "show_loading":
+            Loading.show({ ...(decrypted_data.data || {}) })
+            break
+
+        case "hide_loading":
+            Loading.hide()
+            break
+
         case "return_to_wallet_select":
             this.router.replace({ path: "/wallet-select" })
             setTimeout(() => {

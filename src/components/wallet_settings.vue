@@ -446,6 +446,7 @@ export default {
             this.modals.change_password.new_password_confirm = ""
         },
         deleteWallet () {
+            if(!this.is_ready) return
             this.$q.dialog({
                 title: "Delete wallet",
                 message: "Are you absolutely sure you want to delete your wallet?\nMake sure you have your private keys backed up.\nTHIS PROCESS IS NOT REVERSIBLE!",

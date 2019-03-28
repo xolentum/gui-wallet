@@ -263,7 +263,17 @@ export class WalletRPC {
         }
     }
 
+    isValidPasswordHash (password_hash) {
+        if (this.wallet_state.password_hash === null) return true
+        return this.wallet_state.password_hash === password_hash.toString("hex")
+    }
+
     hasPassword () {
+        if (this.wallet_state.password_hash === null) {
+            this.sendGateway("set_has_password", false)
+            return
+        }
+
         crypto.pbkdf2("", this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
                 this.sendGateway("set_has_password", false)
@@ -658,7 +668,7 @@ export class WalletRPC {
                 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_snode_status", {
                     stake: {
                         code: -1,
@@ -712,7 +722,7 @@ export class WalletRPC {
                 return
             }
 
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_snode_status", {
                     registration: {
                         code: -1,
@@ -763,7 +773,7 @@ export class WalletRPC {
                 return
             }
 
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_snode_status", {
                     unlock: {
                         code: -1,
@@ -831,7 +841,7 @@ export class WalletRPC {
                 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_tx_status", {
                     code: -1,
                     message: "Invalid password",
@@ -910,7 +920,7 @@ export class WalletRPC {
                 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_wallet_data", {
                     secret: {
                         mnemonic: "Invalid password",
@@ -1163,7 +1173,7 @@ export class WalletRPC {
                 this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
                 return
             }
@@ -1198,7 +1208,7 @@ export class WalletRPC {
                 this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
                 return
             }
@@ -1379,7 +1389,7 @@ export class WalletRPC {
                 this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("show_notification", { type: "negative", message: "Invalid old password", timeout: 2000 })
                 return
             }
@@ -1404,17 +1414,21 @@ export class WalletRPC {
                 this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
                 return
             }
-            if (this.wallet_state.password_hash !== password_hash.toString("hex")) {
+            if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
                 return
             }
+
+            this.sendGateway("show_loading", { message: "Deleting wallet" })
 
             let wallet_path = path.join(this.wallet_dir, this.wallet_state.name)
             this.closeWallet().then(() => {
                 fs.unlinkSync(wallet_path)
                 fs.unlinkSync(wallet_path + ".keys")
                 fs.unlinkSync(wallet_path + ".address.txt")
+
                 this.listWallets()
+                this.sendGateway("hide_loading")
                 this.sendGateway("return_to_wallet_select")
             })
         })
