@@ -1,6 +1,7 @@
 import { app, ipcMain, BrowserWindow, Menu, dialog } from "electron"
 import { Backend } from "./modules/backend"
 import menuTemplate from "./menu"
+import isDev from "electron-is-dev"
 const portscanner = require("portscanner")
 const windowStateKeeper = require("electron-window-state")
 
@@ -80,8 +81,12 @@ function createWindow () {
         }
     })
 
-    ipcMain.on("confirmClose", (e) => {
+    ipcMain.on("confirmClose", (e, restart) => {
         showConfirmClose = false
+
+        // In dev mode, this will launch a blank white screen
+        if (restart && !isDev) app.relaunch()
+
         if (backend) {
             backend.quit().then(() => {
                 backend = null
