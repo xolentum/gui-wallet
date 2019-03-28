@@ -54,16 +54,16 @@ export class Gateway extends EventEmitter {
         this.send("core", "init")
     }
 
-    confirmClose (msg) {
+    confirmClose (msg, restart = false) {
         if (this.closeDialog) {
             return
         }
         this.closeDialog = true
         Dialog.create({
-            title: "Exit",
+            title: restart ? "Restart" : "Exit",
             message: msg,
             ok: {
-                label: "EXIT"
+                label: restart ? "RESTART" : "EXIT"
             },
             cancel: {
                 flat: true,
@@ -74,7 +74,7 @@ export class Gateway extends EventEmitter {
             this.closeDialog = false
             Loading.hide()
             this.router.replace({ path: "/quit" })
-            ipcRenderer.send("confirmClose")
+            ipcRenderer.send("confirmClose", restart)
         }).catch(() => {
             this.closeDialog = false
         })
@@ -140,7 +140,7 @@ export class Gateway extends EventEmitter {
             break
 
         case "settings_changed_reboot":
-            this.confirmClose("Changes require restart. Would you like to exit now?")
+            this.confirmClose("Changes require restart. Would you like to restart now?", true)
             break
 
         case "show_notification":
@@ -150,6 +150,14 @@ export class Gateway extends EventEmitter {
                 message: ""
             }
             Notify.create(Object.assign(notification, decrypted_data.data))
+            break
+
+        case "show_loading":
+            Loading.show({ ...(decrypted_data.data || {}) })
+            break
+
+        case "hide_loading":
+            Loading.hide()
             break
 
         case "return_to_wallet_select":
