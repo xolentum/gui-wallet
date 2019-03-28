@@ -194,7 +194,7 @@ module.exports = function (ctx) {
                 },
 
                 dmg: {
-                    background: "src-electron/build/ryo-dmg.tiff"
+                    background: "src-electron/build/loki-dmg.tiff"
                 },
 
                 nsis: {
