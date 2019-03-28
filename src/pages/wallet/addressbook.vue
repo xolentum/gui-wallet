@@ -1,7 +1,7 @@
 <template>
 <q-page class="address-book">
 
-    <div class="row q-pt-sm q-mx-md q-mb-none items-center non-selectable" style="height: 44px;">
+    <div class="header row q-pt-md q-pb-xs q-mx-md q-mb-none items-center non-selectable">
             Address book
     </div>
 
@@ -9,20 +9,18 @@
         <q-list link no-border :dark="theme=='dark'" class="loki-list">
             <q-item class="loki-list-item" v-for="(entry, index) in address_book_combined" @click.native="details(entry)" :key="entry.address">
                 <q-item-main>
-                    <q-item-tile sublabel>{{ entry.name }}</q-item-tile>
                     <q-item-tile class="ellipsis" label>{{ entry.address }}</q-item-tile>
+                    <q-item-tile sublabel>{{ entry.name }}</q-item-tile>
                 </q-item-main>
                 <q-item-side>
-                    <q-btn
-                        color="primary" style="width:25px; margin-right: 10px;"
-                        size="sm" icon="call_made"
-                        :disabled="view_only"
-                        @click="sendToAddress(entry, $event)">
-                        <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Send coins
-                        </q-tooltip>
-                    </q-btn>
                     <q-icon size="24px" :name="entry.starred ? 'star' : 'star_border'" />
+                    <q-btn
+                        color="secondary"
+                        style="margin-left: 10px;"
+                        label="Send"
+                        :disabled="view_only"
+                        @click="sendToAddress(entry, $event)"
+                    />
                 </q-item-side>
 
                 <q-context-menu>
@@ -156,13 +154,31 @@ export default {
 
 <style lang="scss">
 .address-book {
-    .q-item-label {
-        font-weight: 400;
+    .header {
+        font-size: 14px;
+        font-weight: 500
     }
 
-    .q-item-sublabel, .q-list-header {
-        font-size: 14px;
-        margin-top: 0px;
+    .loki-list-item {
+        cursor: pointer;
+        padding-top: 12px;
+        padding-bottom: 12px;
+
+        .q-item-sublabel,  {
+            font-size: 14px;
+        }
+
+        .q-item-label {
+            font-weight: 400;
+        }
+
+        .q-item-side {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 12px;
+        }
     }
+
 }
 </style>
