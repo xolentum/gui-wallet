@@ -122,6 +122,10 @@ export class Backend {
             {
                 host: "nodes.hashvault.pro",
                 port: "22023"
+            },
+            {
+                host: "rpc.nodes.rentals",
+                port: "22023"
             }
         ]
 
