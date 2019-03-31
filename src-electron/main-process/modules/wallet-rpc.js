@@ -26,9 +26,24 @@ export class WalletRPC {
         this.dirs = null
         this.last_height_send_time = Date.now()
 
-        this.height_regex1 = /Processed block: <([a-f0-9]+)>, height (\d+)/
-        this.height_regex2 = /Skipped block by height: (\d+)/
-        this.height_regex3 = /Skipped block by timestamp, height: (\d+)/
+        this.height_regexes = [
+            {
+                string: /Processed block: <([a-f0-9]+)>, height (\d+)/,
+                height: (match) => match[2]
+            },
+            {
+                string: /Skipped block by height: (\d+)/,
+                height: (match) => match[1]
+            },
+            {
+                string: /Skipped block by timestamp, height: (\d+)/,
+                height: (match) => match[1]
+            },
+            {
+                string: /Blockchain sync progress: <([a-f0-9]+)>, height (\d+)/,
+                height: (match) => match[2]
+            }
+        ]
 
         this.agent = new http.Agent({ keepAlive: true, maxSockets: 1 })
         this.queue = new queue(1, Infinity)
@@ -109,18 +124,11 @@ export class WalletRPC {
                     let lines = data.toString().split("\n")
                     let match, height = null
                     lines.forEach((line) => {
-                        match = line.match(this.height_regex1)
-                        if (match) {
-                            height = match[2]
-                        } else {
-                            match = line.match(this.height_regex2)
+                        for (const regex of this.height_regexes) {
+                            match = line.match(regex.string)
                             if (match) {
-                                height = match[1]
-                            } else {
-                                match = line.match(this.height_regex3)
-                                if (match) {
-                                    height = match[1]
-                                }
+                                height = regex.height(match)
+                                break
                             }
                         }
                     })
