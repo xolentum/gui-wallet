@@ -760,27 +760,25 @@ export class WalletRPC {
     }
 
     unlockStake (password, service_node_key, confirmed = false) {
+        const sendError = (message) => {
+            this.sendGateway("set_snode_status", {
+                unlock: {
+                    code: -1,
+                    message,
+                    sending: false
+                }
+            })
+        }
+
         // Unlock code 0 means success, 1 means can unlock, -1 means error
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("set_snode_status", {
-                    unlock: {
-                        code: -1,
-                        message: "Internal error",
-                        sending: false
-                    }
-                })
+                sendError("Internal error")
                 return
             }
 
             if (!this.isValidPasswordHash(password_hash)) {
-                this.sendGateway("set_snode_status", {
-                    unlock: {
-                        code: -1,
-                        message: "Invalid password",
-                        sending: false
-                    }
-                })
+                sendError("Invalid password")
                 return
             }
 
@@ -790,16 +788,16 @@ export class WalletRPC {
                 }).then(data => {
                     if (data.hasOwnProperty("error")) {
                         const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
-                        this.sendGateway("set_snode_status", {
-                            unlock: {
-                                code: -1,
-                                message: error,
-                                sending: false
-                            }
-                        })
+                        sendError(error)
                         return null
                     }
-                    return data
+
+                    if (!data.hasOwnProperty("result")) {
+                        sendError("Failed to unlock service node")
+                        return null
+                    }
+
+                    return data.result
                 })
             }
 
