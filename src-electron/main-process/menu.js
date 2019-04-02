@@ -43,7 +43,7 @@ let template = [
 
 if (process.platform === "darwin") {
     template.unshift({
-        label: "Loki Wallet Atom",
+        label: "Loki Electron Wallet",
         submenu: [
             { role: "about" },
             { type: "separator" },

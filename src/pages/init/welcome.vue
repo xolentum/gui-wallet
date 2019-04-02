@@ -7,7 +7,8 @@
 
             <div class="welcome-container">
                 <img src="statics/loki.svg" height="100" class="q-mb-md">
-                <div>Version: ATOM v{{version}}-v{{daemonVersion}}</div>
+                <div>Wallet Version: v{{version}}</div>
+                <div>Deamon Version: v{{daemonVersion}}</div>
 
                 <h6 class="q-mb-md" style="font-weight: 300">Select language:</h6>
 

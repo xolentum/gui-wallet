@@ -1,9 +1,9 @@
 {
-  "name": "loki-wallet-atom",
+  "name": "loki-electron-wallet",
   "version": "1.1.1",
-  "daemonVersion": "0.3.2.0",
+  "daemonVersion": "3.0.3",
   "description": "Modern GUI interface for Loki Currency",
-  "productName": "Loki Wallet Atom",
+  "productName": "Loki Electron Wallet",
   "cordovaId": "com.lokinetwork.wallet",
   "author": "Loki",
   "private": true,
