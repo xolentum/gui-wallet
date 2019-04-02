@@ -27,9 +27,24 @@ export class WalletRPC {
         this.dirs = null
         this.last_height_send_time = Date.now()
 
-        this.height_regex1 = /Processed block: <([a-f0-9]+)>, height (\d+)/
-        this.height_regex2 = /Skipped block by height: (\d+)/
-        this.height_regex3 = /Skipped block by timestamp, height: (\d+)/
+        this.height_regexes = [
+            {
+                string: /Processed block: <([a-f0-9]+)>, height (\d+)/,
+                height: (match) => match[2]
+            },
+            {
+                string: /Skipped block by height: (\d+)/,
+                height: (match) => match[1]
+            },
+            {
+                string: /Skipped block by timestamp, height: (\d+)/,
+                height: (match) => match[1]
+            },
+            {
+                string: /Blockchain sync progress: <([a-f0-9]+)>, height (\d+)/,
+                height: (match) => match[2]
+            }
+        ]
 
         this.agent = new http.Agent({ keepAlive: true, maxSockets: 1 })
         this.queue = new queue(1, Infinity)
@@ -112,21 +127,15 @@ export class WalletRPC {
                             let lines = data.toString().split("\n")
                             let match, height = null
                             lines.forEach((line) => {
-                                match = line.match(this.height_regex1)
-                                if (match) {
-                                    height = match[2]
-                                } else {
-                                    match = line.match(this.height_regex2)
+                                for (const regex of this.height_regexes) {
+                                    match = line.match(regex.string)
                                     if (match) {
-                                        height = match[1]
-                                    } else {
-                                        match = line.match(this.height_regex3)
-                                        if (match) {
-                                            height = match[1]
-                                        }
+                                        height = regex.height(match)
+                                        break
                                     }
                                 }
                             })
+
                             if (height && Date.now() - this.last_height_send_time > 1000) {
                                 this.last_height_send_time = Date.now()
                                 this.sendGateway("set_wallet_data", {
@@ -776,27 +785,25 @@ export class WalletRPC {
     }
 
     unlockStake (password, service_node_key, confirmed = false) {
+        const sendError = (message) => {
+            this.sendGateway("set_snode_status", {
+                unlock: {
+                    code: -1,
+                    message,
+                    sending: false
+                }
+            })
+        }
+
         // Unlock code 0 means success, 1 means can unlock, -1 means error
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("set_snode_status", {
-                    unlock: {
-                        code: -1,
-                        message: "Internal error",
-                        sending: false
-                    }
-                })
+                sendError("Internal error")
                 return
             }
 
             if (!this.isValidPasswordHash(password_hash)) {
-                this.sendGateway("set_snode_status", {
-                    unlock: {
-                        code: -1,
-                        message: "Invalid password",
-                        sending: false
-                    }
-                })
+                sendError("Invalid password")
                 return
             }
 
@@ -806,16 +813,16 @@ export class WalletRPC {
                 }).then(data => {
                     if (data.hasOwnProperty("error")) {
                         const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
-                        this.sendGateway("set_snode_status", {
-                            unlock: {
-                                code: -1,
-                                message: error,
-                                sending: false
-                            }
-                        })
+                        sendError(error)
                         return null
                     }
-                    return data
+
+                    if (!data.hasOwnProperty("result")) {
+                        sendError("Failed to unlock service node")
+                        return null
+                    }
+
+                    return data.result
                 })
             }
 
