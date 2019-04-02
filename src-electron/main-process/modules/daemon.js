@@ -16,6 +16,12 @@ export class Daemon {
 
         this.agent = new http.Agent({ keepAlive: true, maxSockets: 1 })
         this.queue = new queue(1, Infinity)
+
+        // Settings for timestamp to height conversion
+        // These are initial values used to calculate the height
+        this.PIVOT_BLOCK_HEIGHT = 119681
+        this.PIVOT_BLOCK_TIMESTAMP = 1539676273
+        this.PIVOT_BLOCK_TIME = 120
     }
 
     checkVersion () {
@@ -206,10 +212,10 @@ export class Daemon {
                 timestamp = Math.floor(timestamp / 1000)
             }
 
-            pivot = pivot || [137500, 1528073506]
+            pivot = pivot || [this.PIVOT_BLOCK_HEIGHT, this.PIVOT_BLOCK_TIMESTAMP]
             recursion_limit = recursion_limit || 0
 
-            let diff = Math.floor((timestamp - pivot[1]) / 240)
+            let diff = Math.floor((timestamp - pivot[1]) / this.PIVOT_BLOCK_TIME)
             let estimated_height = pivot[0] + diff
 
             if (estimated_height <= 0) {
