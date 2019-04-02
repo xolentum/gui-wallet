@@ -6,6 +6,7 @@ const os = require("os")
 const fs = require("fs-extra")
 const path = require("path")
 const crypto = require("crypto")
+const portscanner = require("portscanner")
 
 export class WalletRPC {
     constructor (backend) {
@@ -105,62 +106,78 @@ export class WalletRPC {
 
                 if (!fs.existsSync(this.wallet_dir)) { fs.mkdirpSync(this.wallet_dir) }
 
-                if (process.platform === "win32") {
-                    this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc.exe"), args)
-                } else {
-                    this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc"), args, {
-                        detached: true
-                    })
-                }
-
                 // save this info for later RPC calls
                 this.protocol = "http://"
                 this.hostname = "127.0.0.1"
                 this.port = options.wallet.rpc_bind_port
 
-                this.walletRPCProcess.stdout.on("data", (data) => {
-                    process.stdout.write(`Wallet: ${data}`)
-
-                    let lines = data.toString().split("\n")
-                    let match, height = null
-                    lines.forEach((line) => {
-                        for (const regex of this.height_regexes) {
-                            match = line.match(regex.string)
-                            if (match) {
-                                height = regex.height(match)
-                                break
-                            }
+                portscanner.checkPortStatus(this.port, this.hostname).catch(e => "closed").then(status => {
+                    if (status === "closed") {
+                        if (process.platform === "win32") {
+                            this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc.exe"), args)
+                        } else {
+                            this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc"), args, {
+                                detached: true
+                            })
                         }
-                    })
-                    if (height && Date.now() - this.last_height_send_time > 1000) {
-                        this.last_height_send_time = Date.now()
-                        this.sendGateway("set_wallet_data", {
-                            info: {
-                                height
+
+                        this.walletRPCProcess.stdout.on("data", (data) => {
+                            process.stdout.write(`Wallet: ${data}`)
+
+                            let lines = data.toString().split("\n")
+                            let match, height = null
+                            lines.forEach((line) => {
+                                for (const regex of this.height_regexes) {
+                                    match = line.match(regex.string)
+                                    if (match) {
+                                        height = regex.height(match)
+                                        break
+                                    }
+                                }
+                            })
+
+                            if (height && Date.now() - this.last_height_send_time > 1000) {
+                                this.last_height_send_time = Date.now()
+                                this.sendGateway("set_wallet_data", {
+                                    info: {
+                                        height
+                                    }
+                                })
                             }
                         })
+                        this.walletRPCProcess.on("error", err => process.stderr.write(`Wallet: ${err}`))
+                        this.walletRPCProcess.on("close", code => {
+                            process.stderr.write(`Wallet: exited with code ${code} \n`)
+                            this.walletRPCProcess = null
+                            this.agent.destroy()
+                            if (code === null) {
+                                reject(new Error("Failed to start wallet RPC"))
+                            }
+                        })
+
+                        // To let caller know when the wallet is ready
+                        let intrvl = setInterval(() => {
+                            this.sendRPC("get_languages").then((data) => {
+                                if (!data.hasOwnProperty("error")) {
+                                    clearInterval(intrvl)
+                                    resolve()
+                                } else {
+                                    if (data.error.cause &&
+                                       data.error.cause.code === "ECONNREFUSED") {
+                                        // Ignore
+                                    } else {
+                                        clearInterval(intrvl)
+                                        if (this.walletRPCProcess) this.walletRPCProcess.kill()
+                                        this.walletRPCProcess = null
+                                        reject(new Error("Could not connect to wallet RPC"))
+                                    }
+                                }
+                            })
+                        }, 1000)
+                    } else {
+                        reject(new Error(`Wallet RPC port ${this.port} is in use`))
                     }
                 })
-                this.walletRPCProcess.on("error", err => process.stderr.write(`Wallet: ${err}`))
-                this.walletRPCProcess.on("close", code => process.stderr.write(`Wallet: exited with code ${code}`))
-
-                // To let caller know when the wallet is ready
-                let intrvl = setInterval(() => {
-                    this.sendRPC("get_languages").then((data) => {
-                        if (!data.hasOwnProperty("error")) {
-                            clearInterval(intrvl)
-                            resolve()
-                        } else {
-                            if (data.error.cause &&
-                               data.error.cause.code === "ECONNREFUSED") {
-                                // Ignore
-                            } else {
-                                clearInterval(intrvl)
-                                reject(error)
-                            }
-                        }
-                    })
-                }, 1000)
             })
         })
     }
