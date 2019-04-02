@@ -175,7 +175,7 @@ module.exports = function (ctx) {
                 // https://www.electron.build/configuration/configuration
 
                 appId: "com.lokinetwork.wallet",
-                productName: "Loki Wallet Atom",
+                productName: "Loki Electron Wallet",
                 copyright: "Copyright © 2018-2019 Loki Project, 2018 Ryo Currency Project",
 
                 // directories: {
