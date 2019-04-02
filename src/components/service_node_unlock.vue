@@ -88,6 +88,7 @@ export default {
                             message: this.unlock_status.message
                         })
                         break;
+                    default: break;
                 }
             },
             deep: true
