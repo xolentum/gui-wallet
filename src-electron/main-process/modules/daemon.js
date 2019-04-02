@@ -4,6 +4,7 @@ const queue = require("promise-queue")
 const http = require("http")
 const fs = require("fs")
 const path = require("path")
+const portscanner = require("portscanner")
 
 export class Daemon {
     constructor (backend) {
@@ -124,42 +125,63 @@ export class Daemon {
                 )
             }
 
-            if (process.platform === "win32") {
-                this.daemonProcess = child_process.spawn(path.join(__ryo_bin, "lokid.exe"), args)
-            } else {
-                this.daemonProcess = child_process.spawn(path.join(__ryo_bin, "lokid"), args, {
-                    detached: true
-                })
-            }
-
             // save this info for later RPC calls
             this.protocol = "http://"
             this.hostname = daemon.rpc_bind_ip
             this.port = daemon.rpc_bind_port
 
-            this.daemonProcess.stdout.on("data", data => process.stdout.write(`Daemon: ${data}`))
-            this.daemonProcess.on("error", err => process.stderr.write(`Daemon: ${err}`))
-            this.daemonProcess.on("close", code => process.stderr.write(`Daemon: exited with code ${code}`))
-
-            // To let caller know when the daemon is ready
-            let intrvl = setInterval(() => {
-                this.sendRPC("get_info").then((data) => {
-                    if (!data.hasOwnProperty("error")) {
-                        this.startHeartbeat()
-                        clearInterval(intrvl)
-                        resolve()
+            portscanner.checkPortStatus(this.port, this.hostname).catch(e => "closed").then(status => {
+                if (status === "closed") {
+                    if (process.platform === "win32") {
+                        this.daemonProcess = child_process.spawn(path.join(__ryo_bin, "lokid.exe"), args)
                     } else {
-                        if (data.error.cause &&
-                           data.error.cause.code === "ECONNREFUSED") {
-                            // Ignore
-                        } else {
-                            clearInterval(intrvl)
-                            reject(error)
-                        }
+                        this.daemonProcess = child_process.spawn(path.join(__ryo_bin, "lokid"), args, {
+                            detached: true
+                        })
                     }
-                })
-            }, 1000)
+
+                    this.daemonProcess.stdout.on("data", data => process.stdout.write(`Daemon: ${data}`))
+                    this.daemonProcess.on("error", err => process.stderr.write(`Daemon error: ${err}`))
+                    this.daemonProcess.on("close", code => {
+                        process.stderr.write(`Daemon: exited with code ${code} \n`)
+                        this.daemonProcess = null
+                        this.agent.destroy()
+                        if (code === null) {
+                            reject(new Error("Failed to start local daemon"))
+                        }
+                    })
+
+                    // To let caller know when the daemon is ready
+                    let intrvl = setInterval(() => {
+                        this.sendRPC("get_info").then((data) => {
+                            if (!data.hasOwnProperty("error")) {
+                                this.startHeartbeat()
+                                clearInterval(intrvl)
+                                resolve()
+                            } else {
+                                if (data.error.cause &&
+                                   data.error.cause.code === "ECONNREFUSED") {
+                                    // Ignore
+                                } else {
+                                    clearInterval(intrvl)
+                                    this.killProcess()
+                                    reject(new Error("Could not connect to local daemon"))
+                                }
+                            }
+                        })
+                    }, 1000)
+                } else {
+                    reject(new Error(`Local daemon port ${this.port} is in use`))
+                }
+            })
         })
+    }
+
+    killProcess () {
+        if (this.daemonProcess) {
+            this.daemonProcess.kill()
+            this.daemonProcess = null
+        }
     }
 
     handle (data) {
