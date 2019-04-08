@@ -8,11 +8,11 @@
         <div class="row justify-center">
             <div class="funds column items-center">
                 <div class="balance">
-                    <div class="text"><span>Balance</span></div>
+                    <div class="text"><span>{{ $t("strings.lokiBalance") }}</span></div>
                     <div class="value"><span><FormatLoki :amount="info.balance" /></span></div>
                 </div>
                 <div class="row unlocked">
-                    <span>Unlocked: <FormatLoki :amount="info.unlocked_balance" /></span>
+                    <span>{{ $t("strings.lokiUnlockedShort") }}: <FormatLoki :amount="info.unlocked_balance" /></span>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
             ref="copy"
             @click="copyAddress">
             <q-tooltip anchor="center right" self="center left" :offset="[5, 10]">
-                Copy address
+                {{ $t("menuItems.copyAddress") }}
             </q-tooltip>
         </q-btn>
         </div>
@@ -50,7 +50,7 @@ export default {
             this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Address copied to clipboard"
+                message: this.$t("notification.positive.addressCopied")
             })
         },
     },

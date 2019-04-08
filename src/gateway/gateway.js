@@ -2,6 +2,7 @@ import { ipcRenderer } from "electron"
 import { Notify, Dialog, Loading, LocalStorage } from "quasar"
 import { EventEmitter } from "events"
 import { SCEE } from "./SCEE-Node"
+import { i18n } from "src/plugins/i18n"
 
 export class Gateway extends EventEmitter {
     constructor (app, router) {
@@ -59,15 +60,18 @@ export class Gateway extends EventEmitter {
             return
         }
         this.closeDialog = true
+
+        const key = restart ? "restart" : "exit"
+
         Dialog.create({
-            title: restart ? "Restart" : "Exit",
+            title: i18n.t(`dialog.${key}.title`),
             message: msg,
             ok: {
-                label: restart ? "RESTART" : "EXIT"
+                label: i18n.t(`dialog.${key}.ok`)
             },
             cancel: {
                 flat: true,
-                label: "CANCEL",
+                label: i18n.t("dialog.buttons.cancel"),
                 color: this.app.store.state.gateway.app.config.appearance.theme == "dark" ? "white" : "dark"
             }
         }).then(() => {
@@ -149,7 +153,17 @@ export class Gateway extends EventEmitter {
                 timeout: 1000,
                 message: ""
             }
-            Notify.create(Object.assign(notification, decrypted_data.data))
+            const { data } = decrypted_data
+
+            if (data.i18n) {
+                if (typeof data.i18n === "string") {
+                    notification.message = i18n.t(data.i18n)
+                } else if (Array.isArray(data.i18n)) {
+                    notification.message = i18n.t(...data.i18n)
+                }
+            }
+
+            Notify.create(Object.assign(notification, data))
             break
 
         case "show_loading":

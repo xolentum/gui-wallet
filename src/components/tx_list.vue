@@ -2,7 +2,7 @@
 <div class="tx-list">
 
     <template v-if="tx_list_paged.length === 0">
-        <p class="q-pa-md q-mb-none">No transactions found</p>
+        <p class="q-pa-md q-mb-none">{{ $t("strings.noTransactionsFound") }}</p>
     </template>
 
     <template v-else>
@@ -30,17 +30,17 @@
                         <q-list link separator style="min-width: 150px; max-height: 300px;">
                             <q-item v-close-overlay
                                     @click.native="details(tx)">
-                                <q-item-main label="Show details" />
+                                <q-item-main :label="$t('menuItems.showDetails')" />
                             </q-item>
 
                             <q-item v-close-overlay
                                     @click.native="copyTxid(tx.txid, $event)">
-                                <q-item-main label="Copy transaction id" />
+                                <q-item-main :label="$t('menuItems.copyTransactionId')" />
                             </q-item>
 
                             <q-item v-close-overlay
                                     @click.native="openExplorer(tx.txid)">
-                                <q-item-main label="View on explorer" />
+                                <q-item-main :label="$t('menuItems.viewOnExplorer')" />
                             </q-item>
                         </q-list>
                     </q-context-menu>
@@ -64,6 +64,7 @@ import Identicon from "components/identicon"
 import TxTypeIcon from "components/tx_type_icon"
 import TxDetails from "components/tx_details"
 import FormatLoki from "components/format_loki"
+import { i18n } from "plugins/i18n"
 
 export default {
     name: "TxList",
@@ -161,22 +162,22 @@ export default {
         typeToString: function (value) {
             switch (value) {
                 case "in":
-                    return "Received"
+                    return i18n.t("strings.transactions.received")
                 case "out":
-                    return "Sent"
+                    return i18n.t("strings.transactions.sent")
                 case "failed":
-                    return "Failed"
+                    return i18n.t("strings.transactions.types.failed")
                 case "pending":
                 case "pool":
-                    return "Pending"
+                    return i18n.t("strings.transactions.types.pending")
                 case "miner":
-                    return "Miner"
+                    return i18n.t("strings.transactions.types.miner")
                 case "snode":
-                    return "Service Node"
+                    return i18n.t("strings.transactions.types.serviceNode")
                 case "gov":
-                    return "Governance"
+                    return i18n.t("strings.transactions.types.governance")
                 case "stake":
-                    return "Stake"
+                    return i18n.t("strings.transactions.types.stake")
                 default:
                     return "-"
             }
@@ -251,11 +252,11 @@ export default {
             let height = tx.height;
             let confirms = Math.max(0, this.wallet_height - height);
             if(height == 0)
-                return "Pending"
+                return this.$t("strings.transactions.types.pending")
             if(confirms < Math.max(10, tx.unlock_time - height))
-                return `Height: ${height} (${confirms} confirm${confirms==1?'':'s'})`
+                return this.$t("strings.blockHeight") + `: ${height} (${confirms} confirm${confirms==1?'':'s'})`
             else
-                return `Height: ${height} (confirmed)`
+                return this.$t("strings.blockHeight") + `: ${height} (confirmed)`
         },
         copyTxid (txid, event) {
             event.stopPropagation()
@@ -269,7 +270,7 @@ export default {
             this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Txid copied to clipboard"
+                message: this.$t("notification.positive.copied", { item: "Txid" })
             })
         },
         openExplorer (txid) {

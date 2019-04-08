@@ -1,17 +1,17 @@
 <template>
 <q-page class="create-wallet">
     <div class="fields q-mx-md q-mt-md">
-        <LokiField label="Wallet name" :error="$v.wallet.name.$error">
+        <LokiField :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
                 @blur="$v.wallet.name.$touch"
                 :dark="theme=='dark'"
-                placeholder="A name for your wallet"
+                :placeholder="$t('placeholders.walletName')"
                 hide-underline
             />
         </LokiField>
 
-        <LokiField label="Seed Language">
+        <LokiField :label="$t('fieldLabels.seedLanguage')">
             <q-select
                 v-model="wallet.language"
                 :options="languageOptions"
@@ -20,17 +20,17 @@
             />
         </LokiField>
 
-        <LokiField label="Password" optional>
+        <LokiField :label="$t('fieldLabels.password')" optional>
             <q-input
                 v-model="wallet.password"
                 type="password"
                 :dark="theme=='dark'"
-                placeholder="An optional password for the wallet"
+                :placeholder="$t('placeholders.walletPassword')"
                 hide-underline
             />
         </LokiField>
 
-        <LokiField label="Confirm Password">
+        <LokiField :label="$t('fieldLabels.confirmPassword')">
             <q-input
                 v-model="wallet.password_confirm"
                 type="password"
@@ -40,7 +40,7 @@
         </LokiField>
 
         <q-field>
-            <q-btn color="primary" @click="create" label="Create wallet" />
+            <q-btn color="primary" @click="create" :label="$t('buttons.createWallet')" />
         </q-field>
 
     </div>
@@ -120,7 +120,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Enter a wallet name"
+                    message: this.$t("notification.errors.enterWalletName")
                 })
                 return
             }
@@ -128,7 +128,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Passwords do not match"
+                    message: this.$t("notification.errors.passwordNoMatch")
                 })
                 return
             }
@@ -137,14 +137,14 @@ export default {
             let passwordPromise = Promise.resolve();
             if (!this.wallet.password) {
                 passwordPromise = this.$q.dialog({
-                    title: "No password set",
-                    message: "Are you sure you want to create a wallet with no password?",
+                    title: this.$t("dialog.noPassword.title"),
+                    message: this.$t("dialog.noPassword.message"),
                     ok: {
-                        label: "YES",
+                        label: this.$t("dialog.noPassword.ok"),
                     },
                     cancel: {
                         flat: true,
-                        label: "CANCEL",
+                        label: this.$t("dialog.buttons.cancel"),
                         color: this.theme === "dark" ? "white" : "dark"
                     },
                 })

@@ -1,10 +1,10 @@
 <template>
 <q-item class="address-header">
     <q-item-main class="self-start">
-        <q-item-tile sublabel class="title">{{ title }}</q-item-tile>
+        <q-item-tile sublabel class="title non-selectable">{{ title }}</q-item-tile>
         <q-item-tile class="break-all" label>{{ address }}</q-item-tile>
-        <q-item-tile v-if="payment_id" sublabel>Payment id: {{ payment_id }}</q-item-tile>
-        <q-item-tile v-if="extra" sublabel class="extra">{{ extra }}</q-item-tile>
+        <q-item-tile v-if="payment_id" sublabel>{{ $t("fieldLabels.paymentId") }}: {{ payment_id }}</q-item-tile>
+        <q-item-tile v-if="extra" sublabel class="extra non-selectable">{{ extra }}</q-item-tile>
     </q-item-main>
     <q-item-side v-if="showCopy">
         <q-btn
@@ -14,7 +14,7 @@
             ref="copy"
             @click="copyAddress">
             <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                Copy address
+                {{ $t("menuItems.copyAddress") }}
             </q-tooltip>
         </q-btn>
 
@@ -23,8 +23,8 @@
     <q-context-menu>
         <q-list link separator style="min-width: 150px; max-height: 300px;">
             <q-item v-close-overlay
-                    @click.native="copyAddress(address, $event)">
-                <q-item-main label="Copy address" />
+                    @click.native="copyAddress($event)">
+                <q-item-main :label="$t('menuItems.copyAddress')" />
             </q-item>
         </q-list>
     </q-context-menu>
@@ -64,34 +64,33 @@ export default {
         return {}
     },
     methods: {
-        copyAddress () {
-            this.$refs.copy.$el.blur()
+        copyAddress (event) {
+            if (event) {
+                event.stopPropagation()
+            }
+            if (this.$refs.copy) {
+                this.$refs.copy.$el.blur()
+            }
             clipboard.writeText(this.address)
             if(this.payment_id) {
                 this.$q.dialog({
-                    title: "Copy address",
-                    message: "There is a payment id associated with this address.\nBe sure to copy the payment id separately.",
+                    title: this.$t("dialog.copyAddress.title"),
+                    message: this.$t("dialog.copyAddress.message"),
                     ok: {
-                        label: "OK"
+                        label: this.$t(`dialog.${key}.ok`)
                     },
-                }).then(() => {
+                }).catch(() => null).then(() => {
                     this.$q.notify({
                         type: "positive",
                         timeout: 1000,
-                        message: "Address copied to clipboard"
-                    })
-                }).catch(() => {
-                    this.$q.notify({
-                        type: "positive",
-                        timeout: 1000,
-                        message: "Address copied to clipboard"
+                        message: this.$t("notification.positive.addressCopied")
                     })
                 })
             } else {
                 this.$q.notify({
                     type: "positive",
                     timeout: 1000,
-                    message: "Address copied to clipboard"
+                    message: this.$t("notification.positive.addressCopied")
                 })
             }
         },

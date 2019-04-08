@@ -2,32 +2,49 @@
 <q-page>
     <div class="q-mx-md import-wallet">
 
-        <LokiField label="New wallet name" :error="$v.wallet.name.$error">
+        <LokiField :label="$t('fieldLabels.newWalletName')" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
-                placeholder="A name for your wallet"
+                :placeholder="$t('placeholders.walletName')"
                 @blur="$v.wallet.name.$touch"
                 :dark="theme=='dark'"
                 hide-underline
                 />
         </LokiField>
 
-        <LokiField label="Wallet file" disable-hover>
-            <q-input v-model="wallet.path" placeholder="Please select a file" disable :dark="theme=='dark'" hide-underline/>
+        <LokiField :label="$t('fieldLabels.walletFile')" disable-hover>
+            <q-input
+                v-model="wallet.path"
+                :placeholder="$t('placeholders.selectAFile')"
+                disable
+                :dark="theme=='dark'"
+                hide-underline
+            />
             <input type="file" id="walletPath" v-on:change="setWalletPath" ref="fileInput" hidden />
-            <q-btn color="secondary" v-on:click="selectFile" :text-color="theme=='dark'?'white':'dark'">Select wallet file</q-btn>
+            <q-btn
+                color="secondary"
+                :label="$t('buttons.selectWalletFile')"
+                v-on:click="selectFile"
+                :text-color="theme=='dark'?'white':'dark'"
+            />
         </LokiField>
 
-        <LokiField label="Password">
-            <q-input v-model="wallet.password" placeholder="An optional password for the wallet" type="password" :dark="theme=='dark'" hide-underline />
+        <LokiField :label="$t('fieldLabels.password')">
+            <q-input
+                v-model="wallet.password"
+                :placeholder="$t('placeholders.walletPassword')"
+                type="password"
+                :dark="theme=='dark'"
+                hide-underline
+            />
         </LokiField>
 
-        <LokiField label="Confirm Password">
+        <LokiField :label="$t('fieldLabels.confirmPassword')">
             <q-input v-model="wallet.password_confirm" type="password" :dark="theme=='dark'" hide-underline />
         </LokiField>
 
         <q-field>
-            <q-btn color="primary" @click="import_wallet" label="Import wallet" />
+            <q-btn color="primary" @click="import_wallet" :label="$tc('buttons.importWallet', 1)" />
         </q-field>
 
     </div>
@@ -97,7 +114,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Enter a wallet name"
+                    message: this.$t("notification.errors.enterWalletName")
                 })
                 return
             }
@@ -105,7 +122,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Passwords do not match"
+                    message: this.$t("notification.errors.passwordNoMatch")
                 })
                 return
             }

@@ -6,9 +6,9 @@
             toggle-color="primary"
             color="secondary"
             :options="[
-                {label: 'Staking', value: 'staking'},
-                {label: 'Registration', value: 'registration'},
-                {label: 'Unlock', value: 'unlock'}
+                {label: $t('titles.serviceNode.staking'), value: 'staking'},
+                {label: $t('titles.serviceNode.registration'), value: 'registration'},
+                {label: $t('titles.serviceNode.unlock'), value: 'unlock'}
             ]"
         />
     </div>

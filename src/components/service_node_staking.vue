@@ -1,28 +1,28 @@
 <template>
 <div class="service-node-staking">
     <div class="q-pa-md">
-        <LokiField label="Service Node Key" :error="$v.service_node.key.$error">
+        <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
             <q-input v-model="service_node.key"
                 :dark="theme=='dark'"
                 @blur="$v.service_node.key.$touch"
-                placeholder="64 hexadecimal characters"
+                :placeholder="$t('placeholders.hexCharacters', { count: 64 })"
                 hide-underline
             />
         </LokiField>
 
         <div class="q-mt-md col">
-            <LokiField label="Award Recepient's Address" :error="$v.service_node.award_address.$error">
+            <LokiField :label="$t('fieldLabels.awardRecepientAddress')" :error="$v.service_node.award_address.$error">
                 <q-input v-model="service_node.award_address"
                     :dark="theme=='dark'"
                     @blur="$v.service_node.award_address.$touch"
-                    placeholder="64 hexadecimal characters"
+                    :placeholder="address_placeholder"
                     hide-underline
                 />
             </LokiField>
             <div class="address-type" :class="[addressType]">( {{ addressType | addressTypeString }} )</div>
         </div>
 
-            <LokiField label="Amount" class="q-mt-md" :error="$v.service_node.amount.$error">
+            <LokiField :label="$t('fieldLabels.amount')" class="q-mt-md" :error="$v.service_node.amount.$error">
             <q-input v-model="service_node.amount"
                 :dark="theme=='dark'"
                 type="number"
@@ -32,7 +32,9 @@
                 @blur="$v.service_node.amount.$touch"
                 hide-underline
             />
-            <q-btn color="secondary" @click="service_node.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">All</q-btn>
+            <q-btn color="secondary" @click="service_node.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">
+                {{ $t("buttons.all") }}
+            </q-btn>
         </LokiField>
 
 
@@ -40,7 +42,7 @@
         <q-field class="q-pt-sm">
             <q-btn
                 :disable="!is_able_to_send"
-                color="primary" @click="stake()" label="Stake" />
+                color="primary" @click="stake()" :label="$t('buttons.stake')" />
         </q-field>
 
     </div>
@@ -59,6 +61,7 @@ import { required, decimal } from "vuelidate/lib/validators"
 import { payment_id, service_node_key, greater_than_zero, address } from "src/validators/common"
 import LokiField from "components/loki_field"
 import WalletPassword from "src/mixins/wallet_password"
+import { i18n } from "plugins/i18n"
 
 export default {
     name: "ServiceNodeStaking",
@@ -74,7 +77,11 @@ export default {
         is_able_to_send (state) {
             return this.$store.getters["gateway/isAbleToSend"]
         },
-
+        address_placeholder (state) {
+            const wallet = state.gateway.wallet.info;
+            const prefix = (wallet && wallet.address && wallet.address[0]) || "L";
+            return `${prefix}..`;
+        },
         addressType (state) {
             const address = this.service_node.award_address;
             const inArray = (array) => array.map(o => o.address).includes(address);
@@ -89,7 +96,7 @@ export default {
             } else {
                 return "not-ours"
             }
-        }
+        },
     }),
     data () {
         return {
@@ -104,13 +111,13 @@ export default {
         addressTypeString: function (value) {
             switch (value) {
                 case "primary":
-                    return "Your primary address"
+                    return i18n.t("strings.addresses.yourPrimaryAddress")
                 case "used":
-                    return "Your used address"
+                    return i18n.t("strings.addresses.yourUsedAddress")
                 case "ununsed":
-                    return "Your unused address"
+                    return i18n.t("strings.addresses.yourUnusedAddress")
                 default:
-                    return "Not your address!"
+                    return i18n.t("strings.addresses.notYourAddress")
             }
         }
     },
@@ -187,7 +194,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Service node key not valid"
+                    message: this.$t("notification.errors.invalidServiceNodeKey")
                 })
                 return
             }
@@ -196,7 +203,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Address not valid"
+                    message: this.$t("notification.errors.invalidAddress")
                 })
                 return
             }
@@ -205,37 +212,37 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Amount cannot be negative"
+                    message: this.$t("notification.errors.negativeAmount")
                 })
                 return
             } else if(this.service_node.amount == 0) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Amount must be greater than zero"
+                    message: this.$t("notification.errors.zeroAmount")
                 })
                 return
             } else if(this.service_node.amount > this.unlocked_balance / 1e9) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Not enough unlocked balance"
+                    message: this.$t("notification.errors.notEnoughBalance")
                 })
                 return
             } else if (this.$v.service_node.amount.$error) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Amount not valid"
+                    message: this.$t("notification.errors.invalidAmount")
                 })
                 return
             }
 
             this.showPasswordConfirmation({
-                title: "Stake",
-                noPasswordMessage: "Do you want to stake?",
+                title: this.$t("dialog.stake.title"),
+                noPasswordMessage: this.$t("dialog.stake.message"),
                 ok: {
-                    label: "STAKE"
+                    label: this.$t("dialog.stake.ok")
                 },
             }).then(password => {
                 this.$store.commit("gateway/set_snode_status", {

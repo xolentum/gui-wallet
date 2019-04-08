@@ -161,7 +161,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Enter a wallet name"
+                    message: this.$t("notification.errors.enterWalletName")
                 })
                 return
             }
@@ -169,7 +169,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Invalid public address"
+                    message: this.$t("notification.errors.invalidPublicAddress")
                 })
                 return
             }
@@ -178,7 +178,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Invalid private viewkey"
+                    message: this.$t("notification.errors.invalidPrivateViewKey")
                 })
                 return
             }
@@ -187,7 +187,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Invalid restore height"
+                    message: this.$t("notification.errors.invalidRestoreHeight")
                 })
                 return
             }
@@ -195,7 +195,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Passwords do not match"
+                    message: this.$t("notification.errors.passwordNoMatch")
                 })
                 return
             }

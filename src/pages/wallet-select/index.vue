@@ -3,7 +3,7 @@
     <q-list class="wallet-list" link no-border :dark="theme=='dark'">
         <template v-if="wallets.list.length">
             <div class="header row justify-between items-center">
-                <div class="header-title">Your wallets</div>
+                <div class="header-title">{{ $t("titles.yourWallets") }}</div>
                 <q-btn class="add" icon="add" size="md" color="primary" v-if="wallets.list.length">
                     <q-popover class="header-popover">
                         <q-list separator link>
@@ -31,12 +31,12 @@
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
                         <q-item v-close-overlay
                                 @click.native="openWallet(wallet)">
-                            <q-item-main label="Open wallet" />
+                            <q-item-main :label="$t('menuItems.openWallet')" />
                         </q-item>
 
                         <q-item v-close-overlay
                                 @click.native="copyAddress(wallet.address, $event)">
-                            <q-item-main label="Copy address" />
+                            <q-item-main :label="$t('menuItems.copyAddress')" />
                         </q-item>
                     </q-list>
                 </q-context-menu>
@@ -71,22 +71,22 @@ export default {
             // </q-item>
             const actions = [
                 {
-                    name: "Create new wallet",
+                    name: this.$t("titles.wallet.createNew"),
                     handler: this.createNewWallet,
                 },
                 {
-                    name: "Restore wallet from seed",
+                    name: this.$t("titles.wallet.restoreFromSeed"),
                     handler: this.restoreWallet,
                 },
                 {
-                    name: "Import wallet from file",
+                    name: this.$t("titles.wallet.importFromFile"),
                     handler: this.importWallet,
                 }
             ];
 
             if (this.wallets.directories.length > 0) {
                 actions.push( {
-                    name: "Import wallets from old GUI",
+                    name: this.$t("titles.wallet.importFromOldGUI"),
                     handler: this.importOldGuiWallets,
                 })
             }
@@ -101,18 +101,18 @@ export default {
         openWallet(wallet) {
             if(wallet.password_protected !== false) {
                 this.$q.dialog({
-                    title: "Password",
-                    message: "Enter wallet password to continue.",
+                    title: this.$t("dialog.password.title"),
+                    message: this.$t("dialog.password.message"),
                     prompt: {
                         model: "",
                         type: "password"
                     },
                     ok: {
-                        label: "OPEN"
+                        label: this.$t("dialog.buttons.open")
                     },
                     cancel: {
                         flat: true,
-                        label: "CANCEL",
+                        label: this.$t("dialog.buttons.cancel"),
                         color: this.theme=="dark"?"white":"dark"
                     }
                 }).then(password => {
@@ -160,7 +160,7 @@ export default {
             this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Address copied to clipboard"
+                message: this.$t("notification.positive.addressCopied")
             })
         }
     },

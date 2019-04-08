@@ -5,22 +5,22 @@
             <q-list separator link>
                 <q-item v-close-overlay @click.native="switchWallet" v-if="!disableSwitchWallet">
                     <q-item-main>
-                        <q-item-tile label>Switch Wallet</q-item-tile>
+                        <q-item-tile label>{{ $t("menuItems.switchWallet") }}</q-item-tile>
                     </q-item-main>
                 </q-item>
                 <q-item v-close-overlay @click.native="openSettings">
                     <q-item-main>
-                        <q-item-tile label>Settings</q-item-tile>
+                        <q-item-tile label>{{ $t("menuItems.settings") }}</q-item-tile>
                     </q-item-main>
                 </q-item>
                 <q-item v-close-overlay @click.native="showAbout(true)">
                     <q-item-main>
-                        <q-item-tile label>About</q-item-tile>
+                        <q-item-tile label>{{ $t("menuItems.about") }}</q-item-tile>
                     </q-item-main>
                 </q-item>
                 <q-item v-close-overlay @click.native="exit">
                     <q-item-main>
-                        <q-item-tile label>Exit Loki GUI Wallet</q-item-tile>
+                        <q-item-tile label>{{ $t("menuItems.exit") }}</q-item-tile>
                     </q-item-main>
                 </q-item>
             </q-list>
@@ -86,7 +86,7 @@ export default {
     },
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
-        isRPCSyncing: state => state.gateway.wallet.isRPCSyncing,
+        isRPCSyncing: state => state.gateway.wallet.isRPCSyncing
     }),
     methods: {
         openExternal (url) {
@@ -104,20 +104,20 @@ export default {
         switchWallet () {
             // If the rpc is syncing then we want to tell the user to restart
             if (this.isRPCSyncing) {
-                this.$gateway.confirmClose("The wallet RPC is currently syncing. If you wish to switch wallets then you must restart the application. You will lose your syncing progress and have to rescan the blockchain again.", true)
+                this.$gateway.confirmClose(this.$t("dialog.switchWallet.restartMessage"), true)
                 return
             }
 
             // Allow switching normally because rpc won't be blocked
             this.$q.dialog({
-                title: "Switch wallet",
-                message: "Are you sure you want to close the current wallet?",
+                title: this.$t("dialog.switchWallet.title"),
+                message: this.$t("dialog.switchWallet.closeMessage"),
                 ok: {
-                    label: "OK"
+                    label: this.$t("dialog.buttons.ok")
                 },
                 cancel: {
                     flat: true,
-                    label: "CANCEL",
+                    label: this.$t("dialog.buttons.cancel"),
                     color: this.theme=="dark"?"white":"dark"
                 }
             }).then(() => {
@@ -132,7 +132,7 @@ export default {
             })
         },
         exit () {
-            this.$gateway.confirmClose("Are you sure you want to exit?")
+            this.$gateway.confirmClose(this.$t("dialog.exit.message"))
         }
     },
     components: {

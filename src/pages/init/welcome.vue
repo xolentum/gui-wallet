@@ -3,7 +3,7 @@
 
     <q-stepper class="no-shadow" ref="stepper" :color="theme == 'dark' ? 'light' : 'dark'" dark @step="onStep">
 
-        <q-step default title="Welcome" class="first-step">
+        <q-step default :title="$t('titles.welcome')" class="first-step">
 
             <div class="welcome-container">
                 <img src="statics/loki.svg" height="100" class="q-mb-md">
@@ -25,7 +25,7 @@
 
         </q-step>
 
-        <q-step title="Configure">
+        <q-step :title="$t('titles.configure')">
             <SettingsGeneral randomise_remote ref="settingsGeneral" />
         </q-step>
     </q-stepper>
@@ -36,7 +36,7 @@
                 <q-btn
                     flat
                     @click="clickPrev()"
-                    label="Back"
+                    :label="$t('buttons.back')"
                     />
             </div>
             <div>
@@ -44,7 +44,7 @@
                     class="q-ml-sm"
                     color="primary"
                     @click="clickNext()"
-                    label="Next"
+                    :label="$t('buttons.next')"
                     />
             </div>
         </div>

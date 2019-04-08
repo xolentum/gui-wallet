@@ -373,7 +373,11 @@ export class WalletRPC {
 
             this.sendGateway("reset_wallet_error")
             this.backend.daemon.timestampToHeight(timestamp).then((height) => {
-                if (height === false) { this.sendGateway("set_wallet_error", { status: { code: -1, message: "Invalid restore date" } }) } else { this.restoreWallet(filename, password, seed, "height", height) }
+                if (height === false) {
+                    this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.invalidRestoreDate" } })
+                } else {
+                    this.restoreWallet(filename, password, seed, "height", height)
+                }
             })
             return
         }
@@ -414,7 +418,11 @@ export class WalletRPC {
             timestamp = timestamp - (timestamp % 86400000) - 86400000
 
             this.backend.daemon.timestampToHeight(timestamp).then((height) => {
-                if (height === false) { this.sendGateway("set_wallet_error", { status: { code: -1, message: "Invalid restore date" } }) } else { this.restoreViewWallet(filename, password, address, viewkey, "height", height) }
+                if (height === false) {
+                    this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.invalidRestoreDate" } })
+                } else {
+                    this.restoreViewWallet(filename, password, address, viewkey, "height", height)
+                }
             })
             return
         }
@@ -458,12 +466,12 @@ export class WalletRPC {
         }
 
         if (!fs.existsSync(import_path)) {
-            this.sendGateway("set_wallet_error", { status: { code: -1, message: "Invalid wallet path" } })
+            this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.invalidWalletPath" } })
         } else {
             let destination = path.join(this.wallet_dir, filename)
 
             if (fs.existsSync(destination) || fs.existsSync(destination + ".keys")) {
-                this.sendGateway("set_wallet_error", { status: { code: -1, message: "Wallet with name already exists" } })
+                this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.walletAlreadyExists" } })
                 return
             }
 
@@ -474,7 +482,7 @@ export class WalletRPC {
                     fs.copySync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL)
                 }
             } catch (e) {
-                this.sendGateway("set_wallet_error", { status: { code: -1, message: "Failed to copy wallet" } })
+                this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.copyWalletFail" } })
                 return
             }
 
@@ -497,7 +505,7 @@ export class WalletRPC {
 
                 this.finalizeNewWallet(filename)
             }).catch(() => {
-                this.sendGateway("set_wallet_error", { status: { code: -1, message: "An unknown error occured" } })
+                this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.unknownError" } })
             })
         }
     }
@@ -706,7 +714,7 @@ export class WalletRPC {
                     this.sendGateway("set_wallet_data", wallet)
                 } else {
                     this.closeWallet().then(() => {
-                        this.sendGateway("set_wallet_error", { status: { code: -1, message: "Failed to open wallet. Please try again." } })
+                        this.sendGateway("set_wallet_error", { status: { code: -1, i18n: "notification.errors.failedWalletOpen" } })
                     })
                 }
             }
@@ -719,7 +727,7 @@ export class WalletRPC {
                 this.sendGateway("set_snode_status", {
                     stake: {
                         code: -1,
-                        message: "Internal error",
+                        i18n: "notification.errors.internalError",
                         sending: false
                     }
                 })
@@ -729,7 +737,7 @@ export class WalletRPC {
                 this.sendGateway("set_snode_status", {
                     stake: {
                         code: -1,
-                        message: "Invalid password",
+                        i18n: "notification.errors.invalidPassword",
                         sending: false
                     }
                 })
@@ -758,7 +766,7 @@ export class WalletRPC {
                 this.sendGateway("set_snode_status", {
                     stake: {
                         code: 0,
-                        message: "Successfully staked",
+                        i18n: "notification.positive.stakeSuccess",
                         sending: false
                     }
                 })
@@ -772,7 +780,7 @@ export class WalletRPC {
                 this.sendGateway("set_snode_status", {
                     registration: {
                         code: -1,
-                        message: "Internal error",
+                        i18n: "notification.errors.internalError",
                         sending: false
                     }
                 })
@@ -783,7 +791,7 @@ export class WalletRPC {
                 this.sendGateway("set_snode_status", {
                     registration: {
                         code: -1,
-                        message: "Invalid password",
+                        i18n: "notification.errors.invalidPassword",
                         sending: false
                     }
                 })
@@ -808,7 +816,7 @@ export class WalletRPC {
                 this.sendGateway("set_snode_status", {
                     registration: {
                         code: 0,
-                        message: "Successfully registered service node",
+                        i18n: "notification.positive.registerServiceNodeSuccess",
                         sending: false
                     }
                 })
@@ -817,11 +825,12 @@ export class WalletRPC {
     }
 
     unlockStake (password, service_node_key, confirmed = false) {
-        const sendError = (message) => {
+        const sendError = (message, i18n = true) => {
+            const key = i18n ? "i18n" : "message"
             this.sendGateway("set_snode_status", {
                 unlock: {
                     code: -1,
-                    message,
+                    [key]: message,
                     sending: false
                 }
             })
@@ -830,12 +839,12 @@ export class WalletRPC {
         // Unlock code 0 means success, 1 means can unlock, -1 means error
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                sendError("Internal error")
+                sendError("notification.errors.internalError")
                 return
             }
 
             if (!this.isValidPasswordHash(password_hash)) {
-                sendError("Invalid password")
+                sendError("notification.errors.invalidPassword")
                 return
             }
 
@@ -845,12 +854,12 @@ export class WalletRPC {
                 }).then(data => {
                     if (data.hasOwnProperty("error")) {
                         const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
-                        sendError(error)
+                        sendError(error, false)
                         return null
                     }
 
                     if (!data.hasOwnProperty("result")) {
-                        sendError("Failed to unlock service node")
+                        sendError("notification.errors.failedServiceNodeUnlock")
                         return null
                     }
 
@@ -891,7 +900,7 @@ export class WalletRPC {
             if (err) {
                 this.sendGateway("set_tx_status", {
                     code: -1,
-                    message: "Internal error",
+                    i18n: "notification.errors.internalError",
                     sending: false
                 })
                 return
@@ -899,7 +908,7 @@ export class WalletRPC {
             if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_tx_status", {
                     code: -1,
-                    message: "Invalid password",
+                    i18n: "notification.errors.invalidPassword",
                     sending: false
                 })
                 return
@@ -938,7 +947,7 @@ export class WalletRPC {
 
                 this.sendGateway("set_tx_status", {
                     code: 0,
-                    message: "Transaction successfully sent",
+                    i18n: "notification.positive.sendSuccess",
                     sending: false
                 })
 
@@ -968,7 +977,7 @@ export class WalletRPC {
             if (err) {
                 this.sendGateway("set_wallet_data", {
                     secret: {
-                        mnemonic: "Internal error",
+                        mnemonic: "notification.errors.internalError",
                         spend_key: -1,
                         view_key: -1
                     }
@@ -978,7 +987,7 @@ export class WalletRPC {
             if (!this.isValidPasswordHash(password_hash)) {
                 this.sendGateway("set_wallet_data", {
                     secret: {
-                        mnemonic: "Invalid password",
+                        mnemonic: "notification.errors.invalidPassword",
                         spend_key: -1,
                         view_key: -1
                     }
@@ -1225,11 +1234,11 @@ export class WalletRPC {
     exportKeyImages (password, filename = null) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.internalError", timeout: 2000 })
                 return
             }
             if (!this.isValidPasswordHash(password_hash)) {
-                this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.invalidPassword", timeout: 2000 })
                 return
             }
 
@@ -1239,7 +1248,7 @@ export class WalletRPC {
                 filename = path.join(filename, "key_image_export")
             }
 
-            const onError = () => this.sendGateway("show_notification", { type: "negative", message: "Error exporting key images", timeout: 2000 })
+            const onError = () => this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.keyImages.exporting", timeout: 2000 })
 
             this.sendRPC("export_key_images").then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
@@ -1249,9 +1258,9 @@ export class WalletRPC {
 
                 if (data.result.signed_key_images) {
                     fs.outputJSONSync(filename, data.result.signed_key_images)
-                    this.sendGateway("show_notification", { message: "Key images exported to " + filename, timeout: 2000 })
+                    this.sendGateway("show_notification", { i18n: ["notification.positive.keyImages.exported", { filename }], timeout: 2000 })
                 } else {
-                    this.sendGateway("show_notification", { type: "warning", textColor: "black", message: "No key images found to export", timeout: 2000 })
+                    this.sendGateway("show_notification", { type: "warning", textColor: "black", i18n: "notification.warnings.noKeyImageExport", timeout: 2000 })
                 }
             }).catch(onError)
         })
@@ -1260,28 +1269,28 @@ export class WalletRPC {
     importKeyImages (password, filename = null) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.internalError", timeout: 2000 })
                 return
             }
             if (!this.isValidPasswordHash(password_hash)) {
-                this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.invalidPassword", timeout: 2000 })
                 return
             }
 
             if (filename == null) { filename = path.join(this.wallet_data_dir, "images", this.wallet_state.name, "key_image_export") }
 
-            const onError = (message) => this.sendGateway("show_notification", { type: "negative", message, timeout: 2000 })
+            const onError = (i18n) => this.sendGateway("show_notification", { type: "negative", i18n, timeout: 2000 })
 
             fs.readJSON(filename).then(signed_key_images => {
                 this.sendRPC("import_key_images", { signed_key_images }).then((data) => {
                     if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                        onError("Error importing key images")
+                        onError("notification.errors.keyImages.importing")
                         return
                     }
 
-                    this.sendGateway("show_notification", { message: "Key images imported", timeout: 2000 })
+                    this.sendGateway("show_notification", { i18n: "notification.positive.keyImages.imported", timeout: 2000 })
                 })
-            }).catch(() => onError("Error reading key images"))
+            }).catch(() => onError("notification.errors.keyImages.reading"))
         })
     }
 
@@ -1438,24 +1447,24 @@ export class WalletRPC {
     changeWalletPassword (old_password, new_password) {
         crypto.pbkdf2(old_password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.internalError", timeout: 2000 })
                 return
             }
             if (!this.isValidPasswordHash(password_hash)) {
-                this.sendGateway("show_notification", { type: "negative", message: "Invalid old password", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.invalidOldPassword", timeout: 2000 })
                 return
             }
 
             this.sendRPC("change_wallet_password", { old_password, new_password }).then((data) => {
                 if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                    this.sendGateway("show_notification", { type: "negative", message: "Error changing password", timeout: 2000 })
+                    this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.changingPassword", timeout: 2000 })
                     return
                 }
 
                 // store hash of the password so we can check against it later when requesting private keys, or for sending txs
                 this.wallet_state.password_hash = crypto.pbkdf2Sync(new_password, this.auth[2], 1000, 64, "sha512").toString("hex")
 
-                this.sendGateway("show_notification", { message: "Password updated", timeout: 2000 })
+                this.sendGateway("show_notification", { i18n: "notification.positive.passwordUpdated", timeout: 2000 })
             })
         })
     }
@@ -1463,11 +1472,11 @@ export class WalletRPC {
     deleteWallet (password) {
         crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
             if (err) {
-                this.sendGateway("show_notification", { type: "negative", message: "Internal error", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.internalError", timeout: 2000 })
                 return
             }
             if (!this.isValidPasswordHash(password_hash)) {
-                this.sendGateway("show_notification", { type: "negative", message: "Invalid password", timeout: 2000 })
+                this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.invalidPassword", timeout: 2000 })
                 return
             }
 

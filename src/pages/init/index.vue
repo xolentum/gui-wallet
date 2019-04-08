@@ -54,21 +54,21 @@ export default {
                     this.$router.replace({ path: "wallet-select" });
                     break;
                 case 1:
-                    this.message = "Connecting to backend"
+                    this.message = this.$t("strings.connectingToBackend")
                     this.$refs.backend.className = "pulse"
                     this.$refs.settings.className = "grey"
                     this.$refs.daemon.className = "grey"
                     this.$refs.wallet.className = "grey"
                     break;
                 case 2:
-                    this.message = "Loading settings"
+                    this.message = this.$t("strings.loadingSettings")
                     this.$refs.backend.className = "solid"
                     this.$refs.settings.className = "pulse"
                     this.$refs.daemon.className = "grey"
                     this.$refs.wallet.className = "grey"
                     break;
                 case 3:
-                    this.message = "Starting daemon"
+                    this.message = this.$t("strings.startingDaemon")
                     this.$refs.backend.className = "solid"
                     this.$refs.settings.className = "solid"
                     this.$refs.daemon.className = "pulse"
@@ -81,18 +81,18 @@ export default {
                     this.$q.notify({
                         type: "warning",
                         timeout: 2000,
-                        message: "Warning: lokid not found, using remote node"
+                        message: "Warning: " + this.$t("notification.warnings.usingRemoteNode")
                     })
                     break;
                 case 6:
-                    this.message = "Starting wallet"
+                    this.message = this.$t("strings.startingWallet")
                     this.$refs.backend.className = "solid"
                     this.$refs.settings.className = "solid"
                     this.$refs.daemon.className = "solid"
                     this.$refs.wallet.className = "pulse"
                     break;
                 case 7:
-                    this.message = "Reading wallet list"
+                    this.message = this.$t("strings.readingWalletList")
                     this.$refs.backend.className = "solid"
                     this.$refs.settings.className = "solid"
                     this.$refs.daemon.className = "solid"

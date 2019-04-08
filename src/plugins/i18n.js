@@ -1,6 +1,8 @@
 import VueI18n from "vue-i18n"
 import messages from "src/i18n"
 
+let i18n
+
 export default ({
     app,
     Vue
@@ -13,4 +15,8 @@ export default ({
         fallbackLocale: "en-us",
         messages
     })
+
+    i18n = app.i18n
 }
+
+export { i18n }
