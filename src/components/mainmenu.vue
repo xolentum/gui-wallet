@@ -86,6 +86,7 @@ export default {
     },
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
+        isRPCSyncing: state => state.gateway.wallet.isRPCSyncing,
     }),
     methods: {
         openExternal (url) {
@@ -101,6 +102,13 @@ export default {
             this.$refs.settingsModal.isVisible = true
         },
         switchWallet () {
+            // If the rpc is syncing then we want to tell the user to restart
+            if (this.isRPCSyncing) {
+                this.$gateway.confirmClose("The wallet RPC is currently syncing. If you wish to switch wallets then you must restart the application. You will lose your syncing progress and have to rescan the blockchain again.", true)
+                return
+            }
+
+            // Allow switching normally because rpc won't be blocked
             this.$q.dialog({
                 title: "Switch wallet",
                 message: "Are you sure you want to close the current wallet?",
