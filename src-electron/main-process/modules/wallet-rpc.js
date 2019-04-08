@@ -24,6 +24,7 @@ export class WalletRPC {
             balance: null,
             unlocked_balance: null
         }
+        this.isRPCSyncing = false
         this.dirs = null
         this.last_height_send_time = Date.now()
 
@@ -126,15 +127,21 @@ export class WalletRPC {
 
                             let lines = data.toString().split("\n")
                             let match, height = null
-                            lines.forEach((line) => {
+                            let isRPCSyncing = false
+                            for (const line of lines) {
                                 for (const regex of this.height_regexes) {
                                     match = line.match(regex.string)
                                     if (match) {
                                         height = regex.height(match)
+                                        isRPCSyncing = true
                                         break
                                     }
                                 }
-                            })
+                            }
+
+                            // Keep track on wether a wallet is sycning or not
+                            this.sendGateway("set_wallet_data", { isRPCSyncing })
+                            this.isRPCSyncing = isRPCSyncing
 
                             if (height && Date.now() - this.last_height_send_time > 1000) {
                                 this.last_height_send_time = Date.now()
@@ -1585,9 +1592,18 @@ export class WalletRPC {
                 setTimeout(() => {
                     this.walletRPCProcess.on("close", code => {
                         this.agent.destroy()
+                        clearTimeout(this.forceKill)
                         resolve()
                     })
-                    this.walletRPCProcess.kill()
+
+                    // Force kill after 20 seconds
+                    this.forceKill = setTimeout(() => {
+                        this.walletRPCProcess.kill("SIGKILL")
+                    }, 20000)
+
+                    // Force kill if the rpc is syncing
+                    const signal = this.isRPCSyncing ? "SIGKILL" : "SIGTERM"
+                    this.walletRPCProcess.kill(signal)
                 }, 2500)
             } else {
                 resolve()
