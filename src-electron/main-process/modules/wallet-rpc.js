@@ -139,7 +139,7 @@ export class WalletRPC {
                                 }
                             }
 
-                            // Keep track on wether a wallet is sycning or not
+                            // Keep track on wether a wallet is syncing or not
                             this.sendGateway("set_wallet_data", { isRPCSyncing })
                             this.isRPCSyncing = isRPCSyncing
 
@@ -1353,12 +1353,6 @@ export class WalletRPC {
         }
 
         fs.readdirSync(this.wallet_dir).forEach(filename => {
-            if (filename.endsWith(".keys") ||
-               filename.endsWith(".meta.json") ||
-               filename.endsWith(".address.txt") ||
-               filename.endsWith(".bkp-old") ||
-               filename.endsWith(".unportable")) { return }
-
             switch (filename) {
             case ".DS_Store":
             case ".DS_Store?":
@@ -1385,6 +1379,9 @@ export class WalletRPC {
                 }
                 return
             }
+
+            // Exclude all files with an extension
+            if (path.extname(filename) !== "") return
 
             let wallet_data = {
                 name: filename,
