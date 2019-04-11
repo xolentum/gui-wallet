@@ -10,17 +10,10 @@
                 <div>Wallet Version: v{{version}}</div>
                 <div>Deamon Version: v{{daemonVersion}}</div>
 
-                <h6 class="q-mb-md" style="font-weight: 300">Select language:</h6>
-
-                <q-btn
-                    color="primary"
-                    size="md"
-                    icon="language"
-                    label="English"
-                    @click="clickNext()"
+                <language-select
+                    class="q-mt-lg"
+                    v-on:select="onLanguageSelected"
                 />
-
-                <p class="q-mt-md">More languages coming soon</p>
             </div>
 
         </q-step>
@@ -56,7 +49,9 @@
 <script>
 import { version, daemonVersion } from "../../../package.json"
 import { mapState } from "vuex"
+import LanguageSelect from "components/language_select"
 import SettingsGeneral from "components/settings_general"
+
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
@@ -68,7 +63,6 @@ export default {
     data() {
         return {
             is_first_page: true,
-            choose_lang: "EN",
             version: "",
             daemonVersion: ""
         }
@@ -100,8 +94,12 @@ export default {
         clickPrev () {
             this.$refs.stepper.previous();
         },
+        onLanguageSelected (lang) {
+            this.clickNext()
+        }
     },
     components: {
+        LanguageSelect,
         SettingsGeneral
     }
 }

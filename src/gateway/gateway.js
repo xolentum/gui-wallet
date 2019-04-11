@@ -2,7 +2,7 @@ import { ipcRenderer } from "electron"
 import { Notify, Dialog, Loading, LocalStorage } from "quasar"
 import { EventEmitter } from "events"
 import { SCEE } from "./SCEE-Node"
-import { i18n } from "src/plugins/i18n"
+import { i18n, changeLanguage } from "src/plugins/i18n"
 
 export class Gateway extends EventEmitter {
     constructor (app, router) {
@@ -11,6 +11,10 @@ export class Gateway extends EventEmitter {
         this.router = router
         this.token = null
         this.scee = new SCEE()
+
+        // Set the initial language
+        let language = LocalStorage.has("language") ? LocalStorage.get.item("language") : "en-us"
+        this.setLanguage(language)
 
         let theme = LocalStorage.has("theme") ? LocalStorage.get.item("theme") : "dark"
         this.app.store.commit("gateway/set_app_data", {
@@ -104,6 +108,10 @@ export class Gateway extends EventEmitter {
             !decrypted_data.hasOwnProperty("data")) { return }
 
         switch (decrypted_data.event) {
+        case "set_language":
+            const { lang } = decrypted_data.data
+            this.setLanguage(lang)
+            break
         case "set_has_password":
             this.emit("has_password", decrypted_data.data)
             break
@@ -183,5 +191,17 @@ export class Gateway extends EventEmitter {
             }, 250)
             break
         }
+    }
+
+    setLanguage (lang) {
+        changeLanguage(lang).then(() => {
+            LocalStorage.set("language", lang)
+        }).catch(() => {
+            Notify.create({
+                type: "negative",
+                timeout: 2000,
+                message: i18n.t("notification.errors.failedToSetLanguage", { lang })
+            })
+        })
     }
 }

@@ -1,5 +1,6 @@
 import VueI18n from "vue-i18n"
 import messages from "src/i18n"
+import { Quasar } from "quasar"
 
 let i18n
 
@@ -19,4 +20,26 @@ export default ({
     i18n = app.i18n
 }
 
-export { i18n }
+const changeLanguage = (lang) => {
+    const quasarLang = Quasar.i18n.lang
+    return new Promise((resolve, reject) => {
+        import(`src/i18n/${lang}`).then(({ default: messages }) => {
+            i18n.locale = lang
+            i18n.setLocaleMessage(lang, messages)
+
+            // Setting the quasar language is optional
+            // There may be cases where they don't have the language
+            import(`quasar-framework/i18n/${lang}`).then(lang => {
+                quasarLang.set(lang.default)
+            }).catch(() => {
+                console.warn(`Failed to set quasar language: ${lang}`)
+            }).finally(() => {
+                resolve(lang)
+            })
+        }).catch(() => {
+            reject(new Error("Language not found"))
+        })
+    })
+}
+
+export { i18n, changeLanguage }

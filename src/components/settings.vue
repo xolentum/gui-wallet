@@ -53,6 +53,10 @@
 
         </div>
 
+        <div v-if="page === 'language'">
+            <language-select />
+        </div>
+
     </q-modal-layout>
 
 </q-modal>
@@ -61,6 +65,8 @@
 <script>
 import { mapState } from "vuex"
 import SettingsGeneral from "components/settings_general"
+import LanguageSelect from "components/language_select"
+
 export default {
     name: "SettingsModal",
     computed: mapState({
@@ -71,10 +77,11 @@ export default {
         tabs: function(state) {
             const { app, daemons } = state.gateway.app.config;
             let tabs = [
-                {label: this.$t("titles.settings.tabs.general"), value: 'general', icon: 'settings'},
+                { label: this.$t("titles.settings.tabs.general"), value: 'general', icon: 'settings' },
+                { label: this.$t("titles.settings.tabs.language"), value: 'language', icon: 'language' },
             ]
             if(daemons[app.net_type].type != 'remote') {
-                tabs.push({label: this.$t("titles.settings.tabs.peers"), value: 'peers', icon: 'cloud_queue'})
+                tabs.push({ label: this.$t("titles.settings.tabs.peers"), value: 'peers', icon: 'cloud_queue' })
             }
             return tabs
         }
@@ -139,6 +146,7 @@ export default {
         }
     },
     components: {
+        LanguageSelect,
         SettingsGeneral
     }
 }

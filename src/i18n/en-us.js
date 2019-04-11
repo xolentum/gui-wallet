@@ -251,6 +251,7 @@ export default {
             enterWalletName: "Enter a wallet name",
             errorSavingItem: "Error saving {item}",
             failedServiceNodeUnlock: "Failed to unlock service node",
+            failedToSetLanguage: "Failed to set language: {lang}",
             failedWalletImport: "Failed to import wallet",
             failedWalletOpen: "Failed to open wallet. Please try again.",
             internalError: "Internal error",
@@ -355,6 +356,7 @@ export default {
         saveSeedWarning: "Please copy and save these in a secure location!",
         saveToAddressBook: "Save to address book",
         seedWords: "Seed words",
+        selectLanguage: "Select language",
         serviceNodeRegistrationDescription: "Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the \"{prepareCommand}\" command",
         spendKey: "Spend key",
         startingDaemon: "Starting daemon",
@@ -407,6 +409,7 @@ export default {
             title: "Settings",
             tabs: {
                 general: "General",
+                language: "Language",
                 peers: "Peers"
             }
         },

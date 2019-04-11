@@ -181,6 +181,9 @@ export class Backend {
         let params = data.data
 
         switch (data.method) {
+        case "set_language":
+            this.send("set_language", { lang: params.lang })
+            break
         case "quick_save_config":
             // save only partial config settings
             Object.keys(params).map(key => {
