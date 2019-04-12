@@ -22,11 +22,11 @@ export default {
                 return this.$q.dialog({
                     cancel: {
                         flat: true,
-                        label: "CANCEL",
+                        label: this.$t("dialog.buttons.cancel"),
                         color: this.theme === "dark" ? "white" : "dark"
                     },
                     ...other,
-                    message: hasPassword ? "Enter wallet password to continue." : noPasswordMessage,
+                    message: hasPassword ? this.$t("dialog.password.message") : noPasswordMessage,
                     prompt: hasPassword ? {
                         model: "",
                         type: "password"

@@ -9,7 +9,7 @@
             </div>
 
             <div class="message">
-                Closing...
+                {{ $t("strings.closing") }}...
             </div>
         </div>
     </div>

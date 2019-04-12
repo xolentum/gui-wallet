@@ -29,3 +29,12 @@ cp path_to_loki_binaries/loki-wallet-rpc bin/
 npm install
 quasar build -m electron -t mat
 ```
+
+### Adding language support
+
+Adding a new language is fairly simple.
+
+1. Duplicate the language file `src/i18n/en-us.js` and rename it to the relevant language code.
+2. Translate all the strings in that duplicated file. Take note that capitalization matters.
+3. Add the language to the `languages` array in `src/i18n/index.js`. The `flag` property is the [ISO 3166-1-alpha-2 code](https://www.iso.org/obp/ui/#search/code/) of a country.
+4. Submit a PR with your changes.

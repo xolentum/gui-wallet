@@ -10,10 +10,10 @@
                 icon="reply"
                 />
             <q-toolbar-title>
-                Address details
+                {{ $t("titles.addressDetails") }}
             </q-toolbar-title>
-            <q-btn flat @click="isQRCodeVisible = true" label="Show QR Code" />
-            <q-btn class="q-ml-sm" color="primary" @click="copyAddress()" label="Copy address" />
+            <q-btn flat @click="isQRCodeVisible = true" :label="$t('buttons.showQRCode')" />
+            <q-btn class="q-ml-sm" color="primary" @click="copyAddress()" :label="$t('buttons.copyAddress')" />
         </q-toolbar>
 
         <div class="layout-padding">
@@ -21,8 +21,8 @@
             <template v-if="address != null">
 
                 <AddressHeader :address="address.address"
-                               :title="address.address_index == 0 ? 'Primary address' : 'Sub-address (Index '+address.address_index+')'"
-                               :extra="'You have '+(address.used?'used':'not used')+' this address'"
+                               :title="addressHeaderInfo.title"
+                               :extra="addressHeaderInfo.extra"
                                :showCopy="false"
                                />
 
@@ -32,21 +32,21 @@
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
-                                <div class="text"><span>Balance</span></div>
+                                <div class="text"><span>{{ $t("strings.lokiBalance") }}</span></div>
                                 <div class="value"><span><FormatLoki :amount="address.balance" /></span></div>
                             </div>
                         </div>
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
-                                <div class="text"><span>Unlocked balance</span></div>
+                                <div class="text"><span>{{ $t("strings.lokiUnlockedBalance") }}</span></div>
                                 <div class="value"><span><FormatLoki :amount="address.unlocked_balance" /></span></div>
                             </div>
                         </div>
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
-                                <div class="text"><span>Number of unspent outputs</span></div>
+                                <div class="text"><span>{{ $t("strings.numberOfUnspentOutputs") }}</span></div>
                                 <div class="value"><span>{{ address.num_unspent_outputs }}</span></div>
                             </div>
                         </div>
@@ -58,21 +58,21 @@
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
-                                <div class="text"><span>Balance</span></div>
+                                <div class="text"><span>{{ $t("strings.lokiBalance") }}</span></div>
                                 <div class="value"><span>N/A</span></div>
                             </div>
                         </div>
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
-                                <div class="text"><span>Unlocked balance</span></div>
+                                <div class="text"><span>{{ $t("strings.lokiUnlockedBalance") }}</span></div>
                                 <div class="value"><span>N/A</span></div>
                             </div>
                         </div>
 
                         <div class="infoBox">
                             <div class="infoBoxContent">
-                                <div class="text"><span>Number of unspent outputs</span></div>
+                                <div class="text"><span>{{ $t("strings.numberOfUnspentOutputs") }}</span></div>
                                 <div class="value"><span>N/A</span></div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
 
                     <div class="non-selectable">
                         <q-icon name="history" size="24px" />
-                        <span class="vertical-middle q-ml-xs">Recent incoming transactions to this address</span>
+                        <span class="vertical-middle q-ml-xs">{{ $t("strings.recentIncomingTransactionsToAddress") }}</span>
                     </div>
 
                     <div style="margin: 0 -16px;">
@@ -108,10 +108,10 @@
                 <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
                         <q-item v-close-overlay @click.native="copyQR()">
-                            <q-item-main label="Copy QR code" />
+                            <q-item-main :label="$t('menuItems.copyQR')" />
                         </q-item>
                         <q-item v-close-overlay @click.native="saveQR()">
-                            <q-item-main label="Save QR code to file" />
+                            <q-item-main :label="$t('menuItems.saveQR')" />
                         </q-item>
                     </q-list>
                 </q-context-menu>
@@ -120,7 +120,7 @@
             <q-btn
                  color="primary"
                  @click="isQRCodeVisible = false"
-                 label="Close"
+                 :label="$t('buttons.close')"
              />
         </q-modal>
     </template>
@@ -138,6 +138,21 @@ import TxList from "components/tx_list"
 export default {
     name: "AddressDetails",
     computed: mapState({
+        addressHeaderInfo (state) {
+            if (!this.address) return null
+
+            let title = this.$t('strings.addresses.primaryAddress')
+            if (this.address.address_index !== 0) {
+                title = this.$t('strings.addresses.subAddress') + ' (Index ' + this.address.address_index + ')'
+            }
+
+            const extra = this.address.used ? this.$t('strings.userUsedAddress') : this.$t('strings.userNotUsedAddress')
+
+            return {
+                title,
+                extra
+            }
+        }
     }),
     data () {
         return {
@@ -154,7 +169,7 @@ export default {
              this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Copied QR code to clipboard"
+                message: this.$t("notification.positive.qrCopied")
             })
         },
         saveQR() {
@@ -166,7 +181,7 @@ export default {
             this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Address copied to clipboard"
+                message: this.$t("notification.positive.addressCopied")
             })
         }
     },

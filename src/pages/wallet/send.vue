@@ -2,19 +2,16 @@
 <q-page class="send">
     <template v-if="view_only">
         <div class="q-pa-md">
-
-            View-only mode. Please load full wallet in order to send coins.
-
+            {{ $t("strings.viewOnlyMode") }}
         </div>
     </template>
     <template v-else>
-
         <div class="q-pa-md">
-
             <div class="row gutter-md">
+
                 <!-- Amount -->
                 <div class="col-6">
-                    <LokiField label="Amount" :error="$v.newTx.amount.$error">
+                    <LokiField :label="$t('fieldLabels.amount')" :error="$v.newTx.amount.$error">
                         <q-input v-model="newTx.amount"
                             :dark="theme=='dark'"
                             type="number"
@@ -24,13 +21,15 @@
                             @blur="$v.newTx.amount.$touch"
                             hide-underline
                         />
-                        <q-btn color="secondary" @click="newTx.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">All</q-btn>
+                        <q-btn color="secondary" @click="newTx.amount = unlocked_balance / 1e9" :text-color="theme=='dark'?'white':'dark'">
+                            {{ $t("buttons.all") }}
+                        </q-btn>
                     </LokiField>
                 </div>
 
                 <!-- Priority -->
                 <div class="col-6">
-                    <LokiField label="Priority">
+                    <LokiField :label="$t('fieldLabels.priority')">
                         <q-select :dark="theme=='dark'"
                             v-model="newTx.priority"
                             :options="priorityOptions"
@@ -42,24 +41,26 @@
 
             <!-- Address -->
             <div class="col q-mt-sm">
-                <LokiField label="Address" :error="$v.newTx.address.$error">
+                <LokiField :label="$t('fieldLabels.address')" :error="$v.newTx.address.$error">
                      <q-input v-model="newTx.address"
                         :dark="theme=='dark'"
                         @blur="$v.newTx.address.$touch"
                         :placeholder="address_placeholder"
                         hide-underline
                     />
-                    <q-btn color="secondary" :text-color="theme=='dark'?'white':'dark'" to="addressbook">Contacts</q-btn>
+                    <q-btn color="secondary" :text-color="theme=='dark'?'white':'dark'" to="addressbook">
+                        {{ $t("buttons.contacts") }}
+                    </q-btn>
                 </LokiField>
             </div>
 
             <!-- Payment ID -->
             <div class="col q-mt-sm">
-                <LokiField label="Payment id" :error="$v.newTx.payment_id.$error" optional>
+                <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
                      <q-input v-model="newTx.payment_id"
                         :dark="theme=='dark'"
                         @blur="$v.newTx.payment_id.$touch"
-                        placeholder="16 or 64 hexadecimal characters"
+                        :placeholder="$t('placeholders.hexCharacters', { count: '16 or 64' })"
                         hide-underline
                     />
                 </LokiField>
@@ -67,11 +68,11 @@
 
             <!-- Notes -->
             <div class="col q-mt-sm">
-                <LokiField label="Notes" optional>
+                <LokiField :label="$t('fieldLabels.notes')" optional>
                      <q-input v-model="newTx.note"
                         type="textarea"
                         :dark="theme=='dark'"
-                        placeholder="Additional notes to attach to the transaction"
+                        :placeholder="$t('placeholders.transactionNotes')"
                         hide-underline
                     />
                 </LokiField>
@@ -79,23 +80,23 @@
 
             <!-- Save to address book -->
             <q-field>
-                <q-checkbox v-model="newTx.address_book.save" label="Save to address book" :dark="theme=='dark'" />
+                <q-checkbox v-model="newTx.address_book.save" :label="$t('strings.saveToAddressBook')" :dark="theme=='dark'" />
             </q-field>
 
             <div v-if="newTx.address_book.save">
-                <LokiField label="Name" optional>
+                <LokiField :label="$t('fieldLabels.name')" optional>
                      <q-input v-model="newTx.address_book.name"
                         :dark="theme=='dark'"
-                        placeholder="Name that belongs to this address"
+                        :placeholder="$t('placeholders.addressBookName')"
                         hide-underline
                     />
                 </LokiField>
-                <LokiField class="q-mt-sm" label="Notes" optional>
+                <LokiField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
                      <q-input v-model="newTx.address_book.description"
                         type="textarea"
                         rows="2"
                         :dark="theme=='dark'"
-                        placeholder="Additional notes"
+                        :placeholder="$t('placeholders.additionalNotes')"
                         hide-underline
                     />
                 </LokiField>
@@ -105,7 +106,7 @@
                 <q-btn
                     class="send-btn"
                     :disable="!is_able_to_send"
-                    color="primary" @click="send()" label="Send" />
+                    color="primary" @click="send()" :label="$t('buttons.send')" />
             </q-field>
 
         </div>
@@ -252,28 +253,28 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Amount cannot be negative"
+                    message: this.$t("notification.errors.negativeAmount")
                 })
                 return
             } else if(this.newTx.amount == 0) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Amount must be greater than zero"
+                    message: this.$t("notification.errors.zeroAmount")
                 })
                 return
             } else if(this.newTx.amount > this.unlocked_balance / 1e9) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Not enough unlocked balance"
+                    message: this.$t("notification.errors.notEnoughBalance")
                 })
                 return
             } else if (this.$v.newTx.amount.$error) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Amount not valid"
+                    message: this.$t("notification.errors.invalidAmount")
                 })
                 return
             }
@@ -283,7 +284,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Address not valid"
+                    message: this.$t("notification.errors.invalidAddress")
                 })
                 return
             }
@@ -292,16 +293,16 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Payment id not valid"
+                    message: this.$t("notification.errors.invalidPaymentId")
                 })
                 return
             }
 
             this.showPasswordConfirmation({
-                title: "Transfer",
-                noPasswordMessage: "Do you want to send the transaction?",
+                title: this.$t("dialog.transfer.title"),
+                noPasswordMessage: this.$t("dialog.transfer.message"),
                 ok: {
-                    label: "SEND"
+                    label: this.$t("dialog.transfer.ok")
                 },
             }).then(password => {
                 this.$store.commit("gateway/set_tx_status", {

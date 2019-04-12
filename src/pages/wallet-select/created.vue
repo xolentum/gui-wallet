@@ -10,9 +10,9 @@
                 <q-btn
                     color="primary" style="width:25px;"
                     size="sm" icon="file_copy"
-                    @click="copyPrivateKey('view_key', $event)">
+                    @click="copyAddress">
                     <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                        Copy view key
+                        {{ $t("menuItems.copyAddress") }}
                     </q-tooltip>
                 </q-btn>
             </div>
@@ -21,12 +21,12 @@
 
     <template v-if="secret.mnemonic">
         <div class="seed-box col">
-            <h6 class="q-mb-xs q-mt-lg">Seed words</h6>
+            <h6 class="q-mb-xs q-mt-lg">{{ $t("strings.seedWords") }}</h6>
             <div class="seed q-my-lg">
                 {{ secret.mnemonic }}
             </div>
             <div class="q-my-md warning">
-                Please copy and save these in a secure location!
+                {{ $t("strings.saveSeedWarning") }}
             </div>
             <div>
                 <q-btn
@@ -42,7 +42,7 @@
 
     <q-collapsible label="Advanced" header-class="q-mt-sm non-selectable row reverse advanced-options-label">
         <template v-if="secret.view_key != secret.spend_key">
-            <h6 class="q-mb-xs title">View key</h6>
+            <h6 class="q-mb-xs title">{{ $t("strings.viewKey") }}</h6>
             <div class="row">
                 <div class="col" style="word-break:break-all;">
                     {{ secret.view_key }}
@@ -53,7 +53,7 @@
                         size="sm" icon="file_copy"
                         @click="copyPrivateKey('view_key', $event)">
                         <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Copy view key
+                            {{ $t("menuItems.copyViewKey") }}
                         </q-tooltip>
                     </q-btn>
                 </div>
@@ -61,7 +61,7 @@
         </template>
 
         <template v-if="!/^0*$/.test(secret.spend_key)">
-            <h6 class="q-mb-xs title">Spend key</h6>
+            <h6 class="q-mb-xs title">{{ $t("strings.spendKey") }}</h6>
             <div class="row">
                 <div class="col" style="word-break:break-all;">
                     {{ secret.spend_key }}
@@ -72,7 +72,7 @@
                         size="sm" icon="file_copy"
                         @click="copyPrivateKey('spend_key', $event)">
                         <q-tooltip anchor="center left" self="center right" :offset="[5, 10]">
-                            Copy spend key
+                            {{ $t("menuItems.copySpendKey") }}
                         </q-tooltip>
                     </q-btn>
                 </div>
@@ -80,7 +80,7 @@
         </template>
     </q-collapsible>
 
-    <q-btn class="q-mt-lg" color="primary" @click="open" label="Open wallet" />
+    <q-btn class="q-mt-lg" color="primary" @click="open" :label="$t('buttons.openWallet')" />
 
 </q-page>
 </template>
@@ -123,34 +123,43 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Error copying private key",
+                    message: this.$t("notification.errors.copyingPrivateKeys"),
                 })
                 return
             }
 
             clipboard.writeText(this.secret[type])
-            let type_human = type.substring(0,1).toUpperCase()+type.substring(1).replace("_"," ")
+
+            let type_key = "seedWords"
+            if (type === "spend_key") {
+                type_key = "spendKey"
+            } else if (type === "view_key") {
+                type_key = "viewKey"
+            }
+            const type_title = this.$t("dialog.copyPrivateKeys." + type_key)
 
             this.$q.dialog({
-                title: "Copy "+type_human,
-                message: "Be careful who you send your private keys to as they control your funds.",
+                title: this.$t("dialog.copyPrivateKeys.title", { type: type_title }) ,
+                message: this.$t("dialog.copyPrivateKeys.message"),
                 ok: {
-                    label: "OK"
+                    label: this.$t("dialog.buttons.ok")
                 },
-            }).then(() => {
+            }).catch(() => null).then(() => {
                 this.$q.notify({
                     type: "positive",
                     timeout: 1000,
-                    message: type_human+" copied to clipboard"
-                })
-            }).catch(() => {
-                this.$q.notify({
-                    type: "positive",
-                    timeout: 1000,
-                    message: type_human+" copied to clipboard"
+                    message: this.$t("notification.positive.copied", { item: this.$t("strings." + type_key) })
                 })
             })
         },
+        copyAddress() {
+            clipboard.writeText(this.info.address)
+            this.$q.notify({
+                type: "positive",
+                timeout: 1000,
+                message: this.$t("notification.positive.addressCopied")
+            })
+        }
     },
     components: {
         AddressHeader,
@@ -182,7 +191,6 @@ export default {
 
         .seed {
             font-size: 24px;
-            text-transform: uppercase;
             font-weight: 600;
         }
 

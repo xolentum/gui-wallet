@@ -3,29 +3,22 @@
 
     <q-stepper class="no-shadow" ref="stepper" :color="theme == 'dark' ? 'light' : 'dark'" dark @step="onStep">
 
-        <q-step default title="Welcome" class="first-step">
+        <q-step default :title="$t('titles.welcome')" class="first-step">
 
             <div class="welcome-container">
                 <img src="statics/loki.svg" height="100" class="q-mb-md">
                 <div>Wallet Version: v{{version}}</div>
                 <div>Deamon Version: v{{daemonVersion}}</div>
 
-                <h6 class="q-mb-md" style="font-weight: 300">Select language:</h6>
-
-                <q-btn
-                    color="primary"
-                    size="md"
-                    icon="language"
-                    label="English"
-                    @click="clickNext()"
+                <language-select
+                    class="q-mt-lg"
+                    v-on:select="onLanguageSelected"
                 />
-
-                <p class="q-mt-md">More languages coming soon</p>
             </div>
 
         </q-step>
 
-        <q-step title="Configure">
+        <q-step :title="$t('titles.configure')">
             <SettingsGeneral randomise_remote ref="settingsGeneral" />
         </q-step>
     </q-stepper>
@@ -36,7 +29,7 @@
                 <q-btn
                     flat
                     @click="clickPrev()"
-                    label="Back"
+                    :label="$t('buttons.back')"
                     />
             </div>
             <div>
@@ -44,7 +37,7 @@
                     class="q-ml-sm"
                     color="primary"
                     @click="clickNext()"
-                    label="Next"
+                    :label="$t('buttons.next')"
                     />
             </div>
         </div>
@@ -56,7 +49,9 @@
 <script>
 import { version, daemonVersion } from "../../../package.json"
 import { mapState } from "vuex"
+import LanguageSelect from "components/language_select"
 import SettingsGeneral from "components/settings_general"
+
 export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
@@ -68,7 +63,6 @@ export default {
     data() {
         return {
             is_first_page: true,
-            choose_lang: "EN",
             version: "",
             daemonVersion: ""
         }
@@ -100,8 +94,12 @@ export default {
         clickPrev () {
             this.$refs.stepper.previous();
         },
+        onLanguageSelected (lang) {
+            this.clickNext()
+        }
     },
     components: {
+        LanguageSelect,
         SettingsGeneral
     }
 }

@@ -181,6 +181,9 @@ export class Backend {
         let params = data.data
 
         switch (data.method) {
+        case "set_language":
+            this.send("set_language", { lang: params.lang })
+            break
         case "quick_save_config":
             // save only partial config settings
             Object.keys(params).map(key => {
@@ -258,9 +261,20 @@ export class Backend {
             })
             if (filename) {
                 let base64Data = params.img.replace(/^data:image\/png;base64,/, "")
-                let binaryData = new Buffer(base64Data, "base64").toString("binary")
+                let binaryData = Buffer.from(base64Data, "base64").toString("binary")
                 fs.writeFile(filename, binaryData, "binary", (err) => {
-                    if (err) { this.send("show_notification", { type: "negative", message: "Error saving " + params.type, timeout: 2000 }) } else { this.send("show_notification", { message: params.type + " saved to " + filename, timeout: 2000 }) }
+                    if (err) {
+                        this.send("show_notification", {
+                            type: "negative",
+                            i18n: ["notification.errors.errorSavingItem", { item: params.type }],
+                            timeout: 2000
+                        })
+                    } else {
+                        this.send("show_notification", {
+                            i18n: ["notification.positive.itemSaved", { item: params.type, filename }],
+                            timeout: 2000
+                        })
+                    }
                 })
             }
             break
@@ -326,11 +340,11 @@ export class Backend {
             // Check to see if data and wallet directories exist
             const dirs_to_check = [{
                 path: data_dir,
-                error: "Data storge path not found"
+                error: "notification.errors.dataPathNotFound"
             },
             {
                 path: wallet_data_dir,
-                error: "Wallet data storge path not found"
+                error: "notification.errors.walletPathNotFound"
             }]
 
             for (const dir of dirs_to_check) {
@@ -338,7 +352,7 @@ export class Backend {
                 if (!fs.existsSync(dir.path)) {
                     this.send("show_notification", {
                         type: "negative",
-                        message: `Error: ${dir.error}`,
+                        i18n: dir.error,
                         timeout: 2000
                     })
 
@@ -390,13 +404,13 @@ export class Backend {
                         this.send("show_notification", {
                             type: "warning",
                             textColor: "black",
-                            message: "Warning: Could not access remote node, switching to local only",
+                            i18n: "notification.warnings.usingLocalNode",
                             timeout: 2000
                         })
                     } else {
                         this.send("show_notification", {
                             type: "negative",
-                            message: "Error: Could not access remote node, please try another remote node",
+                            i18n: "notification.errors.cannotAccessRemoteNode",
                             timeout: 2000
                         })
 
@@ -414,7 +428,7 @@ export class Backend {
                 if (data.net_type && data.net_type !== net_type) {
                     this.send("show_notification", {
                         type: "negative",
-                        message: "Error: Remote node is using a different nettype",
+                        i18n: "notification.errors.differentNetType",
                         timeout: 2000
                     })
 
@@ -481,9 +495,17 @@ export class Backend {
                     // eslint-disable-next-line
                     }).catch(error => {
                         if (this.config_data.daemons[net_type].type == "remote") {
-                            this.send("show_notification", { type: "negative", message: "Remote daemon cannot be reached", timeout: 3000 })
+                            this.send("show_notification", {
+                                type: "negative",
+                                i18n: "notification.errors.remoteCannotBeReached",
+                                timeout: 3000
+                            })
                         } else {
-                            this.send("show_notification", { type: "negative", message: error.message, timeout: 3000 })
+                            this.send("show_notification", {
+                                type: "negative",
+                                message: error.message,
+                                timeout: 3000
+                            })
                         }
                         this.send("set_app_data", {
                             status: {

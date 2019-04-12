@@ -2,6 +2,7 @@ import { ipcRenderer } from "electron"
 import { Notify, Dialog, Loading, LocalStorage } from "quasar"
 import { EventEmitter } from "events"
 import { SCEE } from "./SCEE-Node"
+import { i18n, changeLanguage } from "src/plugins/i18n"
 
 export class Gateway extends EventEmitter {
     constructor (app, router) {
@@ -10,6 +11,10 @@ export class Gateway extends EventEmitter {
         this.router = router
         this.token = null
         this.scee = new SCEE()
+
+        // Set the initial language
+        let language = LocalStorage.has("language") ? LocalStorage.get.item("language") : "en-us"
+        this.setLanguage(language)
 
         let theme = LocalStorage.has("theme") ? LocalStorage.get.item("theme") : "dark"
         this.app.store.commit("gateway/set_app_data", {
@@ -59,15 +64,18 @@ export class Gateway extends EventEmitter {
             return
         }
         this.closeDialog = true
+
+        const key = restart ? "restart" : "exit"
+
         Dialog.create({
-            title: restart ? "Restart" : "Exit",
+            title: i18n.t(`dialog.${key}.title`),
             message: msg,
             ok: {
-                label: restart ? "RESTART" : "EXIT"
+                label: i18n.t(`dialog.${key}.ok`)
             },
             cancel: {
                 flat: true,
-                label: "CANCEL",
+                label: i18n.t("dialog.buttons.cancel"),
                 color: this.app.store.state.gateway.app.config.appearance.theme == "dark" ? "white" : "dark"
             }
         }).then(() => {
@@ -100,6 +108,10 @@ export class Gateway extends EventEmitter {
             !decrypted_data.hasOwnProperty("data")) { return }
 
         switch (decrypted_data.event) {
+        case "set_language":
+            const { lang } = decrypted_data.data
+            this.setLanguage(lang)
+            break
         case "set_has_password":
             this.emit("has_password", decrypted_data.data)
             break
@@ -149,7 +161,17 @@ export class Gateway extends EventEmitter {
                 timeout: 1000,
                 message: ""
             }
-            Notify.create(Object.assign(notification, decrypted_data.data))
+            const { data } = decrypted_data
+
+            if (data.i18n) {
+                if (typeof data.i18n === "string") {
+                    notification.message = i18n.t(data.i18n)
+                } else if (Array.isArray(data.i18n)) {
+                    notification.message = i18n.t(...data.i18n)
+                }
+            }
+
+            Notify.create(Object.assign(notification, data))
             break
 
         case "show_loading":
@@ -169,5 +191,17 @@ export class Gateway extends EventEmitter {
             }, 250)
             break
         }
+    }
+
+    setLanguage (lang) {
+        changeLanguage(lang).then(() => {
+            LocalStorage.set("language", lang)
+        }).catch(() => {
+            Notify.create({
+                type: "negative",
+                timeout: 2000,
+                message: i18n.t("notification.errors.failedToSetLanguage", { lang })
+            })
+        })
     }
 }

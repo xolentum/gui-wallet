@@ -2,182 +2,44 @@
 <q-page class="receive">
     <q-list link no-border :dark="theme=='dark'" class="loki-list">
 
-        <q-list-header>My primary address</q-list-header>
-        <q-list class="loki-list-item primary-address" no-border v-for="address in address_list.primary" :key="address.address" @click.native="details(address)">
-            <q-item>
-                <q-item-main>
-                    <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
-                    <q-item-tile sublabel>Primary address</q-item-tile>
-                </q-item-main>
-                <q-item-side>
-                    <q-btn
-                        flat
-                        style="width:25px;"
-                        size="md"
-                        @click="showQR(address.address, $event)"
-                    >
-                        <img src="statics/qr-code.svg" height="20" />
-                        <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
-                            Show QR code
-                        </q-tooltip>
-                    </q-btn>
-                    <q-btn
-                        flat
-                        style="width:25px;"
-                        size="md" icon="file_copy"
-                        @click="copyAddress(address.address, $event)"
-                    >
-                        <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
-                            Copy address
-                        </q-tooltip>
-                    </q-btn>
-                </q-item-side>
-            </q-item>
-            <q-item-separator />
-            <q-item class="info">
-                <q-item-main class="flex justify-between">
-                    <div class="column">
-                        <span>Balance</span>
-                        <span class="value">{{address.balance | currency}}</span>
-                    </div>
-                    <div class="column">
-                        <span>Unlocked balance</span>
-                        <span class="value">{{ address.unlocked_balance | currency }}</span>
-                    </div>
-                    <div class="column">
-                        <span>Unspent outputs</span>
-                        <span class="value">{{ address.num_unspent_outputs | toString }}</span>
-                    </div>
-                </q-item-main>
-            </q-item>
-            <q-context-menu>
-                <q-list link separator style="min-width: 150px; max-height: 300px;">
-                    <q-item v-close-overlay
-                            @click.native="details(address)">
-                        <q-item-main label="Show details" />
-                    </q-item>
-
-                    <q-item v-close-overlay
-                            @click.native="copyAddress(address.address, $event)">
-                        <q-item-main label="Copy address" />
-                    </q-item>
-                </q-list>
-            </q-context-menu>
-        </q-list>
+        <q-list-header>{{ $t("strings.addresses.myPrimaryAddress") }}</q-list-header>
+        <receive-item
+            class="primary-address"
+            v-for="address in address_list.primary"
+            :key="address.address"
+            :address="address"
+            :sublabel="$t('strings.addresses.primaryAddress')"
+            :showQR="showQR"
+            :copyAddress="copyAddress"
+            :details="details"
+            whiteQRIcon
+        />
 
         <template v-if="address_list.used.length">
-            <q-list-header>My used addresses</q-list-header>
-            <q-list class="loki-list-item" no-border v-for="address in address_list.used" @click.native="details(address)" :key="address.address">
-                <q-item>
-                    <q-item-main>
-                        <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
-                        <q-item-tile sublabel>Sub-address (Index {{ address.address_index }})</q-item-tile>
-                    </q-item-main>
-                    <q-item-side>
-                        <q-btn
-                            flat
-                            style="width:25px;"
-                            size="md"
-                            @click="showQR(address.address, $event)"
-                        >
-                            <img src="statics/qr-code-grey.svg" height="20" />
-                            <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
-                                Show QR code
-                            </q-tooltip>
-                        </q-btn>
-                        <q-btn
-                            flat
-                            style="width:25px;"
-                            size="md" icon="file_copy"
-                            @click="copyAddress(address.address, $event)">
-                            <q-tooltip anchor="bottom right" self="top right" :offset="[5, 10]">
-                                Copy address
-                            </q-tooltip>
-                        </q-btn>
-                    </q-item-side>
-                </q-item>
-                <q-item-separator />
-                <q-item class="info">
-                    <q-item-main class="flex justify-between">
-                        <div class="column">
-                            <span>Balance</span>
-                            <span class="value">{{ address.balance | currency }}</span>
-                        </div>
-                        <div class="column">
-                            <span>Unlocked balance</span>
-                            <span class="value">{{ address.unlocked_balance | currency }}</span>
-                        </div>
-                        <div class="column">
-                            <span>Unspent outputs</span>
-                            <span class="value">{{ address.num_unspent_outputs | toString }}</span>
-                        </div>
-                    </q-item-main>
-                </q-item>
-
-                <q-context-menu>
-                    <q-list link separator style="min-width: 150px; max-height: 300px;">
-                        <q-item v-close-overlay
-                                @click.native="details(address)">
-                            <q-item-main label="Show details" />
-                        </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="copyAddress(address.address, $event)">
-                            <q-item-main label="Copy address" />
-                        </q-item>
-                    </q-list>
-                </q-context-menu>
-            </q-list>
+            <q-list-header>{{ $t("strings.addresses.myUsedAddresses") }}</q-list-header>
+            <receive-item
+                v-for="address in address_list.used"
+                :key="address.address"
+                :address="address"
+                :sublabel="`${$t('strings.addresses.subAddress')} (Index ${address.address_index})`"
+                :showQR="showQR"
+                :copyAddress="copyAddress"
+                :details="details"
+            />
         </template>
 
-
         <template v-if="address_list.unused.length">
-            <q-list-header>My unused addresses</q-list-header>
-            <q-list class="loki-list-item" no-border v-for="address in address_list.unused" @click.native="details(address)" :key="address.address">
-                <q-item>
-                    <q-item-main>
-                        <q-item-tile class="ellipsis" label>{{ address.address }}</q-item-tile>
-                        <q-item-tile sublabel>Sub-address (Index {{ address.address_index }})</q-item-tile>
-                    </q-item-main>
-                    <q-item-side>
-                        <q-btn
-                            flat
-                            style="width:25px;"
-                            size="md"
-                            @click="showQR(address.address, $event)"
-                        >
-                            <img src="statics/qr-code-grey.svg" height="20" />
-                            <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
-                                Show QR code
-                            </q-tooltip>
-                        </q-btn>
-                        <q-btn
-                            flat
-                            style="width:25px;"
-                            size="md" icon="file_copy"
-                            @click="copyAddress(address.address, $event)">
-                            <q-tooltip anchor="bottom right" self="top right" :offset="[5, 10]">
-                                Copy address
-                            </q-tooltip>
-                        </q-btn>
-                    </q-item-side>
-                </q-item>
-
-                <q-context-menu>
-                    <q-list link separator style="min-width: 150px; max-height: 300px;">
-                        <q-item v-close-overlay
-                                @click.native="details(address)">
-                            <q-item-main label="Show details" />
-                        </q-item>
-
-                        <q-item v-close-overlay
-                                @click.native="copyAddress(address.address, $event)">
-                            <q-item-main label="Copy address" />
-                        </q-item>
-                    </q-list>
-                </q-context-menu>
-
-           </q-list>
+            <q-list-header>{{ $t("strings.addresses.myUnusedAddresses") }}</q-list-header>
+            <receive-item
+                v-for="address in address_list.unused"
+                :key="address.address"
+                :address="address"
+                :sublabel="`${$t('strings.addresses.subAddress')} (Index ${address.address_index})`"
+                :showQR="showQR"
+                :copyAddress="copyAddress"
+                :details="details"
+                :shouldShowInfo="false"
+            />
         </template>
 
     </q-list>
@@ -193,10 +55,10 @@
                 <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
                         <q-item v-close-overlay @click.native="copyQR()">
-                            <q-item-main label="Copy QR code" />
+                            <q-item-main :label="$t('menuItems.copyQR')" />
                         </q-item>
                         <q-item v-close-overlay @click.native="saveQR()">
-                            <q-item-main label="Save QR code to file" />
+                            <q-item-main :label="$t('menuItems.saveQR')" />
                         </q-item>
                     </q-list>
                 </q-context-menu>
@@ -205,7 +67,7 @@
             <q-btn
                  color="primary"
                  @click="QR.visible = false"
-                 label="Close"
+                 :label="$t('buttons.close')"
              />
         </q-modal>
     </template>
@@ -217,8 +79,8 @@
 const { clipboard, nativeImage } = require("electron")
 import { mapState } from "vuex"
 import QrcodeVue from "qrcode.vue";
-import Identicon from "components/identicon"
 import AddressDetails from "components/address_details"
+import ReceiveItem from "components/receive_item"
 
 export default {
     computed: mapState({
@@ -247,6 +109,7 @@ export default {
     },
     methods: {
         details (address) {
+            console.log(address)
             this.$refs.addressDetails.address = address;
             this.$refs.addressDetails.isVisible = true;
         },
@@ -262,7 +125,7 @@ export default {
              this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Copied QR code to clipboard"
+                message: this.$t("notification.positive.qrCopied")
             })
         },
         saveQR () {
@@ -281,14 +144,14 @@ export default {
             this.$q.notify({
                 type: "positive",
                 timeout: 1000,
-                message: "Address copied to clipboard"
+                message: this.$t("notification.positive.addressCopied")
             })
         }
     },
     components: {
-        Identicon,
         AddressDetails,
-        QrcodeVue
+        QrcodeVue,
+        ReceiveItem
     }
 }
 </script>

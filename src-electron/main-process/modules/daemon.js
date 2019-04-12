@@ -215,12 +215,19 @@ export class Daemon {
 
         this.sendRPC("set_bans", params).then((data) => {
             if (data.hasOwnProperty("error") || !data.hasOwnProperty("result")) {
-                this.sendGateway("show_notification", { type: "negative", message: "Error banning peer", timeout: 2000 })
+                this.sendGateway("show_notification", {
+                    type: "negative",
+                    i18n: "notification.errors.banningPeer",
+                    timeout: 2000
+                })
                 return
             }
 
             let end_time = new Date(Date.now() + seconds * 1000).toLocaleString()
-            this.sendGateway("show_notification", { message: "Banned " + host + " until " + end_time, timeout: 2000 })
+            this.sendGateway("show_notification", {
+                i18n: ["notification.positive.bannedPeer", { host, time: end_time }],
+                timeout: 2000
+            })
 
             // Send updated peer and ban list
             this.heartbeatSlowAction()

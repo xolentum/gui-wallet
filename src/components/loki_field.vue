@@ -2,7 +2,7 @@
 <div class="loki-field" :class="{disable, 'disable-hover': disableHover}">
     <div class="label row items-center" v-if="label" :disabled="disable">
         {{ label }}
-        <span v-if="optional" class="optional">(Optional)</span>
+        <span v-if="optional" class="optional">({{ $t("fieldLabels.optional") }})</span>
     </div>
     <div class="content row items-center" :class="{error}">
         <slot></slot>
@@ -57,7 +57,6 @@ export default {
         margin: 6px 0;
         font-weight: bold;
         font-size: 12px;
-        text-transform: uppercase;
 
         // Disable text selection
         -webkit-user-select: none;

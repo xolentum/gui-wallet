@@ -1,18 +1,18 @@
 <template>
 <div class="service-node-unlock">
      <div class="q-pa-md">
-        <LokiField label="Service Node Key" :error="$v.node_key.$error" :disabled="unlock_status.sending">
+        <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.node_key.$error" :disabled="unlock_status.sending">
             <q-input
                 v-model="node_key"
                 :dark="theme=='dark'"
                 @blur="$v.node_key.$touch"
-                placeholder="64 hexadecimal characters"
+                :placeholder="$t('placeholders.hexCharacters', { count: 64 })"
                 :disabled="unlock_status.sending"
                 hide-underline
             />
         </LokiField>
         <q-field class="q-pt-sm">
-            <q-btn color="primary" @click="unlock()" label="Unlock service node" :disabled="unlock_status.sending"/>
+            <q-btn color="primary" @click="unlock()" :label="$t('buttons.unlockServiceNode')" :disabled="unlock_status.sending"/>
         </q-field>
     </div>
 
@@ -64,14 +64,14 @@ export default {
                     case 1:
                         // Tell the user to confirm
                          this.$q.dialog({
-                            title: "Confirm",
+                            title: this.$t("dialog.unlockServiceNode.confirmTitle"),
                             message: this.unlock_status.message,
                             ok: {
-                                label: "UNLOCK"
+                                label: this.$t("dialog.unlockServiceNode.ok")
                             },
                             cancel: {
                                 flat: true,
-                                label: "CANCEL",
+                                label: this.$t("dialog.buttons.cancel"),
                                 color: this.theme=="dark"?"white":"dark"
                             }
                         }).then(() => {
@@ -101,7 +101,7 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Service node key not valid"
+                    message: this.$t("notification.errors.invalidServiceNodeKey")
                 })
                 return
             }
@@ -110,10 +110,10 @@ export default {
             this.key = this.node_key
 
             this.showPasswordConfirmation({
-                title: "Unlock service node",
-                noPasswordMessage: "Do you want to unlock the service node?",
+                title: this.$t("dialog.unlockServiceNode.title"),
+                noPasswordMessage: this.$t("dialog.unlockServiceNode.message"),
                 ok: {
-                    label: "UNLOCK"
+                    label: this.$t("dialog.unlockServiceNode.ok")
                 },
             }).then(password => {
                 this.password = password

@@ -25,7 +25,7 @@
                 <router-link to="/wallet/send">
                     <q-btn
                         class="large-btn"
-                        label="Send"
+                        :label="$t('buttons.send')"
                         size="md"
                         icon-right="arrow_right_alt"
                         align="left"
@@ -34,7 +34,7 @@
                 <router-link to="/wallet/receive">
                     <q-btn
                         class="large-btn"
-                        label="Receive"
+                        :label="$t('buttons.receive')"
                         size="md"
                         icon-right="save_alt"
                         align="left"
@@ -43,7 +43,7 @@
                 <router-link to="/wallet/servicenode">
                     <q-btn
                         class="large-btn"
-                        label="Service node"
+                        :label="$t('buttons.serviceNode')"
                         size="md"
                         icon-right="router"
                         align="left"
@@ -123,9 +123,10 @@ export default {
     }
 
     .large-btn {
-        width: 160px;
+        min-width: 160px;
         .q-btn-inner > *:last-child {
             margin-left: auto;
+            padding-left: 8px;
         }
 
     }

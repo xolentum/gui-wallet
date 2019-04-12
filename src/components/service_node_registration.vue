@@ -1,10 +1,11 @@
 <template>
 <div class="service-node-registration">
     <div class="q-pa-md">
-        <div class="description q-mb-lg">
-            Enter the <b>register_service_node</b> command produced by the daemon that is registering to become a Service Node using the "<b>prepare_registration</b>" command
-        </div>
-        <LokiField label="Service Node Command" :error="$v.registration_string.$error" :disabled="registration_status.sending">
+        <i18n path="strings.serviceNodeRegistrationDescription" tag="div" class="description q-mb-lg">
+            <b place="registerCommand">register_service_node</b>
+            <b place="prepareCommand">prepare_registration</b>
+        </i18n>
+        <LokiField :label="$t('fieldLabels.serviceNodeCommand')" :error="$v.registration_string.$error" :disabled="registration_status.sending">
             <q-input
                 v-model="registration_string"
                 type="textarea"
@@ -16,7 +17,7 @@
             />
         </LokiField>
         <q-field class="q-pt-sm">
-            <q-btn color="primary" @click="register()" label="Register service node" :disabled="registration_status.sending"/>
+            <q-btn color="primary" @click="register()" :label="$t('buttons.registerServiceNode')" :disabled="registration_status.sending"/>
         </q-field>
     </div>
 
@@ -81,16 +82,16 @@ export default {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
-                    message: "Please enter the service node registration command"
+                    message: this.$t("notification.errors.invalidServiceNodeCommand")
                 })
                 return
             }
 
             this.showPasswordConfirmation({
-                title: "Register service node",
-                noPasswordMessage: "Do you want to register the service node?",
+                title: this.$t("dialog.registerServiceNode.title"),
+                noPasswordMessage: this.$t("dialog.registerServiceNode.message"),
                 ok: {
-                    label: "REGISTER"
+                    label: this.$t("dialog.registerServiceNode.ok")
                 },
             }).then(password => {
                 this.$store.commit("gateway/set_snode_status", {

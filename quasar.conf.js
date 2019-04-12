@@ -11,7 +11,8 @@ module.exports = function (ctx) {
             "timeago"
         ],
         css: [
-            "app.styl"
+            "app.styl",
+            "~flag-icon-css/css/flag-icon.min.css"
         ],
         extras: [
             ctx.theme.mat ? "roboto-font" : null,

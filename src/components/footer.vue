@@ -2,8 +2,8 @@
 <q-layout-footer class="status-footer">
     <div class="status-line row items-center">
         <div class="status row items-center">
-            <span>Status:</span>
-            <span class="status-text" :class="[status]">{{ status | upperCase }}</span>
+            <span>{{ $t("footer.status") }}:</span>
+            <span class="status-text" :class="[status]">{{ $t(`footer.${status}`) }}</span>
         </div>
         <div class="row">
             <template v-if="config_daemon.type !== 'remote'">
@@ -87,11 +87,6 @@ export default {
         }
 
     }),
-    filters: {
-        upperCase: function (status) {
-            return status.toUpperCase();
-        }
-    },
     data () {
         return {
         }
