@@ -12,6 +12,7 @@
             :showQR="showQR"
             :copyAddress="copyAddress"
             :details="details"
+            whiteQRIcon
         />
 
         <template v-if="address_list.used.length">

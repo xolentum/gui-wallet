@@ -12,7 +12,7 @@
                 size="md"
                 @click="showQR(address.address, $event)"
             >
-                <img src="statics/qr-code.svg" height="20" />
+                <img :src="qrImage" height="20" />
                 <q-tooltip anchor="bottom right" self="top right" :offset="[0, 5]">
                     {{ $t("menuItems.showQRCode") }}
                 </q-tooltip>
@@ -93,7 +93,18 @@ export default {
         details: {
             type: Function,
             required: true
+        },
+        whiteQRIcon: {
+            type: Boolean,
+            required: false,
+            default: false
         }
+    },
+    computed: {
+        qrImage () {
+            const image = this.whiteQRIcon ? "qr-code" : "qr-code-grey"
+            return `statics/${image}.svg`
+        },
     },
     filters: {
         toString: function (value) {
