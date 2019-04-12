@@ -18,18 +18,20 @@
 </template>
 
 <script>
+import { languages } from "src/i18n"
+
 export default {
     name: "LanguageSelect",
-    data () {
-        return {
-            options: [
-                { label: "English", value: "en-us", flag: "us" },
-            ]
-        }
-    },
     computed: {
         lang () {
             return this.$i18n.locale
+        },
+        options () {
+            return languages.map(lang => ({
+                label: lang.name,
+                value: lang.code,
+                flag: lang.flag
+            }))
         }
     },
     methods: {
