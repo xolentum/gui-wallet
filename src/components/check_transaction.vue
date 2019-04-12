@@ -182,7 +182,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss">
 .check-transaction {
     .description {
