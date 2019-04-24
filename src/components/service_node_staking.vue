@@ -27,15 +27,18 @@
 
 
 
-        <q-field class="q-pt-sm">
+        <q-field class="buttons q-pt-sm">
             <q-btn
                 :disable="!is_able_to_send"
                 color="primary" @click="stake()" :label="$t('buttons.stake')" />
+            <q-btn
+                :disable="!is_able_to_send"
+                color="secondary" @click="sweepAll()" :label="$t('buttons.sweepAll')" />
         </q-field>
 
     </div>
 
-    <q-inner-loading :visible="stake_status.sending" :dark="theme=='dark'">
+    <q-inner-loading :visible="stake_status.sending || tx_status.sending" :dark="theme=='dark'">
         <q-spinner color="primary" :size="30" />
     </q-inner-loading>
 </div>
@@ -58,6 +61,7 @@ export default {
         unlocked_balance: state => state.gateway.wallet.info.unlocked_balance,
         info: state => state.gateway.wallet.info,
         stake_status: state => state.gateway.service_node_status.stake,
+        tx_status: state => state.gateway.tx_status,
         award_address: state => state.gateway.wallet.info.address,
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
@@ -117,10 +121,57 @@ export default {
             },
             deep: true
         },
+        tx_status: {
+            handler(val, old){
+                if(val.code == old.code) return
+                switch(this.tx_status.code) {
+                    case 0:
+                        this.$q.notify({
+                            type: "positive",
+                            timeout: 1000,
+                            message: this.tx_status.message
+                        })
+                        break;
+                    case -1:
+                        this.$q.notify({
+                            type: "negative",
+                            timeout: 1000,
+                            message: this.tx_status.message
+                        })
+                        break;
+                }
+            },
+            deep: true
+        },
     },
     methods: {
-        stake: function () {
+        sweepAll: function () {
+            const { unlocked_balance } = this.info;
 
+            const tx = {
+                amount: unlocked_balance / 1e9,
+                address: this.award_address,
+                priority: 0
+            };
+
+            this.showPasswordConfirmation({
+                title: this.$t("dialog.sweepAll.title"),
+                noPasswordMessage: this.$t("dialog.sweepAll.message"),
+                ok: {
+                    label: this.$t("dialog.sweepAll.ok")
+                },
+            }).then(password => {
+                this.$store.commit("gateway/set_tx_status", {
+                    code: 1,
+                    message: "Sweeping all",
+                    sending: true
+                })
+                const newTx = objectAssignDeep.noMutate(tx, {password})
+                this.$gateway.send("wallet", "transfer", newTx)
+            }).catch(() => {
+            })
+        },
+        stake: function () {
             this.$v.service_node.$touch()
 
             if (this.$v.service_node.key.$error) {
@@ -180,6 +231,7 @@ export default {
                     password,
                     destination: this.award_address
                 })
+
                 this.$gateway.send("wallet", "stake", service_node)
             }).catch(() => {
             })
@@ -193,4 +245,11 @@ export default {
 </script>
 
 <style lang="scss">
+.service-node-staking {
+    .buttons {
+        .q-btn:not(:first-child) {
+            margin-left: 8px;
+        }
+    }
+}
 </style>

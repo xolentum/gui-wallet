@@ -32,6 +32,7 @@ export default {
         showQRCode: "SHOW QR CODE",
         showTxDetails: "SHOW TX DETAILS",
         stake: "STAKE",
+        sweepAll: "SWEEP ALL",
         unlockServiceNode: "UNLOCK SERVICE NODE",
         viewOnExplorer: "VIEW ON EXPLORER"
     },
@@ -111,6 +112,11 @@ export default {
             title: "Stake",
             message: "Do you want to stake?",
             ok: "STAKE"
+        },
+        sweepAll: {
+            title: "Sweep All",
+            message: "Do you want to sweep all?",
+            ok: "SWEEP ALL"
         },
         switchWallet: {
             title: "Switch wallet",
