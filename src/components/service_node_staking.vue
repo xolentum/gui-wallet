@@ -10,19 +10,7 @@
             />
         </LokiField>
 
-        <div class="q-mt-md col">
-            <LokiField :label="$t('fieldLabels.awardRecepientAddress')" :error="$v.service_node.award_address.$error">
-                <q-input v-model="service_node.award_address"
-                    :dark="theme=='dark'"
-                    @blur="$v.service_node.award_address.$touch"
-                    :placeholder="address_placeholder"
-                    hide-underline
-                />
-            </LokiField>
-            <div class="address-type" :class="[addressType]">( {{ addressType | addressTypeString }} )</div>
-        </div>
-
-            <LokiField :label="$t('fieldLabels.amount')" class="q-mt-md" :error="$v.service_node.amount.$error">
+        <LokiField :label="$t('fieldLabels.amount')" class="q-mt-md" :error="$v.service_node.amount.$error">
             <q-input v-model="service_node.amount"
                 :dark="theme=='dark'"
                 type="number"
@@ -69,8 +57,8 @@ export default {
         theme: state => state.gateway.app.config.appearance.theme,
         unlocked_balance: state => state.gateway.wallet.info.unlocked_balance,
         info: state => state.gateway.wallet.info,
-        address_list: state => state.gateway.wallet.address_list,
         stake_status: state => state.gateway.service_node_status.stake,
+        award_address: state => state.gateway.wallet.info.address,
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
         },
@@ -82,43 +70,13 @@ export default {
             const prefix = (wallet && wallet.address && wallet.address[0]) || "L";
             return `${prefix}..`;
         },
-        addressType (state) {
-            const address = this.service_node.award_address;
-            const inArray = (array) => array.map(o => o.address).includes(address);
-
-            const { primary, used, unused } = this.address_list
-            if (inArray(primary)) {
-                return "primary"
-            } else if (inArray(used)) {
-                return "used"
-            } else if (inArray(unused)) {
-                return "unsued"
-            } else {
-                return "not-ours"
-            }
-        },
     }),
     data () {
         return {
             service_node: {
                 key: "",
                 amount: 0,
-                award_address: "",
             },
-        }
-    },
-    filters: {
-        addressTypeString: function (value) {
-            switch (value) {
-                case "primary":
-                    return i18n.t("strings.addresses.yourPrimaryAddress")
-                case "used":
-                    return i18n.t("strings.addresses.yourUsedAddress")
-                case "ununsed":
-                    return i18n.t("strings.addresses.yourUnusedAddress")
-                default:
-                    return i18n.t("strings.addresses.notYourAddress")
-            }
         }
     },
     validations: {
@@ -129,18 +87,6 @@ export default {
                 decimal,
                 greater_than_zero,
             },
-            award_address: {
-                required,
-                isAddress(value) {
-                    if (value === '') return true
-
-                    return new Promise(resolve => {
-                        address(value, this.$gateway)
-                            .then(() => resolve(true))
-                            .catch(e => resolve(false))
-                    });
-                }
-            }
         }
     },
     watch: {
@@ -156,7 +102,6 @@ export default {
                         })
                         this.$v.$reset();
                         this.service_node = {
-                            ...this.service_node,
                             key: "",
                             amount: 0,
                         }
@@ -173,19 +118,7 @@ export default {
             deep: true
         },
     },
-    created () {
-        const { address } = this.info;
-        if (!this.service_node.award_address || this.service_node.award_address === "") {
-            this.service_node.award_address = address || ""
-        }
-    },
     methods: {
-        isOurAddress (address) {
-            const { primary, used, unused } = this.address_list
-            const addresses = [...primary, ...used, ...unused].map(o => o.address);
-            console.log(addresses);
-            return addresses.includes(address);
-        },
         stake: function () {
 
             this.$v.service_node.$touch()
@@ -195,15 +128,6 @@ export default {
                     type: "negative",
                     timeout: 1000,
                     message: this.$t("notification.errors.invalidServiceNodeKey")
-                })
-                return
-            }
-
-            if (this.$v.service_node.award_address.$error) {
-                this.$q.notify({
-                    type: "negative",
-                    timeout: 1000,
-                    message: this.$t("notification.errors.invalidAddress")
                 })
                 return
             }
@@ -252,11 +176,11 @@ export default {
                         sending: true
                     }
                 })
-                const service_node = objectAssignDeep.noMutate(this.service_node, {password})
-                this.$gateway.send("wallet", "stake", {
-                    ...service_node,
-                    destination: service_node.award_address,
+                const service_node = objectAssignDeep.noMutate(this.service_node, {
+                    password,
+                    destination: this.award_address
                 })
+                this.$gateway.send("wallet", "stake", service_node)
             }).catch(() => {
             })
         }
@@ -269,15 +193,4 @@ export default {
 </script>
 
 <style lang="scss">
-.service-node-staking {
-    .address-type {
-        margin-top: 4px;
-        font-size: 13px;
-        font-weight: 400;
-        text-align: right;
-        &.not-ours {
-            font-weight: bold;
-        }
-    }
-}
 </style>

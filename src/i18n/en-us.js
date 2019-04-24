@@ -141,7 +141,6 @@ export default {
         // Field labels are also all uppercased
         address: "ADDRESS",
         amount: "AMOUNT",
-        awardRecepientAddress: "AWARD RECEPIENT ADDRESS",
         confirmPassword: "CONFIRM PASSWORD",
         daemonLogLevel: "DAEMON LOG LEVEL",
         daemonP2pPort: "DAEMON P2P PORT",
@@ -313,12 +312,8 @@ export default {
             myPrimaryAddress: "My primary address",
             myUnusedAddresses: "My unused addresses",
             myUsedAddresses: "My used addresses",
-            notYourAddress: "Not your address!",
             primaryAddress: "Primary address",
-            subAddress: "Sub-address",
-            yourPrimaryAddress: "Your primary address",
-            yourUnusedAddress: "Your unused address",
-            yourUsedAddress: "Your used address"
+            subAddress: "Sub-address"
         },
         advancedOptions: "Advanced Options",
         bannedPeers: {
