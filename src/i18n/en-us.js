@@ -316,7 +316,7 @@ export default {
             notYourAddress: "Not your address!",
             primaryAddress: "Primary address",
             subAddress: "Sub-address",
-            subAddressIndex: "Index",
+            subAddressIndex: "Index {index}",
             yourPrimaryAddress: "Your primary address",
             yourUnusedAddress: "Your unused address",
             yourUsedAddress: "Your used address"
