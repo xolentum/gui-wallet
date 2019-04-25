@@ -313,7 +313,8 @@ export default {
             myUnusedAddresses: "Мои неиспользованные адреса",
             myUsedAddresses: "Мои использованные адреса",
             primaryAddress: "Основной адрес",
-            subAddress: "Суб-адрес"
+            subAddress: "Суб-адрес",
+            subAddressIndex: "Индекс {index}"
         },
         advancedOptions: "Расширенные настройки",
         bannedPeers: {

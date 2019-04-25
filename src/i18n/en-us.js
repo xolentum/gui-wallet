@@ -319,7 +319,8 @@ export default {
             myUnusedAddresses: "My unused addresses",
             myUsedAddresses: "My used addresses",
             primaryAddress: "Primary address",
-            subAddress: "Sub-address"
+            subAddress: "Sub-address",
+            subAddressIndex: "Index {index}"
         },
         advancedOptions: "Advanced Options",
         bannedPeers: {
