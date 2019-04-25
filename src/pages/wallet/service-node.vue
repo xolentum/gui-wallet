@@ -1,6 +1,6 @@
 <template>
 <q-page class="service-node-page">
-    <div class="header row items-center justify-center q-mt-md">
+    <div class="header row items-center justify-center q-pt-md">
         <q-btn-toggle
             v-model="screen"
             toggle-color="primary"

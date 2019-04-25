@@ -141,7 +141,6 @@ export default {
         // Field labels are also all uppercased
         address: "АДРЕС",
         amount: "СУММА",
-        awardRecepientAddress: "АДРЕС ПОЛУЧАТЕЛЯ ВОЗНАГРАЖДЕНИЯ",
         confirmPassword: "ПОДТВЕРЖДЕНИЕ ПАРОЛЯ",
         daemonLogLevel: "УРОВЕНЬ ЛОГА ДЕМОНА",
         daemonP2pPort: "P2P ПОРТ ДЕМОНА",
@@ -313,13 +312,9 @@ export default {
             myPrimaryAddress: "Мой основной адрес",
             myUnusedAddresses: "Мои неиспользованные адреса",
             myUsedAddresses: "Мои использованные адреса",
-            notYourAddress: "Не ваш адрес!",
             primaryAddress: "Основной адрес",
             subAddress: "Суб-адрес",
-            subAddressIndex: "Индекс {index}",
-            yourPrimaryAddress: "Ваш основной адрес",
-            yourUnusedAddress: "Ваш неиспользованный адрес",
-            yourUsedAddress: "Ваш использованный адрес"
+            subAddressIndex: "Индекс {index}"
         },
         advancedOptions: "Расширенные настройки",
         bannedPeers: {

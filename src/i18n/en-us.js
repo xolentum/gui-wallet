@@ -32,6 +32,7 @@ export default {
         showQRCode: "SHOW QR CODE",
         showTxDetails: "SHOW TX DETAILS",
         stake: "STAKE",
+        sweepAll: "SWEEP ALL",
         unlockServiceNode: "UNLOCK SERVICE NODE",
         viewOnExplorer: "VIEW ON EXPLORER"
     },
@@ -112,6 +113,11 @@ export default {
             message: "Do you want to stake?",
             ok: "STAKE"
         },
+        sweepAll: {
+            title: "Sweep All",
+            message: "Do you want to sweep all?",
+            ok: "SWEEP ALL"
+        },
         switchWallet: {
             title: "Switch wallet",
             closeMessage: "Are you sure you want to close the current wallet?",
@@ -141,7 +147,6 @@ export default {
         // Field labels are also all uppercased
         address: "ADDRESS",
         amount: "AMOUNT",
-        awardRecepientAddress: "AWARD RECEPIENT ADDRESS",
         confirmPassword: "CONFIRM PASSWORD",
         daemonLogLevel: "DAEMON LOG LEVEL",
         daemonP2pPort: "DAEMON P2P PORT",
@@ -313,13 +318,9 @@ export default {
             myPrimaryAddress: "My primary address",
             myUnusedAddresses: "My unused addresses",
             myUsedAddresses: "My used addresses",
-            notYourAddress: "Not your address!",
             primaryAddress: "Primary address",
             subAddress: "Sub-address",
-            subAddressIndex: "Index {index}",
-            yourPrimaryAddress: "Your primary address",
-            yourUnusedAddress: "Your unused address",
-            yourUsedAddress: "Your used address"
+            subAddressIndex: "Index {index}"
         },
         advancedOptions: "Advanced Options",
         bannedPeers: {

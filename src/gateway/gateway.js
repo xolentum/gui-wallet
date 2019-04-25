@@ -135,9 +135,19 @@ export class Gateway extends EventEmitter {
             this.app.store.dispatch("gateway/resetWalletStatus")
             break
 
-        case "set_tx_status":
-            this.app.store.commit("gateway/set_tx_status", decrypted_data.data)
+        case "set_tx_status": {
+            const data = { ...decrypted_data.data }
+
+            if (data.i18n) {
+                if (typeof data.i18n === "string") {
+                    data.message = i18n.t(data.i18n)
+                } else if (Array.isArray(data.i18n)) {
+                    data.message = i18n.t(...data.i18n)
+                }
+            }
+            this.app.store.commit("gateway/set_tx_status", data)
             break
+        }
 
         case "set_snode_status":
             this.app.store.commit("gateway/set_snode_status", decrypted_data.data)
@@ -155,7 +165,7 @@ export class Gateway extends EventEmitter {
             this.confirmClose(i18n.t("dialog.restart.message"), true)
             break
 
-        case "show_notification":
+        case "show_notification": {
             let notification = {
                 type: "positive",
                 timeout: 1000,
@@ -173,6 +183,7 @@ export class Gateway extends EventEmitter {
 
             Notify.create(Object.assign(notification, data))
             break
+        }
 
         case "show_loading":
             Loading.show({ ...(decrypted_data.data || {}) })
