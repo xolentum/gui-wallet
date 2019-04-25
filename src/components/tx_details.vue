@@ -190,7 +190,7 @@ export default {
                     if(used_addresses[i].address_index === 0) {
                         address_index_text = this.$t("strings.addresses.primaryAddress")
                     } else {
-                        address_index_text = this.$t("strings.addresses.subAddress") + " (Index: " + used_addresses[i].address_index + ")"
+                        address_index_text = this.$t("strings.addresses.subAddress") + " (" + this.$t('strings.addresses.subAddressIndex', { index: used_addresses[i].address_index}) + ")"
                     }
                     return {
                         address: used_addresses[i].address,

@@ -316,6 +316,7 @@ export default {
             notYourAddress: "Не ваш адрес!",
             primaryAddress: "Основной адрес",
             subAddress: "Суб-адрес",
+            subAddressIndex: "Индекс {index}",
             yourPrimaryAddress: "Ваш основной адрес",
             yourUnusedAddress: "Ваш неиспользованный адрес",
             yourUsedAddress: "Ваш использованный адрес"

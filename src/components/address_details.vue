@@ -143,7 +143,7 @@ export default {
 
             let title = this.$t('strings.addresses.primaryAddress')
             if (this.address.address_index !== 0) {
-                title = this.$t('strings.addresses.subAddress') + ' (Index ' + this.address.address_index + ')'
+                title = this.$t('strings.addresses.subAddress') + ' (' + this.$t('strings.addresses.subAddressIndex', { index: this.address.address_index}) + ')'
             }
 
             const extra = this.address.used ? this.$t('strings.userUsedAddress') : this.$t('strings.userNotUsedAddress')
