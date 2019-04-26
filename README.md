@@ -36,6 +36,9 @@ Adding a new language is fairly simple.
 
 1. Duplicate the language file `src/i18n/en-us.js` and rename it to the relevant language code.
 2. Translate all the strings in that duplicated file. Take note that capitalization matters.
+    - Please don't translate strings inside `{}` brakets. They are meant as placeholders for other values.
+      - Some examples include `{type}` and `{count}`.
+      - E.G if you have a string `A {index}` then you may translate it as `B {index}` or `{index} B` depending on how the string makes sense in your language. You are allowed to reposition the placeholders for the string to make sense **BUT DO NOT DELETE OR REPLACE THE PLACEHOLDERS WITH OTHER VALUES**
 3. Add the language to the `languages` array in `src/i18n/index.js`. The `flag` property is the [ISO 3166-1-alpha-2 code](https://www.iso.org/obp/ui/#search/code/) of a country.
    - **NOTE: DO NOT ADD THE LANGUAGE TO `export default`**. Dynamic language loading is handled by the application.
 4. Add your language locale to Vue Timeago. Add it in `src/plugins/timeago.js` under `locales`.
