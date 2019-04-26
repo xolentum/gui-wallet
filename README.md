@@ -36,6 +36,11 @@ Adding a new language is fairly simple.
 
 1. Duplicate the language file `src/i18n/en-us.js` and rename it to the relevant language code.
 2. Translate all the strings in that duplicated file. Take note that capitalization matters.
+    - The translated string must go in-between the quotes (`""`)
+      - E.G `all: "ALL"` -> `all: "ВСЕ"`
+    - If possible try and stick to the general string formatting already present.
+      - E.G if there is a new line then try and keep that in your translation.
+      - The same goes for the pipe character `|`. **DO NOT REMOVE IT**.
     - Please don't translate strings inside `{}` brakets. They are meant as placeholders for other values.
       - Some examples include `{type}` and `{count}`.
       - E.G if you have a string `A {index}` then you may translate it as `B {index}` or `{index} B` depending on how the string makes sense in your language. You are allowed to reposition the placeholders for the string to make sense **BUT DO NOT DELETE OR REPLACE THE PLACEHOLDERS WITH OTHER VALUES**
