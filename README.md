@@ -41,7 +41,7 @@ Adding a new language is fairly simple.
     - If possible try and stick to the general string formatting already present.
       - E.G if there is a new line then try and keep that in your translation.
       - The same goes for the pipe character `|`. **DO NOT REMOVE IT**.
-    - Please don't translate strings inside `{}` brakets. They are meant as placeholders for other values.
+    - Please don't translate strings inside `{}` brackets. They are meant as placeholders for other values.
       - Some examples include `{type}` and `{count}`.
       - E.G if you have a string `A {index}` then you may translate it as `B {index}` or `{index} B` depending on how the string makes sense in your language. You are allowed to reposition the placeholders for the string to make sense **BUT DO NOT DELETE OR REPLACE THE PLACEHOLDERS WITH OTHER VALUES**
 3. Add the language to the `languages` array in `src/i18n/index.js`. The `flag` property is the [ISO 3166-1-alpha-2 code](https://www.iso.org/obp/ui/#search/code/) of a country.
