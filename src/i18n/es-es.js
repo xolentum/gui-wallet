@@ -22,7 +22,7 @@ export default {
         rescan: "VOLVER A EXAMINAR",
         restoreWallet: "RESTAURAR MONEDERO",
         save: "GUARDAR",
-        saveTxNotes: "GUARDAR NOTAS TRANSFE",
+        saveTxNotes: "GUARDAR NOTAS DE LA TRANSACCIÓN",
         selectLocation: "SELECCIONAR UBICACIÓN",
         selectWalletFile: "SELECCIONAR ARCHIVO DEL MONEDERO",
         send: "ENVIAR",
@@ -30,8 +30,9 @@ export default {
         serviceNode: "NODO DE SERVICIO",
         settings: "CONFIGURACIÓN",
         showQRCode: "MOSTRAR CÓDIGO QR",
-        showTxDetails: "MOSTRAR DETALLES TRANSFE",
-        stake: "DEPOSITAR",
+        showTxDetails: "MOSTRAR DETALLES DE LA TRANSACCIÓN",
+        stake: "RETENER PARTICIPACIÓN",
+		sweepAll: "TRANSFERIR/BARRER TODO",
         unlockServiceNode: "LIBERAR NODO DE SERVICIO",
         viewOnExplorer: "VER EN EL EXPLORADOR"
     },
@@ -45,10 +46,10 @@ export default {
 
         // Dialogs
         banPeer: {
-            title: "Excluir pares",
+            title: "Vetar pares",
             peerDetailsTitle: "Detalles del par",
-            message: "Introduzca el periodo de exclusión del par en segundos.\nPor defecto 3600 = 1 hora.",
-            ok: "Excluir par"
+            message: "Introduzca el periodo de veto del par en segundos.\nPor defecto 3600 = 1 hora.",
+            ok: "Vetar par"
         },
         copyAddress: {
             title: "Copiar dirección",
@@ -57,19 +58,19 @@ export default {
         copyPrivateKeys: {
             // Copy {seedWords/viewKey/spendKey}
             title: "Copiar {type}",
-            message: "Sea muy precavido al compartir sus claves privadas ya que estas permiten operar con sus fondos.",
+            message: "Tenga cuidado si comparte sus claves privadas ya que estas permiten controlar sus fondos.",
             seedWords: "Palabras Semilla",
             viewKey: "Clave de Visualización",
             spendKey: "Clave de Gasto"
         },
         deleteWallet: {
             title: "Eliminar monedero",
-            message: "¿Está absolutamente seguro de querer eliminar su monedero?\nAsegúrese de tener una copia de seguridad de sus claves privadas antes de proceder.\n¡ESTE PROCESO NO SE PUEDE DESHACER!",
+            message: "¿Está absolutamente seguro de querer eliminar su monedero?\nAsegúrese de tener una copia de seguridad de sus claves privadas antes de proceder.\n¡ESTE PROCESO NO ES REVERSIBLE!",
             ok: "ELIMINAR"
         },
         exit: {
             title: "Salir",
-            message: "¿Desea realmente salir del programa?",
+            message: "¿Está seguro de que desea salir?",
             ok: "SALIR"
         },
         keyImages: {
@@ -80,7 +81,7 @@ export default {
         },
         noPassword: {
             title: "Sin contraseña",
-            message: "¿Desea realmente crear un monedero sin contraseña?",
+            message: "¿Está seguro de que quiere crear un monedero sin contraseña?",
             ok: "SÍ"
         },
         password: {
@@ -94,12 +95,12 @@ export default {
         },
         rescan: {
             title: "Volver a examinar el monedero",
-            message: "Advertencia: Se perderá cierta información de las transferencias\nanteriores, como la dirección del destinatario.",
+            message: "Advertencia: Cierta información de las transacciones\nanteriores, como la dirección del destinatario, se perderá.",
             ok: "VOLVER A EXAMINAR"
         },
         restart: {
             title: "Reiniciar",
-            message: "Los cambios requieren un reinicio ¿Desea reiniciar ahora?",
+            message: "Los cambios requieren reiniciar la aplicación ¿Desea reiniciar ahora?",
             ok: "REINICIAR"
         },
         showPrivateKeys: {
@@ -108,22 +109,27 @@ export default {
             ok: "MOSTRAR"
         },
         stake: {
-            title: "Depósito",
-            message: "¿Desea formalizar el depósito?",
-            ok: "DEPOSITAR"
+            title: "RETENER PARTICIPACIÓN",
+            message: "¿Desea participar reteniendo la cantidad que ha indicado?",
+            ok: "RETENER"
+        },
+		sweepAll: {
+            title: "Transferir/Barrer todo",
+            message: "¿Está seguro de que quiere transferir/barrer todos sus fondos?",
+            ok: "TRANSFERIR/BARRER TODO"
         },
         switchWallet: {
             title: "Cambiar de monedero",
             closeMessage: "¿Confirma que desea cerrar el monedero actual?",
-            restartMessage: "El monedero se está sincronizando. \nSi desea cambiar de monedero, deberá reiniciar la aplicación. \nEl proceso de sincronización se perderá y será necesario volver a examinar la cadena de bloques."
+            restartMessage: "El monedero se está sincronizando. \nSi desea cambiar de monedero, tendrá que reiniciar la aplicación. \nEl proceso de sincronización se perderá y será necesario volver a examinar la cadena de bloques."
         },
         transactionDetails: {
-            title: "Detalles de la transferencia",
+            title: "Detalles de la transacción",
             ok: "CERRAR"
         },
         transfer: {
             title: "Transferir",
-            message: "¿Desea enviar la transferencia?",
+            message: "¿Desea enviar la transacción?",
             ok: "ENVIAR"
         },
         unlockConfirm: {
@@ -141,14 +147,13 @@ export default {
         // Field labels are also all uppercased
         address: "DIRECCIÓN",
         amount: "CANTIDAD",
-        awardRecepientAddress: "DIRECCIÓN DONDE SE ABONARÁN LAS RECOMPENSAS",
         confirmPassword: "CONFIRMAR CONTRASEÑA",
-        daemonLogLevel: "NIVEL LOG PARA EL DEMONIO",
-        daemonP2pPort: "PUERTO P2P DEMONIO",
-        daemonZMQPort: "PUERTO ZMQ DEMONIO",
-        dataStoragePath: "RUTA PARA ALMACENAMIENTO DE DATOS",
-        filterTransactionType: "FILTRAR POR TIPO DE TRANSFE",
-        filterTxId: "FILTRAR POR ID TRANSFE",
+        daemonLogLevel: "NIVEL LOG PARA EL SERVICIO",
+        daemonP2pPort: "PUERTO P2P SERVICIO",
+        daemonZMQPort: "PUERTO ZMQ SERVICIO",
+        dataStoragePath: "RUTA DE ALMACENAMIENTO DE DATOS",
+        filterTransactionType: "FILTRAR POR TIPO DE TRANSACCIÓN",
+        filterTxId: "FILTRAR POR ID DE TRANSACCIÓN",
         internalWalletPort: "PUERTO INTERNO MONEDERO",
         keyImages: {
             exportDirectory: "DIRECTORIO AL QUE EXPORTAR LA IMAGEN DE LA CLAVE",
@@ -156,8 +161,8 @@ export default {
         },
         limitDownloadRate: "LÍMITE VELOCIDAD DE DESCARGA",
         limitUploadRate: "LÍMITE VELOCIDAD DE SUBIDA",
-        localDaemonIP: "IP DEMONIO LOCAL",
-        localDaemonPort: "PUERTO DEMONIO LOCAL",
+        localDaemonIP: "IP SERVICIO LOCAL",
+        localDaemonPort: "PUERTO SERVICIO LOCAL",
         maxIncomingPeers: "NÚM. MÁX. PARES ENTRANTES",
         maxOutgoingPeers: "NÚM. MÁX. PARES SALIENTES",
         mnemonicSeed: "SEMILLA MNEMÓNICA",
@@ -166,28 +171,28 @@ export default {
         notes: "NOTAS",
         optional: "OPCIONAL",
         password: "CONTRASEÑA",
-        paymentId: "ID PAGO",
+        paymentId: "ID DE PAGO",
         priority: "PRIORIDAD",
         remoteNodeHost: "HOST NODO REMOTO",
         remoteNodePort: "PUERTO NODO REMOTO",
         restoreFromBlockHeight: "RESTAURAR DESDE EL BLOQUE NÚMERO",
         restoreFromDate: "RESTAURAR DESDE EL DÍA",
         seedLanguage: "IDIOMA SEMILLA",
-        serviceNodeCommand: "COMANDO PARA REGISTRAR DEL NODO DE SERVICIO",
+        serviceNodeCommand: "ORDEN PARA REGISTRAR EL NODO DE SERVICIO",
         serviceNodeKey: "CLAVE NODO DE SERVICIO",
         walletFile: "ARCHIVO MONEDERO",
         walletLogLevel: "NIVEL LOG MONEDERO",
         walletName: "NOMBRE MONEDERO",
         walletRPCPort: "PUERTO RPC MONEDERO",
-        walletStoragePath: "RUTA ALMACENAMIENTO MONEDERO",
+        walletStoragePath: "RUTA DE ALMACENAMIENTO DEL MONEDERO",
 
         // These are specific labels which do not get uppercased
-        confirmNewPassword: "Confirme la nueva Contraseña",
+        confirmNewPassword: "Confirme la nueva contraseña",
         newPassword: "Contraseña nueva",
         oldPassword: "Contraseña antigua",
-        rescanFullBlockchain: "Volver a examinar la cadena de bloques al completo",
+        rescanFullBlockchain: "Volver a examinar la cadena de bloques entera",
         rescanSpentOutputs: "Volver a examinar las salidas gastadas",
-        transactionNotes: "Notas de la Transferencia",
+        transactionNotes: "Notas de la Transacción",
         chooseNetwork: "Seleccione una Red",
         network: "Red"
     },
@@ -206,11 +211,11 @@ export default {
         copyQR: "Copiar código QR",
         copySeedWords: "Copiar palabras semilla",
         copySpendKey: "Copiar clave de gasto",
-        copyTransactionId: "Copiar ID de transferencia",
+        copyTransactionId: "Copiar ID de la transacción",
         copyViewKey: "Copiar clave de visualización",
         createNewWallet: "Crear nuevo monedero",
         deleteWallet: "Eliminar monedero",
-        exit: "Cerrar interfaz gráfica monedero Loki",
+        exit: "Cerrar la interfaz del monedero Loki",
         importOldGUIWallet: "Importar monedero de una interfaz gráfica antigua",
         manageKeyImages: "Administrar Imágenes de Clave",
         openWallet: "Abrir monedero",
@@ -229,9 +234,9 @@ export default {
     notification: {
         positive: {
             addressCopied: "Dirección copiada al portapapeles",
-            bannedPeer: "{host} excluido hasta {time}",
-            copied: "{item} copiado al portapapeles",
-            itemSaved: "{item} guardado en {filename}",
+            bannedPeer: "{host} vetado hasta {time}",
+            copied: "{item} copiado/a al portapapeles",
+            itemSaved: "{item} guardado/a en {filename}",
             keyImages: {
                 exported: "Imágenes de clave exportadas a {filename}",
                 imported: "Imágenes de clave importadas"
@@ -239,18 +244,18 @@ export default {
             passwordUpdated: "Contraseña actualizada",
             qrCopied: "Código QR copiado al portapapeles",
             registerServiceNodeSuccess: "Nodo de servicio registrado correctamente",
-            sendSuccess: "Transferencia enviada correctamente",
-            stakeSuccess: "Depósito realizado correctamente",
-            transactionNotesSaved: "Notas de la transferencia guardadas"
+            sendSuccess: "Transacción enviada correctamente",
+            stakeSuccess: "Participación retenida correctamente",
+            transactionNotesSaved: "Notas de la transacción guardadas"
         },
         errors: {
-            banningPeer: "Error excluyendo par",
+            banningPeer: "Error al vetar el par",
             cannotAccessRemoteNode: "No ha sido posible acceder al nodo remoto. Tenga la amabilidad de probar con otro",
-            changingPassword: "Error al modificar la contraseña",
-            copyWalletFail: "La copia del monedero ha fallado",
+            changingPassword: "Error al cambiar la contraseña",
+            copyWalletFail: "Error al copiar el monedero",
             copyingPrivateKeys: "Error al copiar las claves privadas",
-            dataPathNotFound: "No se ha encontrado la ruta para el almacenamiento de datos",
-            differentNetType: "El nodo remoto usa un nettype diferente",
+            dataPathNotFound: "No se ha encontrado la ruta de almacenamiento",
+            differentNetType: "El nodo remoto usa un tipo de red diferente",
             enterSeedWords: "Introduzca las palabras semilla",
             enterWalletName: "Introduzca un nombre para el monedero",
             errorSavingItem: "Error al guardar {item}",
@@ -279,18 +284,18 @@ export default {
             },
             negativeAmount: "La cantidad no puede ser negativa",
             newPasswordNoMatch: "Las contraseñas nuevas no coinciden",
-            newPasswordSame: "La contraseña nueva ha de ser diferente",
+            newPasswordSame: "La nueva contraseña debe ser diferente",
             notEnoughBalance: "No hay suficiente saldo libre",
             passwordNoMatch: "Las contraseñas no coinciden",
-            remoteCannotBeReached: "No es posible contactar con el demonio remoto",
+            remoteCannotBeReached: "No se puede conectar con el servicio remoto",
             unknownError: "Ha ocurrido un error inesperado",
             walletAlreadyExists: "Ya existe un monedero con este nombre",
-            walletPathNotFound: "Ruta para almacenamiento de datos no encontrada",
-            zeroAmount: "La cantidad ha de ser mayor que cero"
+            walletPathNotFound: "Ruta no encontrada",
+            zeroAmount: "La cantidad debe ser mayor que cero"
         },
         warnings: {
             noKeyImageExport: "No se han encontrado claves para exportar",
-            usingLocalNode: "No se ha podido acceder al nodo remoto, utilizando solo el nodo local",
+            usingLocalNode: "No se ha podido acceder al nodo remoto, volviendo al modo local",
             usingRemoteNode: "lokid no encontrado, utilizando nodo remoto"
         }
     },
@@ -301,7 +306,7 @@ export default {
         hexCharacters: "{count} caracteres hexadecimales",
         mnemonicSeed: "Semilla mnemónica de 25 (o 24) palabras",
         selectAFile: "Seleccione un archivo por favor",
-        transactionNotes: "Notas adicionales para agregar a la transferencia",
+        transactionNotes: "Notas adicionales para agregar a la transacción",
         walletName: "Nombre para identificar su monedero",
         walletPassword: "Contraseña opcional para proteger su monedero"
     },
@@ -313,34 +318,30 @@ export default {
             myPrimaryAddress: "Mi dirección principal",
             myUnusedAddresses: "Mis direcciones no usadas",
             myUsedAddresses: "Mis direcciones usadas",
-            notYourAddress: "¡No es una dirección que le pertenezca!",
             primaryAddress: "Dirección principal",
             subAddress: "Dirección auxiliar",
             subAddressIndex: "Índice",
-            yourPrimaryAddress: "Su dirección principal",
-            yourUnusedAddress: "Su dirección no usada",
-            yourUsedAddress: "Su dirección usada"
         },
         advancedOptions: "Opciones avanzadas",
         bannedPeers: {
-            title: "Pares excluidos (las exclusiones se anularán si reinicia el monedero)",
-            bannedUntil: "Excluido hasta {time}"
+            title: "Pares vetados (los vetos se anularán si reinicia el monedero)",
+            bannedUntil: "Vetado hasta {time}"
         },
         blockHeight: "Altura",
         transactionConfirmed: "confirmada",
         closing: "Cerrando",
-        connectingToBackend: "Conectando al servidor",
+        connectingToBackend: "Conectando con el servicio",
         daemon: {
             local: {
-                title: "Solo Demonio Local",
-                description: "Seguridad completa. Se descargará la cadena de bloques al completo. No podrá operar hasta que no haya finalizado el proceso de sincronización."
+                title: "Solo Servicio Local",
+                description: "Seguridad completa. Se descargará la cadena de bloques entera. No podrá operar hasta que finalice el proceso de sincronización."
             },
             localRemote: {
-                title: "Demonio Local + Remoto",
+                title: "Servicio Local + Remoto",
                 description: "Empiece a operar rápidamente gracias a esta opción predeterminada. Se descargará la cadena de bloques al completo pero se usará un nodo remoto mientras dure la descarga."
             },
             remote: {
-                title: "Solo Demonio Remoto",
+                title: "Solo Servicio Remoto",
                 description: "Menor seguridad. El monedero se conectará a un nodo remoto para realizar cualquier operación."
             }
         },
@@ -357,34 +358,34 @@ export default {
         lokiBalance: "Saldo",
         lokiUnlockedBalance: "Saldo libre",
         lokiUnlockedShort: "Libre",
-        noTransactionsFound: "No se han encontrado transferencias",
+        noTransactionsFound: "No se han encontrado transacciones",
         notes: "Notas",
         numberOfUnspentOutputs: "Número de salidas no gastadas",
         paymentID: "ID de pago",
         peerList: "Lista de pares",
         readingWalletList: "Leyendo el listado de monederos",
-        recentIncomingTransactionsToAddress: "Transferencias recientes recibidas en esta dirección",
-        recentTransactionsWithAddress: "Transferencias recientes con esta dirección",
+        recentIncomingTransactionsToAddress: "Transacciones recientes recibidas en esta dirección",
+        recentTransactionsWithAddress: "Transacciones recientes con esta dirección",
         rescanModalDescription: "Escoja entre un examen completo o examinar solo las salidas gastadas.",
         saveSeedWarning: "¡Por favor, cópielas y guárdelas en un sitio seguro!",
         saveToAddressBook: "Guardar en la libreta de direcciones",
         seedWords: "Palabras semilla",
         selectLanguage: "Escoja un idioma",
-        serviceNodeRegistrationDescription: "Introduzca el comando {registerCommand} producido por el demonio que se está intentado registrar como Nodo de Servicio usando la instrucción \"{prepareCommand}\"",
+        serviceNodeRegistrationDescription: "Introduzca la orden {registerCommand} generada por el servicio (lokid) que se está intentado registrar como Nodo de Servicio usando la instrucción \"{prepareCommand}\"",
         spendKey: "Clave de gasto",
-        startingDaemon: "Iniciando demonio",
+        startingDaemon: "Iniciando servicio",
         startingWallet: "Iniciando monedero",
         switchToDateSelect: "Cambiar a selección por fecha",
         switchToHeightSelect: "Cambiar a selección por altura",
-        transactionID: "ID de la transferencia",
+        transactionID: "ID de la transacción",
         transactions: {
             amount: "Cantidad",
-            description: "Transferencia {type}",
+            description: "Transacción {type}",
             fee: "Comisión",
             paidBySender: "pagada por el remitente",
             received: "Recibida",
             sent: "Enviada",
-            sentTo: "Transferencia {type} enviada a",
+            sentTo: "Transacción {type} enviada a",
             timestamp: "Fecha y hora",
             types: {
                 all: "Todas",
@@ -393,11 +394,11 @@ export default {
                 pending: "Pendiente",
                 pendingIncoming: "Recibida pendiente",
                 pendingOutgoing: "Emitida pendiente",
-                miner: "Minera",
+                miner: "Minería",
                 serviceNode: "Nodo de Servicio",
                 governance: "Gobernanza",
-                stake: "Depósito",
-                failed: "Fallida"
+                stake: "Retención participación",
+                failed: "Fallidas"
             }
         },
         unspentOutputs: "Salidas no gastadas",
@@ -415,7 +416,7 @@ export default {
         rescanWallet: "Volver a examinar monedero",
         serviceNode: {
             registration: "REGISTRO",
-            staking: "DEPÓSITO",
+            staking: "PARTICIPACIÓN",
             unlock: "LIBERACIÓN"
         },
         settings: {
@@ -426,8 +427,8 @@ export default {
                 peers: "Pares"
             }
         },
-        transactionDetails: "Detalles de la transferencia",
-        transactions: "Transferencias",
+        transactionDetails: "Detalles de la transacción",
+        transactions: "Transacciones",
         wallet: {
             createNew: "Crear un monedero nuevo",
             createdOrRestored: "Monedero creado/restaurado",
