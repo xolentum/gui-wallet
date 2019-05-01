@@ -32,7 +32,7 @@ export default {
         showQRCode: "MOSTRAR CÓDIGO QR",
         showTxDetails: "MOSTRAR DETALLES DE LA TRANSACCIÓN",
         stake: "RETENER PARTICIPACIÓN",
-		sweepAll: "TRANSFERIR/BARRER TODO",
+        sweepAll: "TRANSFERIR/BARRER TODO",
         unlockServiceNode: "LIBERAR NODO DE SERVICIO",
         viewOnExplorer: "VER EN EL EXPLORADOR"
     },
@@ -113,7 +113,7 @@ export default {
             message: "¿Desea participar reteniendo la cantidad que ha indicado?",
             ok: "RETENER"
         },
-		sweepAll: {
+        sweepAll: {
             title: "Transferir/Barrer todo",
             message: "¿Está seguro de que quiere transferir/barrer todos sus fondos?",
             ok: "TRANSFERIR/BARRER TODO"
@@ -398,7 +398,7 @@ export default {
                 serviceNode: "Nodo de Servicio",
                 governance: "Gobernanza",
                 stake: "Retención participación",
-                failed: "Fallidas"
+                failed: "Fallida"
             }
         },
         unspentOutputs: "Salidas no gastadas",
