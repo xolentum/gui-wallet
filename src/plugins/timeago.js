@@ -9,7 +9,8 @@ export default ({
         name: "Timeago",
         locale: "en",
         locales: {
-            ru: require("date-fns/locale/ru")
+            ru: require("date-fns/locale/ru"),
+            de: require("date-fns/locale/de")
         }
     })
 }
