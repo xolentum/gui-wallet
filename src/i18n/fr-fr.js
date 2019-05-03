@@ -32,7 +32,7 @@ export default {
         showQRCode: "AFFICHER LE QR CODE",
         showTxDetails: "AFFICHER LES DETAILS DE TRANSACTION",
         stake: "STAKE",
-		sweepAll: "TOUT BALAYER",
+        sweepAll: "TOUT BALAYER",
         unlockServiceNode: "DEVERROUILLER LE NOEUD DE SERIVCE",
         viewOnExplorer: "VUE SUR L’EXPLORATEUR"
   },
