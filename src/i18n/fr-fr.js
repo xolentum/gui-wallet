@@ -314,6 +314,7 @@ export default {
     strings: {
         addAddressBookEntry: "Ajoutez une entrée de carnet d'adresses",
         addressBookIsEmpty: "Le carnet d'adresses est vide",
+        addressBookDetails: "Détails du carnet d’adresse",
         addresses: {
             myPrimaryAddress: "Mon adresse principale",
             myUnusedAddresses: "Mes adresses non utilisées",
