@@ -113,7 +113,7 @@ export default {
             message: "Voulez-vous miser ?",
             ok: "STAKE"
         },
-		sweepAll: {
+        sweepAll: {
             title: "Tout balayer",
             message: "Voulez-vous tout balayer?",
             ok: "TOUT BALAYER"
