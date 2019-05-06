@@ -3,7 +3,9 @@ import enUS from "./en-us"
 // ADD LANGUAGES HERE
 const languages = [
     { name: "English", code: "en-us", flag: "us" },
-    { name: "Russian", code: "ru", flag: "ru" }
+    { name: "Russian", code: "ru", flag: "ru" },
+    { name: "Spanish", code: "es", flag: "es" }
+	
 ]
 
 export { languages }
