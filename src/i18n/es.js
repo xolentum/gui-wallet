@@ -320,7 +320,7 @@ export default {
             myUsedAddresses: "Mis direcciones usadas",
             primaryAddress: "Dirección principal",
             subAddress: "Dirección auxiliar",
-            subAddressIndex: "Índice {index}",
+            subAddressIndex: "Índice {index}"
         },
         advancedOptions: "Opciones avanzadas",
         bannedPeers: {
