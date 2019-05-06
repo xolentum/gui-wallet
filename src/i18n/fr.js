@@ -65,7 +65,7 @@ export default {
         },
         deleteWallet: {
             title: "Supprimer le portefeuille",
-            message: "Êtes-vous absolument certain de vouloir supprimer votre portefeuille?\nAssurez-vous que vos clés privées sont sauvegardées. \nCE PROCESSUS N'EST PAS REVERSIBLE !",",
+            message: "Êtes-vous absolument certain de vouloir supprimer votre portefeuille?\nAssurez-vous que vos clés privées sont sauvegardées. \nCE PROCESSUS N'EST PAS REVERSIBLE !",
             ok: "Supprimer"
         },
         exit: {
@@ -141,7 +141,7 @@ export default {
             confirmTitle: "Confirmer le déverrouillage",
             message: "Voulez-vous déverrouiller le nœud de service ?",
             ok: "DÉVERROUILLER"
-}
+        }
     },
     fieldLabels: {
         // Field labels are also all uppercased
@@ -413,7 +413,7 @@ export default {
         addressBook: "Carnet d'adresses",
         addressDetails: "Détails de l'adresse",
         changePassword: "Changer de mot de passe",
-        configure: "Configurer"
+        configure: "Configurer",
         privateKeys: "Clés privées",
         rescanWallet: "Analysez de nouveau le portefeuille",
         serviceNode: {
