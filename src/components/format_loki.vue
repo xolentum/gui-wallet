@@ -15,6 +15,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        rawValue: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     computed: {
@@ -22,7 +27,7 @@ export default {
             let value = this.amount / 1e9
             if(this.round)
                 value = value.toFixed(3)
-            return value.toLocaleString()
+            return this.rawValue ? value : value.toLocaleString()
         }
 
     }

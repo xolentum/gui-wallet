@@ -46,7 +46,7 @@
                 <div class="infoBox">
                     <div class="infoBoxContent">
                         <div class="text"><span>{{ $t("strings.transactions.amount") }}</span></div>
-                        <div class="value"><span><FormatLoki :amount="tx.amount" /></span></div>
+                        <div class="value"><span><FormatLoki :amount="tx.amount" raw-value /></span></div>
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@
                                 </template>
                             </span>
                         </div>
-                        <div class="value"><span><FormatLoki :amount="tx.fee" /></span></div>
+                        <div class="value"><span><FormatLoki :amount="tx.fee" raw-value /></span></div>
                     </div>
                 </div>
 
