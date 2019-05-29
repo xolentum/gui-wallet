@@ -6,13 +6,14 @@
             <q-input
                 v-model="wallet.name"
                 :placeholder="$t('placeholders.walletName')"
+                @keyup.enter="import_wallet"
                 @blur="$v.wallet.name.$touch"
                 :dark="theme=='dark'"
                 hide-underline
                 />
         </LokiField>
 
-        <LokiField :label="$t('fieldLabels.walletFile')" disable-hover>
+        <LokiField :label="$t('fieldLabels.walletFile')" disable-hover :error="$v.wallet.path.$error">
             <q-input
                 v-model="wallet.path"
                 :placeholder="$t('placeholders.selectAFile')"
@@ -33,6 +34,7 @@
             <q-input
                 v-model="wallet.password"
                 :placeholder="$t('placeholders.walletPassword')"
+                @keyup.enter="import_wallet"
                 type="password"
                 :dark="theme=='dark'"
                 hide-underline
@@ -40,7 +42,13 @@
         </LokiField>
 
         <LokiField :label="$t('fieldLabels.confirmPassword')">
-            <q-input v-model="wallet.password_confirm" type="password" :dark="theme=='dark'" hide-underline />
+            <q-input
+                v-model="wallet.password_confirm"
+                @keyup.enter="import_wallet"
+                type="password"
+                :dark="theme=='dark'"
+                hide-underline
+            />
         </LokiField>
 
         <q-field>
@@ -97,7 +105,8 @@ export default {
     },
     validations: {
         wallet: {
-            name: { required }
+            name: { required },
+            path: { required }
         }
     },
     methods: {
@@ -110,7 +119,7 @@ export default {
         import_wallet() {
             this.$v.wallet.$touch()
 
-            if (this.$v.wallet.$error) {
+            if (this.$v.wallet.name.$error) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
@@ -118,7 +127,17 @@ export default {
                 })
                 return
             }
-            if(this.wallet.password != this.wallet.password_confirm) {
+
+            if (this.$v.wallet.path.$error) {
+                this.$q.notify({
+                    type: "negative",
+                    timeout: 1000,
+                    message: this.$t("notification.errors.selectWalletFile")
+                })
+                return
+            }
+
+            if (this.wallet.password != this.wallet.password_confirm) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,

@@ -4,6 +4,7 @@
         <LokiField :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
             <q-input
                 v-model="wallet.name"
+                @keyup.enter="create"
                 @blur="$v.wallet.name.$touch"
                 :dark="theme=='dark'"
                 :placeholder="$t('placeholders.walletName')"
@@ -23,6 +24,7 @@
         <LokiField :label="$t('fieldLabels.password')" optional>
             <q-input
                 v-model="wallet.password"
+                @keyup.enter="create"
                 type="password"
                 :dark="theme=='dark'"
                 :placeholder="$t('placeholders.walletPassword')"
@@ -33,6 +35,7 @@
         <LokiField :label="$t('fieldLabels.confirmPassword')">
             <q-input
                 v-model="wallet.password_confirm"
+                @keyup.enter="create"
                 type="password"
                 :dark="theme=='dark'"
                 hide-underline

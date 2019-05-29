@@ -5,6 +5,7 @@
             <q-input
                 v-model="wallet.name"
                 :placeholder="$t('placeholders.walletName')"
+                @keyup.enter="restore_wallet"
                 @blur="$v.wallet.name.$touch"
                 :dark="theme=='dark'"
                 hide-underline
@@ -68,6 +69,7 @@
             <q-input
                 v-model="wallet.password"
                 :placeholder="$t('placeholders.walletPassword')"
+                @keyup.enter="restore_wallet"
                 type="password"
                 :dark="theme=='dark'"
                 hide-underline
@@ -77,6 +79,7 @@
         <LokiField class="q-mt-md" :label="$t('fieldLabels.confirmPassword')">
             <q-input
                 v-model="wallet.password_confirm"
+                @keyup.enter="restore_wallet"
                 type="password"
                 :dark="theme=='dark'"
                 hide-underline
