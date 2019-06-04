@@ -52,25 +52,25 @@ export default {
         },
         copyAddress: {
             title: "Adresse kopieren",
-            message: "Es is eine Payment ID mit dieser Adresse verbunden.\nBitte die Paymend ID separat kopieren"
+            message: "Es is eine Payment ID mit dieser Adresse verbunden.\n Bitte die Paymend ID separat kopieren"
         },
         copyPrivateKeys: {
             // Copy {seedWords/viewKey/spendKey}
             title: "Kopieren {type}",
-            message: "Sei vorsichtig wem du deine Private Keys sendest denn er erhält die Kontrolle über deine Einlagen",
+            message: "Sei vorsichtig, wem du deine Private Keys sendest, denn derjenige erhält dadurch die Kontrolle über deine Einlagen",
             seedWords: "Seed Wörter",
             viewKey: "View Key",
             spendKey: "Spend Key"
         },
         deleteWallet: {
             title: "Wallet löschen",
-            message: "Bist du absolut sicher dein Wallet zu löschen?\nBitte stelle sicher dass du dein Private Key gesichert hast.\nDIESER SCHRITT KANN NICHT RÜCKGÄNGIG GEMACHT WERDEN!",
+            message: "Bist du dir absolut sicher, dass du deine Wallet löschen willst?\n Bitte stelle sicher, dass du deinen Private Key gesichert hast.\n DIESER SCHRITT KANN NICHT RÜCKGÄNGIG GEMACHT WERDEN!",
             ok: "LÖSCHEN"
         },
         exit: {
-            title: "Schliessen",
-            message: "Bist du sicher das du schliessen möchtest?",
-            ok: "SCHLIESSEN"
+            title: "Beenden",
+            message: "Bist du sicher, dass du das Programm beenden möchtest?",
+            ok: "Beenden"
         },
         keyImages: {
             title: "{type} key images",
@@ -80,12 +80,12 @@ export default {
         },
         noPassword: {
             title: "Kein Passwort angelegt",
-            message: "Bist du sicher dass du eine Wallet ohne Passwort erstellen möchtest?",
+            message: "Bist du sicher, dass du eine Wallet ohne Passwort erstellen möchtest?",
             ok: "JA"
         },
         password: {
             title: "Passwort",
-            message: "Wallet Passwort eingeben um fortzufahren "
+            message: "Wallet Passwort eingeben um fortzufahren"
         },
         registerServiceNode: {
             title: "Service Node registrieren",
@@ -118,12 +118,12 @@ export default {
             ok: "ALLES BEREINIGEN"
         },
         switchWallet: {
-            title: "Wallet ändern",
-            closeMessage: "Bist du sicher dass du die aktuelle Wallet schliessen möchtest?",
-            restartMessage: "Das Wallet RPC synchronisiert sich gerade\nWenn du deine Wallet wechseln möchtest musst du die Anwendung erneut starten. \nDie Synchronisation wird abgebrochen und du muss die Blockchain erneut scannen. "
+            title: "Wallet wechseln",
+            closeMessage: "Bist du sicher, dass du die aktuelle Wallet schliessen möchtest?",
+            restartMessage: "Die Wallet RPC synchronisiert sich gerade\n Wenn du deine Wallet wechseln möchtest, musst du die Anwendung erneut starten. \n Die Synchronisation wird abgebrochen und du musst die Blockchain erneut scannen. "
         },
         transactionDetails: {
-            title: "Transaktions details",
+            title: "Transaktionsdetails",
             ok: "SCHLIESSEN"
         },
         transfer: {
@@ -152,12 +152,12 @@ export default {
         daemonLogLevel: "DAEMON LOG LEVEL",
         daemonP2pPort: "DAEMON P2P PORT",
         daemonZMQPort: "DAEMON ZMQ PORT",
-        dataStoragePath: "DATEN SICHERUNGS PFAD",
-        filterTransactionType: "FILTERN NACH TRANSAKTIONS TYP",
+        dataStoragePath: "DATENSICHERUNGSPFAD",
+        filterTransactionType: "FILTERN NACH TRANSAKTIONSTYP",
         filterTxId: "FILTERN NACH TXID",
         internalWalletPort: "INTERNER WALLET PORT",
         keyImages: {
-            exportDirectory: "KEY IMAGE EXPORT VERZEICHNIS",
+            exportDirectory: "KEY IMAGE EXPORTVERZEICHNIS",
             importFile: "KEY IMAGE IMPORT FILE"
         },
         limitDownloadRate: "DOWNLOAD RATE LIMITIEREN",
@@ -177,7 +177,7 @@ export default {
         priority: "PRIORITÄT",
         remoteNodeHost: "REMOTE NODE HOST",
         remoteNodePort: "REMOTE NODE PORT",
-        restoreFromBlockHeight: "WIEDERHERSTELLUNG VON BLOCK HÖHE",
+        restoreFromBlockHeight: "WIEDERHERSTELLUNG VON BLOCKHÖHE",
         restoreFromDate: "WIEDERHERSTELLUNG VON DATUM",
         seedLanguage: "SEED SPRACHE",
         serviceNodeCommand: "SERVICE NODE COMMAND",
@@ -186,20 +186,20 @@ export default {
         walletLogLevel: "WALLET LOG LEVEL",
         walletName: "WALLET NAME",
         walletRPCPort: "WALLET RPC PORT",
-        walletStoragePath: "WALLET SICHERUNGS PFAD",
+        walletStoragePath: "WALLET SICHERUNGSPFAD",
         // These are specific labels which do not get uppercased
         confirmNewPassword: "Neues Passwort bestätigen",
         newPassword: "Neues Passwort",
         oldPassword: "Altes Passwort",
         rescanFullBlockchain: "Gesamte Blockchain erneut scannen",
         rescanSpentOutputs: "Spent Outputs erneut scannen",
-        transactionNotes: "Transaktions Notizen"
+        transactionNotes: "Transaktionsnotizen"
     },
     footer: {
         ready: "FERTIG",
         remote: "REMOTE",
         scanning: "SCANNEN",
-        status: "Status ",
+        status: "Status",
         syncing: "Synchronisierung",
         wallet: "Wallet"
     },
@@ -240,7 +240,7 @@ export default {
                 exported: "Key images exportiert nach {filename}",
                 imported: "Key images importiert"
             },
-            passwordUpdated: "Passwort aktualisiert ",
+            passwordUpdated: "Passwort aktualisiert",
             qrCopied: "QR Code in die Zwischenablage kopiert",
             registerServiceNodeSuccess: "Service Node erfolgreich registriert ",
             sendSuccess: "Transaktion erfolgreich gesendet",
@@ -249,19 +249,19 @@ export default {
         },
         errors: {
             banningPeer: "Fehler bei der Blockierung des Peer",
-            cannotAccessRemoteNode: "Remote Node nicht erreichbar bitte versuche einen anderen Remote Node",
-            changingPassword: "Fehler beim ändern des Passworts",
-            copyWalletFail: "Fehler beim kopieren der Wallet",
-            copyingPrivateKeys: "Fehler beim kopieren der Private Keys",
+            cannotAccessRemoteNode: "Remote Node nicht erreichbar, bitte versuche es mit einer anderen Remote Node",
+            changingPassword: "Fehler beim Ändern des Passworts",
+            copyWalletFail: "Fehler beim Kopieren der Wallet",
+            copyingPrivateKeys: "Fehler beim Kopieren der Private Keys",
             dataPathNotFound: "Pfad zur Speicherung nicht gefunden",
             differentNetType: "Remote Node benutzt einen anderen „nettype“",
             enterSeedWords: "Seed Wörter eingeben",
             enterWalletName: "Wallet Namen eingeben",
-            errorSavingItem: "Fehler beim speichern {item}",
+            errorSavingItem: "Fehler beim Speichern {item}",
             failedServiceNodeUnlock: "Fehler beim Service Node unlock",
             failedToSetLanguage: "Fehler bei der Auswahl der Sprache: {lang}",
-            failedWalletImport: "Fehler beim Import der Wallet",
-            failedWalletOpen: "Fehler beim öffnen der Wallet. Bitte versuche es erneut",
+            failedWalletImport: "Fehler beim Importieren der Wallet",
+            failedWalletOpen: "Fehler beim Öffnen der Wallet. Bitte versuche es erneut",
             internalError: "Interner Fehler",
             invalidAddress: "Adresse nicht gültig",
             invalidAmount: "Betrag nicht gültig",
@@ -270,10 +270,10 @@ export default {
             invalidPaymentId: "Payment ID nicht gültig",
             invalidPrivateViewKey: "Ungültiger Private View Key",
             invalidPublicAddress: "Ungültige öffentliche Adresse",
-            invalidRestoreDate: "Ungültiges Wiederherstellung Darum",
-            invalidRestoreHeight: "Ungültige Wiederherstellungs Höhe ",
-            invalidSeedLength: "Ungültige Seed Wörter Länge ",
-            invalidServiceNodeCommand: "Bitte füge den Service Node Registrierungsbefehl ein ",
+            invalidRestoreDate: "Ungültiges Wiederherstellungsdatum",
+            invalidRestoreHeight: "Ungültige Wiederherstellungshöhe",
+            invalidSeedLength: "Ungültige Seed Wortlänge",
+            invalidServiceNodeCommand: "Bitte füge den Service Node Registrierungsbefehl ein",
             invalidServiceNodeKey: "Service Node Key nicht gültig",
             invalidWalletPath: "Ungültiger Wallet Pfad",
             keyImages: {
@@ -293,9 +293,9 @@ export default {
             zeroAmount: "Betrag muss grösser als null sein"
         },
         warnings: {
-            noKeyImageExport: "Keine Key images zum exportieren gefunden",
-            usingLocalNode: "Zugang zur Remote Node nicht möglich Wechsel zur lokalen Node",
-            usingRemoteNode: "lokid nicht gefunden benutze einen Remote Node"
+            noKeyImageExport: "Keine Key Images zum Exportieren gefunden",
+            usingLocalNode: "Zugang zur Remote Node nicht möglich, wechsle zur lokalen Node",
+            usingRemoteNode: "llokid nicht gefunden, benutze eine Remote Node"
         }
     },
     placeholders: {
@@ -314,7 +314,7 @@ export default {
         addressBookDetails: "Adressbuch details",
         addressBookIsEmpty: "Adressbuch ist leer",
         addresses: {
-            myPrimaryAddress: "Meine primären Adressen",
+            myPrimaryAddress: "Meine primäre Adresse",
             myUnusedAddresses: "Meine ungenutzten Adressen",
             myUsedAddresses: "Meine benutzen Adressen",
             primaryAddress: "Primäre Adresse",
@@ -323,7 +323,7 @@ export default {
         },
         advancedOptions: "Erweiterte Optionen",
         bannedPeers: {
-            title: "Blockierte Peers (Blockierungen werden entfernt wenn Wallet neu gestartet wird)",
+            title: "Blockierte Peers (Blockierungen werden entfernt, wenn Wallet neu gestartet wird)",
             bannedUntil: "Blockieren bis {time}"
         },
         priorityOptions: {
@@ -333,29 +333,29 @@ export default {
             normal:"Normal",
             slow:"Langsam"
         },
-        blockHeight: "Height",
+        blockHeight: "Höhe",
         closing: "schliessen",
         connectingToBackend: "Verbinden zum Backend",
         daemon: {
             local: {
                 title: "Nur lokaler Daemon",
-                description: "Volle Sicherheit. Wallet wird die gesamte Blockchain herunterladen. Du kannst keine Transaktionen senden solange die Synchronisation nicht vollständig beendet wurde"
+                description: "Volle Sicherheit. Wallet wird die gesamte Blockchain herunterladen. Du kannst keine Transaktionen durchführen, solange die Synchronisation nicht vollständig beendet wurde"
             },
             localRemote: {
                 title: "Lokal + Remote Daemon",
-                description: "Schnell starten mit dieser Standard Option. Wallet wird die Blockchain vollständig herunterladen aber solange einen Remote Node während der Synchronisation nutzen"
+                description: "Schnell starten mit dieser Standard Option. Wallet wird die Blockchain vollständig herunterladen, aber während der Synchronisation eine Remote Node nutzen"
             },
             remote: {
                 title: "Nur Remote Node",
-                description: "Etwas weniger sicher Wallet verbindet sich mit einer Remote Node um Transaktions über diese durchzuführen"
+                description: "Etwas weniger sicher. Wallet verbindet sich mit einer Remote Node, um Transaktionen über diese durchzuführen"
             }
         },
         destinationUnknown: "Ziel unbekannt",
-        editAddressBookEntry: "Adressbuch Eintrag bearbeiten",
+        editAddressBookEntry: "Adressbucheintrag bearbeiten",
         loadingSettings: "Einstellungen werden geladen",
         lokiBalance: "Guthaben",
         lokiUnlockedBalance: "frei verfügbares Guthaben",
-        lokiUnlockedShort: "frei verfügbar ",
+        lokiUnlockedShort: "frei verfügbar",
         noTransactionsFound: "Keine Transaktionen gefunden",
         notes: "Notizen",
         numberOfUnspentOutputs: "Anzahl der unspent outputs",
@@ -364,12 +364,12 @@ export default {
         readingWalletList: "Lese Wallet Liste",
         recentIncomingTransactionsToAddress: "Kürzlich eingegangene Transaktionen zu dieser Adresse",
         recentTransactionsWithAddress: "Kürzlich durchgeführte Transaktionen mit dieser Adresse",
-        rescanModalDescription: "Auswahl gesamter Rescan oder nur spent outputs  ",
-        saveSeedWarning: "Bitte kopiere und sichere dies in einem sicheren Ort",
+        rescanModalDescription: "Auswahl gesamter Rescan oder nur spent outputs",
+        saveSeedWarning: "Bitte kopiere und verwahre deinen \"Seed\" an einem sicheren Ort",
         saveToAddressBook: "In Adressbuch speichern",
         seedWords: "Seed Wörter",
         selectLanguage: "Sprache auswählen",
-        serviceNodeRegistrationDescription: "Hier den {registerComand} Befehl der durch den dameon mit dem Befehl {prepareCommand} erzeugt wurde eingeben um ein Service Node zu aktivieren",
+        serviceNodeRegistrationDescription: "Hier den {registerComand} Befehl, der mit Hilfe des Daemons durch das Kommando {prepareCommand} erzeugt wurde, eingeben, um eine Service Node zu aktivieren",
         spendKey: "Spend key",
         startingDaemon: "Daemon wird gestartet",
         startingWallet: "Wallet wird gestartet",
@@ -381,7 +381,7 @@ export default {
             amount: "Betrag",
             description: "{type} Transaktion",
             fee: "Gebühr",
-            paidBySender: "Bezahlt durch Sender",
+            paidBySender: "Vom Absender bezahlt",
             received: "Empfangen",
             sent: "Gesendet",
             sentTo: "{type} Transaktion gesendet nach",
@@ -390,9 +390,9 @@ export default {
                 all: "Alles",
                 incoming: "Eingehend",
                 outgoing: "Ausgehend",
-                pending: "Pending",
-                pendingIncoming: "Pending eingehend",
-                pendingOutgoing: "Pending ausgehend",
+                pending: "Ausstehend",
+                pendingIncoming: "Ausstehend eingehend",
+                pendingOutgoing: "Ausstehend ausgehend",
                 miner: "Miner",
                 serviceNode: "Service Node",
                 governance: "Governance",
@@ -401,20 +401,20 @@ export default {
             }
         },
         unspentOutputs: "Unspent outputs",
-        userNotUsedAddress: "Du hast diese Adressen nicht genutzt",
-        userUsedAddress: "Du hast diese Adresse genutzt",
+        userNotUsedAddress: "Du hast diese Adresse nicht benutzt",
+        userUsedAddress: "Du hast diese Adresse benutzt",
         viewKey: "View Key",
         viewOnlyMode: "Nur Anzeige Modus. Bitte die volle Wallet laden um Coins zu senden"
     },
     titles: {
         addressBook: "Adressbuch",
-        addressDetails: "Adressen details",
+        addressDetails: "Adressdetails",
         changePassword: "Passwort ändern",
-        configure: "Konfiguaration  ",
+        configure: "Konfiguaration",
         privateKeys: "Private Keys",
         rescanWallet: "Wallet erneut scannen",
         serviceNode: {
-            registration: "REGISTIRIERUNG ",
+            registration: "REGISTRIERUNG",
             staking: "STAKING",
             unlock: "UNLOCK"
         },
@@ -426,7 +426,7 @@ export default {
                 peers: "Peers"
             }
         },
-        transactionDetails: "Transaktions Details",
+        transactionDetails: "Transaktionsdetails",
         transactions: "Transaktionen",
         wallet: {
             createNew: "Neue Wallet erstellen",
