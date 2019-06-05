@@ -124,7 +124,7 @@ export class Backend {
                 port: "22023"
             },
             {
-                host: "rpc.nodes.rentals",
+                host: "rpc.stakeit.io",
                 port: "22023"
             }
         ]

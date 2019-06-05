@@ -288,6 +288,7 @@ export default {
             notEnoughBalance: "Not enough unlocked balance",
             passwordNoMatch: "Passwords do not match",
             remoteCannotBeReached: "Remote daemon cannot be reached",
+            selectWalletFile: "Select a wallet file",
             unknownError: "An unknown error occurred",
             walletAlreadyExists: "Wallet with name already exists",
             walletPathNotFound: "Wallet data storage path not found",
