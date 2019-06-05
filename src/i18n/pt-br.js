@@ -3,7 +3,7 @@ export default {
         // All button text is uppercased in the gui
         all: "TUDO",
         back: "ATRÁS",
-        browse: "BROWSE",
+        browse: "EXAMINAR",
         cancel: "CANCELAR",
         change: "MUDAR",
         close: "FECHAR",
