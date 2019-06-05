@@ -328,10 +328,10 @@ export default {
         },
         priorityOptions: {
             automatic: "Automatisch",
-            fast:"Schnell",
-            fastest:"Am schnellsten",
-            normal:"Normal",
-            slow:"Langsam"
+            fast: "Schnell",
+            fastest: "Am schnellsten",
+            normal: "Normal",
+            slow: "Langsam"
         },
         blockHeight: "Höhe",
         closing: "schliessen",
