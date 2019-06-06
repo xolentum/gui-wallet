@@ -114,9 +114,14 @@ export default {
             ok: "STAKE"
         },
         sweepAll: {
-            title: "Sweep All",
+            title: "Sweep all",
             message: "Do you want to sweep all?",
             ok: "SWEEP ALL"
+        },
+        sweepAllWarning: {
+            title: "Sweep all warning",
+            message: "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
+            ok: "CONTINUE"
         },
         switchWallet: {
             title: "Switch wallet",
@@ -135,6 +140,11 @@ export default {
         unlockConfirm: {
             title: "Confirm unlock",
             ok: "UNLOCK"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         },
         unlockServiceNode: {
             title: "Unlock service node",

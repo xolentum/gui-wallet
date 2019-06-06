@@ -12,7 +12,7 @@
             />
         </LokiField>
         <q-field class="q-pt-sm">
-            <q-btn color="primary" @click="unlock()" :label="$t('buttons.unlockServiceNode')" :disabled="unlock_status.sending"/>
+            <q-btn color="primary" @click="unlockWarning()" :label="$t('buttons.unlockServiceNode')" :disabled="unlock_status.sending"/>
         </q-field>
     </div>
 
@@ -95,6 +95,22 @@ export default {
         },
     },
     methods: {
+        unlockWarning: function() {
+            this.$q.dialog({
+                title: this.$t("dialog.unlockServiceNodeWarning.title"),
+                message: this.$t("dialog.unlockServiceNodeWarning.message"),
+                ok: {
+                    label: this.$t("dialog.unlockServiceNodeWarning.ok")
+                },
+                cancel: {
+                    flat: true,
+                    label: this.$t("dialog.buttons.cancel"),
+                    color: this.theme === "dark" ? "white" : "dark"
+                }
+            }).then(() => {
+                this.unlock()
+            }).catch(() => {})
+        },
         unlock: function () {
             this.$v.node_key.$touch()
             if (this.$v.node_key.$error) {

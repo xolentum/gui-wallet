@@ -33,7 +33,7 @@
                 color="primary" @click="stake()" :label="$t('buttons.stake')" />
             <q-btn
                 :disable="!is_able_to_send"
-                color="secondary" @click="sweepAll()" :label="$t('buttons.sweepAll')" />
+                color="secondary" @click="sweepAllWarning()" :label="$t('buttons.sweepAll')" />
         </q-field>
 
     </div>
@@ -145,6 +145,22 @@ export default {
         },
     },
     methods: {
+        sweepAllWarning: function () {
+            this.$q.dialog({
+                title: this.$t("dialog.sweepAllWarning.title"),
+                message: this.$t("dialog.sweepAllWarning.message"),
+                ok: {
+                    label: this.$t("dialog.sweepAllWarning.ok")
+                },
+                cancel: {
+                    flat: true,
+                    label: this.$t("dialog.buttons.cancel"),
+                    color: this.theme === "dark" ? "white" : "dark"
+                }
+            }).then(() => {
+                this.sweepAll()
+            }).catch(() => {})
+        },
         sweepAll: function () {
             const { unlocked_balance } = this.info;
 
