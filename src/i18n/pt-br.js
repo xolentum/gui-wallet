@@ -183,7 +183,7 @@ export default {
         walletFile: "FICHEIRO DA CARTEIRA",
         walletLogLevel: "NIVEL DE LOG DA CARTEIRA",
         walletName: "NOME DA CARTEIRA",
-        walletRPCPort: "PORTA RPC DACARTEIRA",
+        walletRPCPort: "PORTA RPC DA CARTEIRA",
         walletStoragePath: "DIRECTORIA DE SALVAMENTO DA CARTEIRA",
 
         // These are specific labels which do not get uppercased
