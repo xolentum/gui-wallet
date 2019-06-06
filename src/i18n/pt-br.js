@@ -246,7 +246,7 @@ export default {
             registerServiceNodeSuccess: "Nódulo de serviço registado com sucesso",
             sendSuccess: "Transação enviada com sucesso.",
             stakeSuccess: "Participação com sucesso",
-            transactionNotesSaved: "Nota de transação salvada."
+            transactionNotesSaved: "A nota de transação foi salva"
         },
         errors: {
             banningPeer: "Erro ao banir par",
