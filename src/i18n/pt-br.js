@@ -3,7 +3,7 @@ export default {
         // All button text is uppercased in the gui
         all: "TUDO",
         back: "ATRÁS",
-        browse: "EXAMINAR",
+        browse: "PESQUISAR",
         cancel: "CANCELAR",
         change: "MUDAR",
         close: "FECHAR",
@@ -19,7 +19,7 @@ export default {
         openWallet: "ABRIR CARTEIRA",
         receive: "RECEBER",
         registerServiceNode: "REGISTAR NÓDULO DE SERVIÇO",
-        rescan: "VOLTAR A EXAMINAR",
+        rescan: "REEXAMINAR",
         restoreWallet: "RESTAURAR CARTEIRA",
         save: "SALVAR",
         saveTxNotes: "SALVAR NOTAS DE TX",
@@ -74,8 +74,8 @@ export default {
             ok: "SAIR"
         },
         keyImages: {
-            title: "{type} imágens chave",
-            message: "Quer {type} imágens chave?",
+            title: "{type} imagens chave",
+            message: "Quer {type} imagens chave?",
             export: "Exportar",
             import: "Importar"
         },
@@ -94,9 +94,9 @@ export default {
             ok: "REGISTAR"
         },
         rescan: {
-            title: "Re-examinar carteira",
+            title: "Reexaminar carteira",
             message: "Aviso: Algumas informações acerca de transações passadas serão perdidas,\ntal como o endereço dos recipientes que serão perdidos.",
-            ok: "RE-EXAMINAR"
+            ok: "REEXAMINAR"
         },
         restart: {
             title: "Reiniciar",
@@ -115,13 +115,13 @@ export default {
         },
         sweepAll: {
             title: "Varrer Tudo",
-            message: "Quer reamente varrer tudo?",
+            message: "Quer realmente varrer tudo?",
             ok: "VARRER TUDO"
         },
         switchWallet: {
             title: "Mudar de carteira",
             closeMessage: "Tem a certeza que deseja fechar a carteira actual?",
-            restartMessage: "A carteira RPC está correntemente em sincronização. \nISe deseja mudar de carteira terá de reiniciar a aplicação. \nPerderá o progresso da sincronização e terá de re-examinar o blockchain."
+            restartMessage: "A carteira RPC está correntemente em sincronização. \nISe deseja mudar de carteira terá de reiniciar a aplicação. \nPerderá o progresso da sincronização e terá de reexaminar o blockchain."
         },
         transactionDetails: {
             title: "Detalhes das transações",
@@ -156,13 +156,13 @@ export default {
         filterTxId: "FILTRAR POR TXID",
         internalWalletPort: "PORTA INTERNA DA CARTEIRA",
         keyImages: {
-            exportDirectory: "DIRECTORIA DE EXPORTAÇÃO DAS CHAVES DE IMÁGEM",
-            importFile: "FICHEIRO DE IMPORTAÇÃO DAS CHAVES DE IMÁGEM"
+            exportDirectory: "DIRETORIA DE EXPORTAÇÃO DAS CHAVES DE IMAGEM",
+            importFile: "FICHEIRO DE IMPORTAÇÃO DAS CHAVES DE IMAGEM"
         },
         limitDownloadRate: "LIMITAR VELOCIDADE DE DOWNLOAD",
         limitUploadRate: "LIMITE DA VELOCIDADE DE UPLOAD",
         localDaemonIP: "IP LOCAL DO SERVIÇO",
-        localDaemonPort: "PORTA LOCALA DO SERVIÇO",
+        localDaemonPort: "PORTA LOCAL DO SERVIÇO",
         maxIncomingPeers: "NÚM. MAX DE PARES DE ENTRADA",
         maxOutgoingPeers: "NUM. MAX DE PARES DE SAÍDA",
         mnemonicSeed: "SEMENTE MNEMÓNICA",
@@ -175,7 +175,7 @@ export default {
         priority: "PRIORIDADE",
         remoteNodeHost: "NÓDULO HÓSPEDE REMOTO",
         remoteNodePort: "PORTA REMOTA DO NÓDULO",
-        restoreFromBlockHeight: "RESTAURAE DESDE ALTURA DO BLOCO",
+        restoreFromBlockHeight: "RESTAURE DESDE ALTURA DO BLOCO",
         restoreFromDate: "RESTAURAR DESDE DATA",
         seedLanguage: "LINGUA DA SEMENTE",
         serviceNodeCommand: "COMANDO DO NÓDULO DE SERVIÇO",
@@ -190,8 +190,8 @@ export default {
         confirmNewPassword: "Confirmar Nova Palavra-Passe",
         newPassword: "Nova Palavra-Passe",
         oldPassword: "Antiga Palavra-Passe",
-        rescanFullBlockchain: "Re-examinar o blockchain completo",
-        rescanSpentOutputs: "Re-examinar saídas gastas",
+        rescanFullBlockchain: "Reexaminar o blockchain completo",
+        rescanSpentOutputs: "Reexaminar saídas gastas",
         transactionNotes: "Notas de Transações",
         chooseNetwork: "Seleccione uma Rede",
         network: "Rede"
@@ -217,15 +217,15 @@ export default {
         deleteWallet: "Apagar carteira",
         exit: "Saír da Carteira GUI Loki",
         importOldGUIWallet: "Importar carteiras da antiga carteira GUI",
-        manageKeyImages: "Administrar Imágens de Chave",
+        manageKeyImages: "Administrar Imagens de Chave",
         openWallet: "Abrir carteira",
-        rescanWallet: "Re-examinar Carteira",
+        rescanWallet: "Reexaminar Carteira",
         restoreWalletFile: "Restaurar carteira a partir de ficheiro",
         restoreWalletSeed: "Restaurar carteira a partir da semente",
         saveQR: "Salvar código QR para um ficheiro",
         sendToThisAddress: "Enviar para este endereço",
         settings: "Configurações",
-        showDetails: "Show details",
+        showDetails: "Mostrar detalhes",
         showPrivateKeys: "Mostrar Chaves Privadas",
         showQRCode: "Mostrar Código QR",
         switchWallet: "Mudar de Carteira",
@@ -238,13 +238,13 @@ export default {
             copied: "{item} copiado para o clipboard",
             itemSaved: "{item} salvado em {filename}",
             keyImages: {
-                exported: "Imágens de Chave exportadas para {filename}",
-                imported: "Imágens de Chave importadas"
+                exported: "Imagens de Chave exportadas para {filename}",
+                imported: "Imagens de Chave importadas"
             },
             passwordUpdated: "Palavra-Passe actualizada",
             qrCopied: "Código QR ccopiado para o clipboard",
             registerServiceNodeSuccess: "Nódulo de serviço registado com sucesso",
-            sendSuccess: "Transação enviado com sucesso.",
+            sendSuccess: "Transação enviada com sucesso.",
             stakeSuccess: "Participação com sucesso",
             transactionNotesSaved: "Nota de transação salvada."
         },
@@ -278,9 +278,9 @@ export default {
             invalidServiceNodeKey: "Chave do nódulo de serviço inválido",
             invalidWalletPath: "Caminho da carteira inválido",
             keyImages: {
-                exporting: "Erro ao exportar as chaves de imágem",
-                reading: "Erro ao ler as chaves de imágem",
-                importing: "Erro ao importar as chaves de imágem"
+                exporting: "Erro ao exportar as chaves de imagem",
+                reading: "Erro ao ler as chaves de imagem",
+                importing: "Erro ao importar as chaves de imagem"
             },
             negativeAmount: "Quantidade não pode ser negativa",
             newPasswordNoMatch: "Nova palavra-passe não coincide",
@@ -295,7 +295,7 @@ export default {
             zeroAmount: "Quantidade tem de ser superior a zero"
         },
         warnings: {
-            noKeyImageExport: "Nenhuma chave de imágem encontrada para exportar",
+            noKeyImageExport: "Nenhuma chave de imagem encontrada para exportar",
             usingLocalNode: "Não foi possível aceder ao nódulo remoto, mudando para nódulo local apenas",
             usingRemoteNode: "lokid não encontrado, utilizando nódulo remoto"
         }
@@ -316,10 +316,10 @@ export default {
         addressBookDetails: "Detalhes do livro de endereço",
         addressBookIsEmpty: "Livro de endereço vazio",
         addresses: {
-            myPrimaryAddress: "Meu endereço primário",
-            myUnusedAddresses: "Meus endereços não utilizado",
+            myPrimaryAddress: "Meu endereço primario",
+            myUnusedAddresses: "Meus endereços não utilizados",
             myUsedAddresses: "Meus endereços utilizados",
-            primaryAddress: "Endereço primário",
+            primaryAddress: "Endereço primario",
             subAddress: "Sub-endereço",
             subAddressIndex: "Índice {index}"
         },
@@ -348,7 +348,7 @@ export default {
         },
         priorityOptions: {
             automatic: "Automatico",
-            slow: "Devagar",
+            slow: "Lento",
             normal: "Normal",
             fast: "Rápido",
             fastest: "O Mais Rápido"
@@ -394,7 +394,7 @@ export default {
                 outgoing: "Saídas",
                 pending: "Pendentes",
                 pendingIncoming: "Entradas pendentes",
-                pendingOutgoing: "Saídas pendesntes",
+                pendingOutgoing: "Saídas pendentes",
                 miner: "Mineiro",
                 serviceNode: "Nódulo de Serviço",
                 governance: "Governança",
@@ -414,7 +414,7 @@ export default {
         changePassword: "Mudar palavra-passe",
         configure: "Configure",
         privateKeys: "Chaves privadas",
-        rescanWallet: "Re-examinar carteira",
+        rescanWallet: "Reexaminar carteira",
         serviceNode: {
             registration: "REGISTO",
             staking: "PARTICIPAÇÃO",
