@@ -33,7 +33,7 @@ export default {
         showTxDetails: "SHOW TX DETAILS",
         stake: "STAKE",
         sweepAll: "SWEEP ALL",
-        unlockServiceNode: "UNLOCK SERVICE NODE",
+        unlockServiceNode: "UNLOCK",
         viewOnExplorer: "VIEW ON EXPLORER"
     },
     dialog: {
@@ -114,9 +114,14 @@ export default {
             ok: "STAKE"
         },
         sweepAll: {
-            title: "Sweep All",
+            title: "Sweep all",
             message: "Do you want to sweep all?",
             ok: "SWEEP ALL"
+        },
+        sweepAllWarning: {
+            title: "Sweep all warning",
+            message: "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
+            ok: "CONTINUE"
         },
         switchWallet: {
             title: "Switch wallet",
@@ -135,6 +140,11 @@ export default {
         unlockConfirm: {
             title: "Confirm unlock",
             ok: "UNLOCK"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         },
         unlockServiceNode: {
             title: "Unlock service node",
@@ -332,6 +342,7 @@ export default {
         transactionConfirmed: "confirmed",
         closing: "Closing",
         connectingToBackend: "Connecting to backend",
+        contribution: "Contribution",
         daemon: {
             local: {
                 title: "Local Daemon Only",
@@ -373,6 +384,7 @@ export default {
         seedWords: "Seed words",
         selectLanguage: "Select language",
         serviceNodeRegistrationDescription: "Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the \"{prepareCommand}\" command",
+        serviceNodeNoContribution: "You have not contributed to any service nodes.",
         spendKey: "Spend key",
         startingDaemon: "Starting daemon",
         startingWallet: "Starting wallet",

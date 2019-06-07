@@ -20,21 +20,19 @@ let mainWindow, backend
 let showConfirmClose = true
 let forceQuit = false
 
-const portInUse = function (port, callback) {
-    var server = net.createServer(function (socket) {
-        socket.write("Echo server\r\n")
-        socket.pipe(socket)
-    })
+const selectionMenu = Menu.buildFromTemplate([
+    { role: "copy" },
+    { type: "separator" },
+    { role: "selectall" }
+])
 
-    server.listen(port, "127.0.0.1")
-    server.on("error", function (e) {
-        callback(true)
-    })
-    server.on("listening", function (e) {
-        server.close()
-        callback(false)
-    })
-}
+const inputMenu = Menu.buildFromTemplate([
+    { role: "cut" },
+    { role: "copy" },
+    { role: "paste" },
+    { type: "separator" },
+    { role: "selectall" }
+])
 
 function createWindow () {
     /**
@@ -107,8 +105,8 @@ function createWindow () {
                 token: buffer.toString("hex")
             }
 
-            portscanner.checkPortStatus(config.port, "127.0.0.1", (error, status) => {
-                if (status == "closed") {
+            portscanner.checkPortStatus(config.port, "127.0.0.1", (e, status) => {
+                if (status === "closed") {
                     backend = new Backend(mainWindow)
                     backend.init(config)
                     mainWindow.webContents.send("initialize", config)
@@ -125,6 +123,15 @@ function createWindow () {
                 }
             })
         })
+    })
+
+    mainWindow.webContents.on("context-menu", (e, props) => {
+        const { selectionText, isEditable } = props
+        if (isEditable) {
+            inputMenu.popup(mainWindow)
+        } else if (selectionText && selectionText.trim() !== "") {
+            selectionMenu.popup(mainWindow)
+        }
     })
 
     mainWindow.loadURL(process.env.APP_URL)

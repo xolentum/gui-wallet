@@ -249,10 +249,10 @@ export default {
     methods: {
         showTxDetails () {
             this.$q.dialog({
-                title: this.$t("dialogs.transactionDetails.title"),
+                title: this.$t("dialog.transactionDetails.title"),
                 message: JSON.stringify(this.tx, null, 2),
                 ok: {
-                    label: this.$t("dialogs.transactionDetails.ok"),
+                    label: this.$t("dialog.transactionDetails.ok"),
                     color: "primary",
                 },
             }).then(() => {

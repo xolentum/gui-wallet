@@ -763,6 +763,9 @@ export class WalletRPC {
                     return
                 }
 
+                // Update the new snode list
+                this.backend.daemon.updateServiceNodes()
+
                 this.sendGateway("set_snode_status", {
                     stake: {
                         code: 0,
@@ -812,6 +815,9 @@ export class WalletRPC {
                     })
                     return
                 }
+
+                // Update the new snode list
+                this.backend.daemon.updateServiceNodes()
 
                 this.sendGateway("set_snode_status", {
                     registration: {
@@ -875,6 +881,11 @@ export class WalletRPC {
                         code: data.unlocked ? 0 : -1,
                         message: data.msg,
                         sending: false
+                    }
+
+                    // Update the new snode list
+                    if (data.unlocked) {
+                        this.backend.daemon.updateServiceNodes()
                     }
 
                     this.sendGateway("set_snode_status", { unlock })
