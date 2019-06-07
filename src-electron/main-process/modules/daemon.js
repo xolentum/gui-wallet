@@ -297,7 +297,7 @@ export class Daemon {
             return Array.isArray(pivot_or_height)
                 ? this.timestampToHeight(timestamp, pivot_or_height, recursion_limit + 1)
                 : pivot_or_height
-        }).catch(error => {
+        }).catch(e => {
             return false
         })
     }
@@ -314,6 +314,12 @@ export class Daemon {
             this.heartbeatSlowAction()
         }, 30 * 1000) // 30 seconds
         this.heartbeatSlowAction()
+
+        clearInterval(this.serviceNodeHeartbeat)
+        this.serviceNodeHeartbeat = setInterval(() => {
+            this.serviceNodeHeartbeatAction()
+        }, 5 * 60 * 1000) // 5 minutes
+        this.serviceNodeHeartbeatAction()
     }
 
     heartbeatAction () {
@@ -373,6 +379,23 @@ export class Daemon {
                 }
             }
             this.sendGateway("set_daemon_data", daemon_info)
+        })
+    }
+
+    serviceNodeHeartbeatAction () {
+        // Get the latest service node data
+        this.getRPC("service_nodes").then(data => {
+            if (!data.hasOwnProperty("result")) return
+
+            const states = data.result.service_node_states
+
+            // Only store the data we need
+            const service_nodes = states.map(s => ({
+                service_node_pubkey: s.service_node_pubkey,
+                contributors: s.contributors
+            }))
+            console.log(service_nodes)
+            this.sendGateway("set_daemon_data", { service_nodes })
         })
     }
 

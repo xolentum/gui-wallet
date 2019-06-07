@@ -95,6 +95,7 @@ export default {
         },
         connections: [],
         bans: [],
-        tx_pool_backlog: []
+        tx_pool_backlog: [],
+        service_nodes: []
     }
 }
