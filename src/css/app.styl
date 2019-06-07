@@ -509,6 +509,29 @@ footer,
 
 }
 
+.service-node-list {
+    .q-item {
+        background: #313131;
+        -webkit-transition: background-color 0.2s ease-in;
+        transition: background-color 0.2s ease-in;
+
+        border-radius: 3px;
+
+        + .q-item {
+            margin-top: 10px;
+        }
+    }
+
+    .q-item-sublabel {
+        color: $loki-black-50;
+    }
+
+    .q-item:hover {
+        background: rgba(117,117,117,0.3);
+    }
+
+}
+
 .tx-list {
     .transaction .main {
             border-left: 1px solid #252525;

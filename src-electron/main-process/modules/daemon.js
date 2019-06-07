@@ -394,7 +394,6 @@ export class Daemon {
                 service_node_pubkey: s.service_node_pubkey,
                 contributors: s.contributors
             }))
-            console.log(service_nodes)
             this.sendGateway("set_daemon_data", { service_nodes })
         })
     }

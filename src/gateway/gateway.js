@@ -98,6 +98,10 @@ export class Gateway extends EventEmitter {
         this.ws.send(encrypted_data)
     }
 
+    geti18n (key) {
+        return Array.isArray(key) ? i18n.t(...key) : i18n.t(key)
+    }
+
     receive (message) {
         // should wrap this in a try catch, and if fail redirect to error screen
         // shouldn't happen outside of dev environment
@@ -137,20 +141,22 @@ export class Gateway extends EventEmitter {
 
         case "set_tx_status": {
             const data = { ...decrypted_data.data }
-
             if (data.i18n) {
-                if (typeof data.i18n === "string") {
-                    data.message = i18n.t(data.i18n)
-                } else if (Array.isArray(data.i18n)) {
-                    data.message = i18n.t(...data.i18n)
-                }
+                data.message = this.geti18n(data.i18n)
             }
             this.app.store.commit("gateway/set_tx_status", data)
             break
         }
 
         case "set_snode_status":
-            this.app.store.commit("gateway/set_snode_status", decrypted_data.data)
+            const data = { ...decrypted_data.data }
+
+            // We have multiple nested objects in service_node_status
+            for (const key in data) {
+                if (data[key].i18n) { data[key].message = this.geti18n(data[key].i18n) }
+            }
+
+            this.app.store.commit("gateway/set_snode_status", data)
             break
 
         case "set_old_gui_import_status":
@@ -172,15 +178,9 @@ export class Gateway extends EventEmitter {
                 message: ""
             }
             const { data } = decrypted_data
-
             if (data.i18n) {
-                if (typeof data.i18n === "string") {
-                    notification.message = i18n.t(data.i18n)
-                } else if (Array.isArray(data.i18n)) {
-                    notification.message = i18n.t(...data.i18n)
-                }
+                notification.message = this.geti18n(data.i18n)
             }
-
             Notify.create(Object.assign(notification, data))
             break
         }

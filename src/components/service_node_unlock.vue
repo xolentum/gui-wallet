@@ -1,19 +1,26 @@
 <template>
 <div class="service-node-unlock">
-     <div class="q-pa-md">
-        <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.node_key.$error" :disabled="unlock_status.sending">
-            <q-input
-                v-model="node_key"
-                :dark="theme=='dark'"
-                @blur="$v.node_key.$touch"
-                :placeholder="$t('placeholders.hexCharacters', { count: 64 })"
-                :disabled="unlock_status.sending"
-                hide-underline
-            />
-        </LokiField>
-        <q-field class="q-pt-sm">
-            <q-btn color="primary" @click="unlockWarning()" :label="$t('buttons.unlockServiceNode')" :disabled="unlock_status.sending"/>
-        </q-field>
+    <div class="q-pa-md">
+        <q-list class="service-node-list" no-border v-if="service_nodes.length > 0">
+            <q-item v-for="node in service_nodes" :key="node.key">
+                <q-item-main>
+                    <q-item-tile class="ellipsis" label>{{ node.key }}</q-item-tile>
+                    <q-item-tile sublabel class="non-selectable">Contribution: <FormatLoki :amount="node.amount" /></q-item-tile>
+                </q-item-main>
+                <q-item-side>
+                    <q-btn
+                        color="primary"
+                        size="md"
+                        label="Unlock"
+                        :disabled="!is_ready || unlock_status.sending"
+                        @click="unlockWarning(node.key)"
+                    />
+                </q-item-side>
+            </q-item>
+        </q-list>
+        <div v-else>
+            You have not contributed to any service nodes.
+        </div>
     </div>
 
     <q-inner-loading :visible="unlock_status.sending" :dark="theme=='dark'">
@@ -29,18 +36,30 @@ import { required } from "vuelidate/lib/validators"
 import { service_node_key } from "src/validators/common"
 import LokiField from "components/loki_field"
 import WalletPassword from "src/mixins/wallet_password"
+import FormatLoki from "components/format_loki"
 
 export default {
     name: "ServiceNodeUnlock",
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
         unlock_status: state => state.gateway.service_node_status.unlock,
-    }),
-    data () {
-        return {
-            node_key: "",
+        our_address: state => state.gateway.wallet.address_list.primary[0].address,
+        is_ready (state) {
+            return this.$store.getters["gateway/isReady"]
+        },
+        service_nodes (state) {
+            const nodes = state.gateway.daemon.service_nodes
+            const getContribution = node => node.contributors.find(c => c.address === this.our_address)
+            // Only show nodes that we contributed to
+            return nodes.filter(getContribution).map(n => {
+                const ourContribution = getContribution(n)
+                return { 
+                    key: n.service_node_pubkey,
+                    amount: ourContribution.amount
+                }
+            })
         }
-    },
+    }),
     validations: {
         node_key: { required, service_node_key }
     },
@@ -59,7 +78,6 @@ export default {
                             message: this.unlock_status.message
                         })
                         this.$v.$reset();
-                        this.node_key = ""
                         break;
                     case 1:
                         // Tell the user to confirm
@@ -76,7 +94,8 @@ export default {
                             }
                         }).then(() => {
                             this.gatewayUnlock(this.password, this.key, true);
-                        }).catch(() => {})
+                        }).catch(() => {
+                        })
                         break;
                     case -1:
                         this.key = null
@@ -95,7 +114,7 @@ export default {
         },
     },
     methods: {
-        unlockWarning: function() {
+        unlockWarning: function (key) {
             this.$q.dialog({
                 title: this.$t("dialog.unlockServiceNodeWarning.title"),
                 message: this.$t("dialog.unlockServiceNodeWarning.message"),
@@ -108,22 +127,12 @@ export default {
                     color: this.theme === "dark" ? "white" : "dark"
                 }
             }).then(() => {
-                this.unlock()
+                this.unlock(key)
             }).catch(() => {})
         },
-        unlock: function () {
-            this.$v.node_key.$touch()
-            if (this.$v.node_key.$error) {
-                this.$q.notify({
-                    type: "negative",
-                    timeout: 1000,
-                    message: this.$t("notification.errors.invalidServiceNodeKey")
-                })
-                return
-            }
-
+        unlock: function (key) {
             // We store this as it could change between the 2 step process
-            this.key = this.node_key
+            this.key = key
 
             this.showPasswordConfirmation({
                 title: this.$t("dialog.unlockServiceNode.title"),
@@ -155,10 +164,16 @@ export default {
 
     mixins: [WalletPassword],
     components: {
-        LokiField
+        LokiField,
+        FormatLoki
     }
 }
 </script>
 
 <style lang="scss">
+.service-node-unlock {
+    .q-item-sublabel, .q-list-header {
+        font-size: 14px;
+    }
+}
 </style>
