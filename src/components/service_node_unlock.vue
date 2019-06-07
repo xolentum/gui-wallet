@@ -5,13 +5,13 @@
             <q-item v-for="node in service_nodes" :key="node.key">
                 <q-item-main>
                     <q-item-tile class="ellipsis" label>{{ node.key }}</q-item-tile>
-                    <q-item-tile sublabel class="non-selectable">Contribution: <FormatLoki :amount="node.amount" /></q-item-tile>
+                    <q-item-tile sublabel class="non-selectable">{{ $t('strings.contribution') }}: <FormatLoki :amount="node.amount" /></q-item-tile>
                 </q-item-main>
                 <q-item-side>
                     <q-btn
                         color="primary"
                         size="md"
-                        label="Unlock"
+                        :label="$t('buttons.unlockServiceNode')"
                         :disabled="!is_ready || unlock_status.sending"
                         @click="unlockWarning(node.key)"
                     />
@@ -19,7 +19,7 @@
             </q-item>
         </q-list>
         <div v-else>
-            You have not contributed to any service nodes.
+            {{ $t('strings.serviceNodeNoContribution')}}
         </div>
     </div>
 

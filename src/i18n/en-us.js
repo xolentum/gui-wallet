@@ -33,7 +33,7 @@ export default {
         showTxDetails: "SHOW TX DETAILS",
         stake: "STAKE",
         sweepAll: "SWEEP ALL",
-        unlockServiceNode: "UNLOCK SERVICE NODE",
+        unlockServiceNode: "UNLOCK",
         viewOnExplorer: "VIEW ON EXPLORER"
     },
     dialog: {
@@ -342,6 +342,7 @@ export default {
         transactionConfirmed: "confirmed",
         closing: "Closing",
         connectingToBackend: "Connecting to backend",
+        contribution: "Contribution",
         daemon: {
             local: {
                 title: "Local Daemon Only",
@@ -383,6 +384,7 @@ export default {
         seedWords: "Seed words",
         selectLanguage: "Select language",
         serviceNodeRegistrationDescription: "Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the \"{prepareCommand}\" command",
+        serviceNodeNoContribution: "You have not contributed to any service nodes.",
         spendKey: "Spend key",
         startingDaemon: "Starting daemon",
         startingWallet: "Starting wallet",
