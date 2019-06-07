@@ -20,6 +20,20 @@ let mainWindow, backend
 let showConfirmClose = true
 let forceQuit = false
 
+const selectionMenu = Menu.buildFromTemplate([
+    { role: "copy" },
+    { type: "separator" },
+    { role: "selectall" }
+])
+
+const inputMenu = Menu.buildFromTemplate([
+    { role: "cut" },
+    { role: "copy" },
+    { role: "paste" },
+    { type: "separator" },
+    { role: "selectall" }
+])
+
 const portInUse = function (port, callback) {
     var server = net.createServer(function (socket) {
         socket.write("Echo server\r\n")
@@ -125,6 +139,15 @@ function createWindow () {
                 }
             })
         })
+    })
+
+    mainWindow.webContents.on("context-menu", (e, props) => {
+        const { selectionText, isEditable } = props
+        if (isEditable) {
+            inputMenu.popup(mainWindow)
+        } else if (selectionText && selectionText.trim() !== "") {
+            selectionMenu.popup(mainWindow)
+        }
     })
 
     mainWindow.loadURL(process.env.APP_URL)
