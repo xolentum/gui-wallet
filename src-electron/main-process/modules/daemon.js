@@ -317,9 +317,9 @@ export class Daemon {
 
         clearInterval(this.serviceNodeHeartbeat)
         this.serviceNodeHeartbeat = setInterval(() => {
-            this.serviceNodeHeartbeatAction()
+            this.updateServiceNodes()
         }, 5 * 60 * 1000) // 5 minutes
-        this.serviceNodeHeartbeatAction()
+        this.updateServiceNodes()
     }
 
     heartbeatAction () {
@@ -382,7 +382,7 @@ export class Daemon {
         })
     }
 
-    serviceNodeHeartbeatAction () {
+    updateServiceNodes () {
         // Get the latest service node data
         this.getRPC("service_nodes").then(data => {
             if (!data.hasOwnProperty("result")) return
