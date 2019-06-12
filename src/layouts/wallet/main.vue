@@ -49,6 +49,15 @@
                         align="left"
                     />
                 </router-link>
+                <router-link to="/wallet/advanced">
+                    <q-btn
+                        class="large-btn"
+                        :label="$t('buttons.advanced')"
+                        size="md"
+                        icon-right="router"
+                        align="left"
+                    />
+                </router-link>
                 <router-link to="/wallet/addressbook" class="address">
                     <q-btn
                         class="single-icon"
