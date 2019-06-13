@@ -107,6 +107,7 @@ export default {
         current_height: state => state.gateway.daemon.info.height,
         wallet_height: state => state.gateway.wallet.info.height,
         tx_list: state => state.gateway.wallet.transactions.tx_list,
+        address_book: state => state.gateway.wallet.address_list.address_book
     }),
     created () {
         this.filterTxList()
@@ -209,7 +210,7 @@ export default {
                 }
 
                 if(this.txid !== "") {
-                    valid = tx.txid.toLowerCase().indexOf(this.txid.toLowerCase()) !== -1
+                    valid = this.txContains(tx, this.txid)
                     return valid
                 }
 
@@ -229,6 +230,25 @@ export default {
 
                 return valid
             })
+        },
+        txContains(tx, value) {
+            // The tx can be searchable using:
+            // id, address, notes, amount, recipient name
+            const fields = [tx.txid, tx.note]
+
+            const formattedAmount = tx.amount / 1e9
+            fields.push(String(formattedAmount))
+
+            // Get all addresses and names and add them on
+            const destinations = (tx.destinations || []).map(d => d.address)
+            const addresses = [tx.address, ...destinations]
+            const contacts = addresses.map(this.getContact).filter(c => !!c).map(c => c.name)
+            fields.push(...addresses, ...contacts)
+
+            return fields.filter(v => v.toLowerCase().includes(value.toLowerCase())).length > 0
+        },
+        getContact(address) {
+            return this.address_book.find(book => book.address === address)
         },
         pageTxList () {
             this.tx_list_paged = this.tx_list_filtered.slice(0, this.limit !== -1 ? this.limit : this.page * 24 + 24)
