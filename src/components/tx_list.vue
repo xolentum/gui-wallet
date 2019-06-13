@@ -79,7 +79,7 @@ export default {
             required: false,
             default: "all"
         },
-        txid: {
+        filter: {
             type: String,
             required: false,
             default: ""
@@ -145,7 +145,7 @@ export default {
                 this.pageTxList()
             }
         },
-        txid: {
+        filter: {
             handler(val, old){
                 if(val == old) return
                 if(this.$refs.scroller) {
@@ -209,8 +209,8 @@ export default {
                     return valid
                 }
 
-                if(this.txid !== "") {
-                    valid = this.txContains(tx, this.txid)
+                if(this.filter !== "") {
+                    valid = this.txContains(tx, this.filter)
                     return valid
                 }
 
