@@ -1,7 +1,7 @@
 <template>
 <div class="prove-transaction">
     <div class="q-pa-md">
-        <div class="q-mb-lg">
+        <div class="q-mb-lg description">
             {{ $t('strings.proveTransactionDescription') }}
         </div>
         <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.transactionId.$error">
@@ -111,6 +111,9 @@ export default {
 
 <style lang="scss">
 .prove-transaction {
+    .description {
+        white-space: pre-line;
+    }
     .buttons {
         .q-btn:not(:first-child) {
             margin-left: 8px;

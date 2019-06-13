@@ -7,7 +7,7 @@
             color="secondary"
             :options="[
                 {label: $t('titles.advanced.prove'), value: 'prove'},
-                {label: $t('titles.serviceNode.checkTransaction'), value: 'check'}
+                {label: $t('titles.advanced.checkTransaction'), value: 'check'}
             ]"
         />
     </div>
