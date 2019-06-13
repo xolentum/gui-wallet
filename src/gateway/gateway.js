@@ -148,7 +148,7 @@ export class Gateway extends EventEmitter {
             break
         }
 
-        case "set_snode_status":
+        case "set_snode_status": {
             const data = { ...decrypted_data.data }
 
             // We have multiple nested objects in service_node_status
@@ -158,7 +158,27 @@ export class Gateway extends EventEmitter {
 
             this.app.store.commit("gateway/set_snode_status", data)
             break
+        }
+        case "set_prove_transaction_status": {
+            const data = { ...decrypted_data.data }
 
+            if (data.i18n) {
+                data.message = this.geti18n(data.i18n)
+            }
+
+            this.app.store.commit("gateway/set_prove_transaction_status", data)
+            break
+        }
+        case "set_check_transaction_status": {
+            const data = { ...decrypted_data.data }
+
+            if (data.i18n) {
+                data.message = this.geti18n(data.i18n)
+            }
+
+            this.app.store.commit("gateway/set_check_transaction_status", data)
+            break
+        }
         case "set_old_gui_import_status":
             this.app.store.commit("gateway/set_old_gui_import_status", decrypted_data.data)
             break

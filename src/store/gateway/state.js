@@ -73,6 +73,16 @@ export default {
             sending: false
         }
     },
+    prove_transaction_status: {
+        code: 0,
+        message: "",
+        state: {}
+    },
+    check_transaction_status: {
+        code: 0,
+        message: "",
+        state: {}
+    },
     daemon: {
         info: {
             alt_blocks_count: 0,

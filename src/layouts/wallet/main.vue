@@ -54,7 +54,7 @@
                         class="large-btn"
                         :label="$t('buttons.advanced')"
                         size="md"
-                        icon-right="router"
+                        icon-right="tune"
                         align="left"
                     />
                 </router-link>

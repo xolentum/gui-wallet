@@ -12,6 +12,7 @@ export default {
         close: "CLOSE",
         contacts: "CONTACTS",
         copyAddress: "COPY ADDRESS",
+        copySignature: "COPY SIGNATURE",
         createWallet: "CREATE WALLET",
         delete: "DELETE",
         edit: "EDIT",
@@ -262,6 +263,7 @@ export default {
             qrCopied: "QR code copied to clipboard",
             registerServiceNodeSuccess: "Successfully registered service node",
             sendSuccess: "Transaction successfully sent",
+            signatureCopied: "Signature copied to clipboard",
             stakeSuccess: "Successfully staked",
             transactionNotesSaved: "Transaction notes saved"
         },
@@ -353,7 +355,19 @@ export default {
         },
         blockHeight: "Height",
         transactionConfirmed: "confirmed",
-        checkTransactionDescription: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor the case with 'Spend Proof', you don't need to specify the recipient address.",
+        checkTransaction: {
+            description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+            infoTitles: {
+                confirmations: "Confirmations",
+                inPool: "In pool",
+                validTransaction: "Valid transaction",
+                received: "Received amount"
+            },
+            validTransaction: {
+                no: "NO",
+                yes: "YES"
+            }
+        },
         closing: "Closing",
         connectingToBackend: "Connecting to backend",
         contribution: "Contribution",

@@ -2,42 +2,66 @@
 <div class="check-transaction">
     <div class="q-pa-md">
         <div class="q-mb-lg description">
-            {{ $t('strings.checkTransactionDescription') }}
+            {{ $t('strings.checkTransaction.description') }}
         </div>
-        <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.transactionId.$error">
-            <q-input v-model="transactionId"
-                :dark="theme=='dark'"
-                :placeholder="$t('placeholders.pasteTransactionId')"
-                @blur="$v.transactionId.$touch"
-                hide-underline
-            />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
-            <q-input v-model="address"
-                :dark="theme=='dark'"
-                :placeholder="$t('placeholders.recipientWalletAddress')"
-                @blur="$v.address.$touch"
-                hide-underline
-            />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
-            <q-input v-model="message"
-                :dark="theme=='dark'"
-                :placeholder="$t('placeholders.proveOptionalMessage')"
-                hide-underline
-            />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.signature')" :error="$v.signature.$error">
-            <q-input v-model="signature"
-                :dark="theme=='dark'"
-                :placeholder="$t('placeholders.pasteTransactionProof')"
-                hide-underline
-            />
-        </LokiField>
-        <q-field class="buttons q-pt-sm">
-            <q-btn color="primary" @click="check" :label="$t('buttons.check')" />
-            <q-btn color="secondary" @click="clear" :label="$t('buttons.clear')" v-if="canClear"/>
-        </q-field>
+        <div>
+            <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
+                <q-input v-model="txid"
+                    :dark="theme=='dark'"
+                    :placeholder="$t('placeholders.pasteTransactionId')"
+                    @blur="$v.txid.$touch"
+                    hide-underline
+                />
+            </LokiField>
+            <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
+                <q-input v-model="address"
+                    :dark="theme=='dark'"
+                    :placeholder="$t('placeholders.recipientWalletAddress')"
+                    @blur="$v.address.$touch"
+                    hide-underline
+                />
+            </LokiField>
+            <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+                <q-input v-model="message"
+                    :dark="theme=='dark'"
+                    :placeholder="$t('placeholders.proveOptionalMessage')"
+                    hide-underline
+                />
+            </LokiField>
+            <LokiField class="q-mt-md" :label="$t('fieldLabels.signature')" :error="$v.signature.$error">
+                <q-input v-model="signature"
+                    :dark="theme=='dark'"
+                    :placeholder="$t('placeholders.pasteTransactionProof')"
+                    hide-underline
+                />
+            </LokiField>
+            <q-field class="buttons q-pt-sm">
+                <q-btn color="primary" @click="check" :label="$t('buttons.check')" />
+                <q-btn color="secondary" @click="clear" :label="$t('buttons.clear')" v-if="canClear"/>
+            </q-field>
+        </div>
+        <div v-if="status.state.txid">
+            <div class="q-mb-sm">
+                <div class="title">{{ $t('strings.transactionID') }}</div>
+                <div>{{ status.state.txid }}</div>
+            </div>
+            <div class="q-mb-sm">
+                <div class="title">{{ $t('strings.checkTransaction.infoTitles.validTransaction') }}</div>
+                <div :class="status.state.good ? 'good' : 'bad'">{{ validTransaction }}</div>
+            </div>
+            <div class="q-mb-sm" v-if="status.state.received != null">
+                <div class="title">{{ $t('strings.checkTransaction.infoTitles.received') }}</div>
+                <div><FormatLoki :amount="status.state.received" raw-value /></div>
+            </div>
+            <div class="q-mb-sm" v-if="status.state.in_pool != null">
+                <div class="title">{{ $t('strings.checkTransaction.infoTitles.inPool') }}</div>
+                <div>{{ status.state.in_pool }}</div>
+            </div>
+            <div class="q-mb-sm" v-if="status.state.confirmations != null">
+                <div class="title">{{ $t('strings.checkTransaction.infoTitles.confirmations') }}</div>
+                <div>{{ status.state.confirmations }}</div>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -46,26 +70,33 @@
 import { mapState } from "vuex"
 import { required } from "vuelidate/lib/validators"
 import { address } from "src/validators/common"
+import { i18n } from "plugins/i18n"
 import LokiField from "components/loki_field"
+import FormatLoki from "components/format_loki"
 
 export default {
     name: "CheckTransaction",
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
+        status: state => state.gateway.check_transaction_status,
         canClear () {
-            return this.transactionId !== "" || this.address !== "" || this.message !== "" || this.signature != ""
+            return this.txid !== "" || this.address !== "" || this.message !== "" || this.signature != ""
+        },
+        validTransaction () {
+            let key = this.status.state.good ? "yes" : "no"
+            return i18n.t(`strings.checkTransaction.validTransaction.${key}`)
         }
     }),
     data() {
         return {
-            transactionId: "",
+            txid: "",
             address: "",
             message: "",
             signature: ""
         }
     },
     validations: {
-        transactionId: { required },
+        txid: { required },
         address: {
             isAddress(value) {
                     if (value === '') return true
@@ -79,13 +110,30 @@ export default {
         },
         signature: { required }
     },
+    watch: {
+        status: {
+            handler(val, old){
+                if(val.code == old.code) return
+                switch(this.status.code) {
+                    case -1:
+                        this.$q.notify({
+                            type: "negative",
+                            timeout: 3000,
+                            message: this.status.message
+                        })
+                        break;
+                }
+            },
+            deep: true
+        },
+    },
     methods: {
         check() {
-            this.$v.transactionId.$touch()
+            this.$v.txid.$touch()
             this.$v.address.$touch()
             this.$v.signature.$touch()
 
-            if (this.$v.transactionId.$error) {
+            if (this.$v.txid.$error) {
                 this.$q.notify({
                     type: "negative",
                     timeout: 1000,
@@ -112,10 +160,15 @@ export default {
                 return
             }
 
-            
+            this.$gateway.send("wallet", "check_transaction", {
+                txid: this.txid,
+                signature: this.signature,
+                address: this.address,
+                message: this.message
+            })
         },
         clear() {
-            this.transactionId = ""
+            this.txid = ""
             this.address = ""
             this.message = ""
             this.signature = ""
@@ -123,7 +176,8 @@ export default {
         }
     },
     components: {
-        LokiField
+        LokiField,
+        FormatLoki
     }
 }
 </script>
