@@ -229,6 +229,7 @@ export default {
         copyQR: "Copy QR code",
         copySeedWords: "Copy seed words",
         copySpendKey: "Copy spend key",
+        copyServiceNodeKey: "Copy service node key",
         copyTransactionId: "Copy transaction ID",
         copyViewKey: "Copy view key",
         createNewWallet: "Create new wallet",
@@ -413,7 +414,6 @@ export default {
         seedWords: "Seed words",
         selectLanguage: "Select language",
         serviceNodeRegistrationDescription: "Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the \"{prepareCommand}\" command",
-        serviceNodeNoContribution: "You have not contributed to any service nodes.",
         spendKey: "Spend key",
         startingDaemon: "Starting daemon",
         startingWallet: "Starting wallet",
@@ -458,12 +458,12 @@ export default {
         },
         changePassword: "Change password",
         configure: "Configure",
+        currentlyStakedNodes: "Currently staked nodes",
         privateKeys: "Private keys",
         rescanWallet: "Rescan wallet",
         serviceNode: {
             registration: "REGISTRATION",
-            staking: "STAKING",
-            unlock: "UNLOCK"
+            staking: "STAKING"
         },
         settings: {
             title: "Settings",

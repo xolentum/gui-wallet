@@ -1,6 +1,6 @@
 <template>
 <div class="service-node-staking">
-    <div class="q-pa-md">
+    <div class="q-px-md q-pt-md">
         <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
             <q-input v-model="service_node.key"
                 :dark="theme=='dark'"
@@ -38,6 +38,8 @@
 
     </div>
 
+    <ServiceNodeUnlock />
+
     <q-inner-loading :visible="stake_status.sending || tx_status.sending" :dark="theme=='dark'">
         <q-spinner color="primary" :size="30" />
     </q-inner-loading>
@@ -49,10 +51,11 @@ const { clipboard } = require("electron")
 const objectAssignDeep = require("object-assign-deep");
 import { mapState } from "vuex"
 import { required, decimal } from "vuelidate/lib/validators"
+import { i18n } from "plugins/i18n"
 import { payment_id, service_node_key, greater_than_zero, address } from "src/validators/common"
 import LokiField from "components/loki_field"
 import WalletPassword from "src/mixins/wallet_password"
-import { i18n } from "plugins/i18n"
+import ServiceNodeUnlock from "components/service_node_unlock"
 
 export default {
     name: "ServiceNodeStaking",
@@ -113,7 +116,7 @@ export default {
                     case -1:
                         this.$q.notify({
                             type: "negative",
-                            timeout: 1000,
+                            timeout: 3000,
                             message: this.stake_status.message
                         })
                         break;
@@ -135,7 +138,7 @@ export default {
                     case -1:
                         this.$q.notify({
                             type: "negative",
-                            timeout: 1000,
+                            timeout: 3000,
                             message: this.tx_status.message
                         })
                         break;
@@ -255,7 +258,8 @@ export default {
     },
     mixins: [WalletPassword],
     components: {
-        LokiField
+        LokiField,
+        ServiceNodeUnlock
     }
 }
 </script>

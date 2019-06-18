@@ -2,7 +2,7 @@ import enUS from "./en-us"
 
 // ADD LANGUAGES HERE
 const languages = [
-    { name: "English", code: "en-us", flag: "us" },
+    { name: "English", code: "en-us", flag: "gb" },
     { name: "Russian", code: "ru", flag: "ru" },
     { name: "German", code: "de", flag: "de" },
     { name: "French", code: "fr", flag: "fr" },
