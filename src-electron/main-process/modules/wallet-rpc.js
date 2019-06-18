@@ -252,6 +252,14 @@ export class WalletRPC {
             this.transfer(params.password, params.amount, params.address, params.payment_id, params.priority, params.note || "", params.address_book)
             break
 
+        case "prove_transaction":
+            this.proveTransaction(params.txid, params.address, params.message)
+            break
+
+        case "check_transaction":
+            this.checkTransactionProof(params.signature, params.txid, params.address, params.message)
+            break
+
         case "add_address_book":
             this.addAddressBook(params.address, params.payment_id,
                 params.description, params.name, params.starred,
@@ -972,6 +980,83 @@ export class WalletRPC {
             })
 
             if (address_book.hasOwnProperty("save") && address_book.save) { this.addAddressBook(address, payment_id, address_book.description, address_book.name) }
+        })
+    }
+
+    proveTransaction (txid, address, message) {
+        const _address = address.trim() === "" ? null : address
+        const _message = message.trim() === "" ? null : message
+
+        const rpc_endpoint = _address ? "get_tx_proof" : "get_spend_proof" 
+        const params = {
+            txid,
+            address: _address,
+            message: _message
+        }
+
+        this.sendGateway("set_prove_transaction_status", {
+            code: 1,
+            message: ""
+        })
+
+        this.sendRPC(rpc_endpoint, params).then((data) => {
+            if (data.hasOwnProperty("error")) {
+                let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
+                this.sendGateway("set_prove_transaction_status", {
+                    code: -1,
+                    message: error,
+                    state: {}
+                })
+                return
+            }
+
+            this.sendGateway("set_prove_transaction_status", {
+                code: 0,
+                message: "",
+                state: {
+                    txid,
+                    ...(data.result || {})
+                }
+            })
+        })
+    }
+
+    checkTransactionProof (signature, txid, address, message) {
+        const _address = address.trim() === "" ? null : address
+        const _message = message.trim() === "" ? null : message
+
+        const rpc_endpoint = _address ? "check_tx_proof" : "check_spend_proof"
+        const params = {
+            txid,
+            signature,
+            address: _address,
+            message: _message
+        }
+
+        this.sendGateway("set_check_transaction_status", {
+            code: 1,
+            message: ""
+        })
+
+        this.sendRPC(rpc_endpoint, params).then((data) => {
+            if (data.hasOwnProperty("error")) {
+                let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1)
+                this.sendGateway("set_check_transaction_status", {
+                    code: -1,
+                    message: error,
+                    state: {}
+                })
+                return
+            }
+
+            this.sendGateway("set_check_transaction_status", {
+                code: 0,
+                message: "",
+                state: {
+                    txid,
+                    ...(data.result || {})
+                }
+            })
         })
     }
 

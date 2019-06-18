@@ -1,18 +1,23 @@
 export default {
     buttons: {
         // All button text is uppercased in the gui
+        advanced: "ADVANCED",
         all: "ALL",
         back: "BACK",
         browse: "BROWSE",
         cancel: "CANCEL",
         change: "CHANGE",
+        check: "CHECK",
+        clear: "CLEAR",
         close: "CLOSE",
         contacts: "CONTACTS",
         copyAddress: "COPY ADDRESS",
+        copySignature: "COPY SIGNATURE",
         createWallet: "CREATE WALLET",
         delete: "DELETE",
         edit: "EDIT",
         export: "EXPORT",
+        generate: "GENERATE",
         import: "IMPORT",
         importWallet: "IMPORT WALLET | IMPORT WALLETS",
         next: "NEXT",
@@ -175,6 +180,7 @@ export default {
         localDaemonPort: "LOCAL DAEMON PORT",
         maxIncomingPeers: "MAX INCOMING PEERS",
         maxOutgoingPeers: "MAX OUTGOING PEERS",
+        message: "MESSAGE",
         mnemonicSeed: "MNEMONIC SEED",
         name: "NAME",
         newWalletName: "NEW WALLET NAME",
@@ -190,6 +196,8 @@ export default {
         seedLanguage: "SEED LANGUAGE",
         serviceNodeCommand: "SERVICE NODE COMMAND",
         serviceNodeKey: "SERVICE NODE KEY",
+        signature: "SIGNATURE",
+        transactionId: "TRANSACTION ID",
         walletFile: "WALLET FILE",
         walletLogLevel: "WALLET LOG LEVEL",
         walletName: "WALLET NAME",
@@ -255,6 +263,7 @@ export default {
             qrCopied: "QR code copied to clipboard",
             registerServiceNodeSuccess: "Successfully registered service node",
             sendSuccess: "Transaction successfully sent",
+            signatureCopied: "Signature copied to clipboard",
             stakeSuccess: "Successfully staked",
             transactionNotesSaved: "Transaction notes saved"
         },
@@ -267,6 +276,8 @@ export default {
             dataPathNotFound: "Data storage path not found",
             differentNetType: "Remote node is using a different nettype",
             enterSeedWords: "Enter seed words",
+            enterTransactionId: "Enter transaction ID",
+            enterTransactionProof: "Enter transaction proof",
             enterWalletName: "Enter a wallet name",
             errorSavingItem: "Error saving {item}",
             failedServiceNodeUnlock: "Failed to unlock service node",
@@ -316,6 +327,10 @@ export default {
         filterTx: "Enter an ID, name, address or amount",
         hexCharacters: "{count} hexadecimal characters",
         mnemonicSeed: "25 (or 24) word mnemonic seed",
+        pasteTransactionId: "Paste transaction ID",
+        pasteTransactionProof: "Paste transaction proof",
+        proveOptionalMessage: "Optional message against which the signature is signed",
+        recipientWalletAddress: "Recipient's wallet address",
         selectAFile: "Please select a file",
         transactionNotes: "Additional notes to attach to the transaction",
         walletName: "A name for your wallet",
@@ -340,6 +355,19 @@ export default {
         },
         blockHeight: "Height",
         transactionConfirmed: "confirmed",
+        checkTransaction: {
+            description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+            infoTitles: {
+                confirmations: "Confirmations",
+                inPool: "In pool",
+                validTransaction: "Valid transaction",
+                received: "Received amount"
+            },
+            validTransaction: {
+                no: "NO",
+                yes: "YES"
+            }
+        },
         closing: "Closing",
         connectingToBackend: "Connecting to backend",
         contribution: "Contribution",
@@ -375,6 +403,7 @@ export default {
         numberOfUnspentOutputs: "Number of unspent outputs",
         paymentID: "Payment ID",
         peerList: "Peer list",
+        proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
         readingWalletList: "Reading wallet list",
         recentIncomingTransactionsToAddress: "Recent incoming transactions to this address",
         recentTransactionsWithAddress: "Recent transactions with this address",
@@ -423,6 +452,10 @@ export default {
     titles: {
         addressBook: "Address book",
         addressDetails: "Address details",
+        advanced: {
+            checkTransaction: "CHECK TRANSACTION",
+            prove: "PROVE"
+        },
         changePassword: "Change password",
         configure: "Configure",
         privateKeys: "Private keys",
