@@ -1,7 +1,8 @@
 <template>
-<div class="service-node-unlock">
+<div class="service-node-unlock" v-if="service_nodes.length > 0">
     <div class="q-pa-md">
-        <q-list class="service-node-list" no-border v-if="service_nodes.length > 0">
+        <div class="q-pb-sm header">{{ $t('titles.currentlyStakedNodes') }}</div>
+        <q-list class="service-node-list" no-border>
             <q-item v-for="node in service_nodes" :key="node.key">
                 <q-item-main>
                     <q-item-tile class="ellipsis" label>{{ node.key }}</q-item-tile>
@@ -16,11 +17,18 @@
                         @click="unlockWarning(node.key)"
                     />
                 </q-item-side>
+                 <q-context-menu>
+                    <q-list link separator style="min-width: 150px; max-height: 300px;">
+                        <q-item v-close-overlay @click.native="copyKey(node.key, $event)">
+                            <q-item-main :label="$t('menuItems.copyServiceNodeKey')" />
+                        </q-item>
+                        <q-item v-close-overlay @click.native="openExplorer(node.key)">
+                            <q-item-main :label="$t('menuItems.viewOnExplorer')" />
+                        </q-item>
+                    </q-list>
+                </q-context-menu>
             </q-item>
         </q-list>
-        <div v-else>
-            {{ $t('strings.serviceNodeNoContribution')}}
-        </div>
     </div>
 
     <q-inner-loading :visible="unlock_status.sending" :dark="theme=='dark'">
@@ -43,7 +51,10 @@ export default {
     computed: mapState({
         theme: state => state.gateway.app.config.appearance.theme,
         unlock_status: state => state.gateway.service_node_status.unlock,
-        our_address: state => state.gateway.wallet.address_list.primary[0].address,
+        our_address: state => {
+            const primary = state.gateway.wallet.address_list.primary[0]
+            return (primary && primary.address) || null
+        },
         is_ready (state) {
             return this.$store.getters["gateway/isReady"]
         },
@@ -53,7 +64,7 @@ export default {
             // Only show nodes that we contributed to
             return nodes.filter(getContribution).map(n => {
                 const ourContribution = getContribution(n)
-                return { 
+                return {
                     key: n.service_node_pubkey,
                     amount: ourContribution.amount
                 }
@@ -103,7 +114,7 @@ export default {
 
                         this.$q.notify({
                             type: "negative",
-                            timeout: 1000,
+                            timeout: 3000,
                             message: this.unlock_status.message
                         })
                         break;
@@ -114,7 +125,7 @@ export default {
         },
     },
     methods: {
-        unlockWarning: function (key) {
+        unlockWarning (key) {
             this.$q.dialog({
                 title: this.$t("dialog.unlockServiceNodeWarning.title"),
                 message: this.$t("dialog.unlockServiceNodeWarning.message"),
@@ -130,7 +141,7 @@ export default {
                 this.unlock(key)
             }).catch(() => {})
         },
-        unlock: function (key) {
+        unlock (key) {
             // We store this as it could change between the 2 step process
             this.key = key
 
@@ -146,7 +157,7 @@ export default {
             }).catch(() => {
             })
         },
-        gatewayUnlock: function (password, key, confirmed = false) {
+        gatewayUnlock (password, key, confirmed = false) {
             this.$store.commit("gateway/set_snode_status", {
                 unlock: {
                     code: 2, // Code 1 is reserved for can_unlock
@@ -160,6 +171,24 @@ export default {
                 confirmed
             })
         },
+        copyKey (key, event) {
+            event.stopPropagation()
+            for(let i = 0; i < event.path.length; i++) {
+                if(event.path[i].tagName == "BUTTON") {
+                    event.path[i].blur()
+                    break
+                }
+            }
+            clipboard.writeText(key)
+            this.$q.notify({
+                type: "positive",
+                timeout: 1000,
+                message: this.$t("notification.positive.copied", { item: "Service node key" })
+            })
+        },
+        openExplorer (key) {
+            this.$gateway.send("core", "open_explorer", {type: "service_node", id: key})
+        }
     },
 
     mixins: [WalletPassword],
@@ -172,6 +201,10 @@ export default {
 
 <style lang="scss">
 .service-node-unlock {
+    user-select: none;
+    .header {
+        font-weight: 450;
+    }
     .q-item-sublabel, .q-list-header {
         font-size: 14px;
     }
