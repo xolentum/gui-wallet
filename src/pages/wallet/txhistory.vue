@@ -6,10 +6,10 @@
             {{ $t("titles.transactions") }}
         </div>
 
-        <LokiField class="col-5 q-px-sm" :label="$t('fieldLabels.filterTxId')">
-            <q-input v-model="tx_txid"
+        <LokiField class="col-5 q-px-sm" :label="$t('fieldLabels.filter')">
+            <q-input v-model="tx_filter"
                      :dark="theme=='dark'"
-                     :placeholder="$t('placeholders.enterAnId')"
+                     :placeholder="$t('placeholders.filterTx')"
                      hide-underline
                      />
         </LokiField>
@@ -23,7 +23,7 @@
         </LokiField>
 
     </div>
-    <TxList :type="tx_type" :txid="tx_txid" />
+    <TxList :type="tx_type" :filter="tx_filter" />
 </q-page>
 </template>
 
@@ -35,7 +35,7 @@ export default {
     data () {
         return {
             tx_type: "all",
-            tx_txid: "",
+            tx_filter: "",
             tx_type_options: [
                 {label: this.$t("strings.transactions.types.all"), value: "all"},
                 {label: this.$t("strings.transactions.types.incoming"), value: "in"},

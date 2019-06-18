@@ -162,8 +162,8 @@ export default {
         daemonP2pPort: "DAEMON P2P PORT",
         daemonZMQPort: "DAEMON ZMQ PORT",
         dataStoragePath: "DATA STORAGE PATH",
+        filter: "FILTER",
         filterTransactionType: "FILTER BY TRANSACTION TYPE",
-        filterTxId: "FILTER BY TXID",
         internalWalletPort: "INTERNAL WALLET PORT",
         keyImages: {
             exportDirectory: "KEY IMAGE EXPORT DIRECTORY",
@@ -313,7 +313,7 @@ export default {
     placeholders: {
         additionalNotes: "Additional notes",
         addressBookName: "Name that belongs to this address",
-        enterAnId: "Enter an ID",
+        filterTx: "Enter an ID, name, address or amount",
         hexCharacters: "{count} hexadecimal characters",
         mnemonicSeed: "25 (or 24) word mnemonic seed",
         selectAFile: "Please select a file",
