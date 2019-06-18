@@ -245,7 +245,7 @@ export default {
             const contacts = addresses.map(this.getContact).filter(c => !!c).map(c => c.name)
             fields.push(...addresses, ...contacts)
 
-            return fields.filter(v => v.toLowerCase().includes(value.toLowerCase())).length > 0
+            return !!fields.find(f => f.toLowerCase().includes(value.toLowerCase()))
         },
         getContact(address) {
             return this.address_book.find(book => book.address === address)
