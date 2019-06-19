@@ -15,6 +15,9 @@ export class Daemon {
         this.net_type = "mainnet"
         this.local = false // do we have a local daemon ?
 
+        this.isDaemonSyncing = false
+        this.last_output_time = Date.now()
+
         this.agent = new http.Agent({ keepAlive: true, maxSockets: 1 })
         this.queue = new queue(1, Infinity)
 
@@ -88,6 +91,7 @@ export class Daemon {
         }
         return new Promise((resolve, reject) => {
             this.local = true
+            this.sendGateway("set_app_data", { status: { daemonInfo: "" } })
 
             const args = [
                 "--data-dir", options.app.data_dir,
@@ -146,7 +150,31 @@ export class Daemon {
                         })
                     }
 
-                    this.daemonProcess.stdout.on("data", data => process.stdout.write(`Daemon: ${data}`))
+                    this.daemonProcess.stdout.on("data", (data) => {
+                        process.stdout.write(`Daemon: ${data}`)
+
+                        // Show sync status to user on start if they get stuck on loading wallet
+                        let regex = /(Synced[ -~]*)/ // Synced 0000/9999 (x%, y remaining)
+                        let lines = data.toString().split("\n")
+                        let match, info = null
+                        let isSyncing = false
+                        for (const line of lines) {
+                            match = line.match(regex)
+                            if (match) {
+                                info = match[1]
+                                isSyncing = true
+                                break
+                            }
+                        }
+
+                        // Keep track on wether a local daemon is syncing or not
+                        this.isDaemonSyncing = isSyncing
+
+                        if (info && Date.now() - this.last_output_time > 1000) {
+                            this.last_output_time = Date.now()
+                            this.sendGateway("set_app_data", { status: { daemonInfo: info } })
+                        }
+                    })
                     this.daemonProcess.on("error", err => process.stderr.write(`Daemon: ${err}`))
                     this.daemonProcess.on("close", code => {
                         process.stderr.write(`Daemon: exited with code ${code} \n`)
@@ -465,9 +493,17 @@ export class Daemon {
             if (this.daemonProcess) {
                 this.daemonProcess.on("close", code => {
                     this.agent.destroy()
+                    clearTimeout(this.forceKill)
                     resolve()
                 })
-                this.daemonProcess.kill()
+
+                // Force kill after 20 seconds
+                this.forceKill = setTimeout(() => {
+                    this.daemonProcess.kill("SIGKILL")
+                }, 20000)
+
+                const signal = this.isDaemonSyncing ? "SIGKILL" : "SIGTERM"
+                this.daemonProcess.kill(signal)
             } else {
                 resolve()
             }

@@ -23,6 +23,10 @@
                 {{ message }}
             </div>
 
+            <div class="q-mt-xs" v-if="status.daemonInfo">
+                {{ status.daemonInfo }}
+            </div>
+
         </div>
 
         <div class="absolute-bottom">
