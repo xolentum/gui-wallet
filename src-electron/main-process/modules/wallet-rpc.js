@@ -987,7 +987,7 @@ export class WalletRPC {
         const _address = address.trim() === "" ? null : address
         const _message = message.trim() === "" ? null : message
 
-        const rpc_endpoint = _address ? "get_tx_proof" : "get_spend_proof" 
+        const rpc_endpoint = _address ? "get_tx_proof" : "get_spend_proof"
         const params = {
             txid,
             address: _address,

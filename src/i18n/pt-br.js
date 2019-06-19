@@ -1,18 +1,23 @@
 export default {
     buttons: {
         // All button text is uppercased in the gui
+        advanced: "ADVANCED",
         all: "TUDO",
         back: "ATRÁS",
         browse: "PESQUISAR",
         cancel: "CANCELAR",
         change: "MUDAR",
+        check: "CHECK",
+        clear: "CLEAR",
         close: "FECHAR",
         contacts: "CONTACTOS",
         copyAddress: "COPIAR ENDEREÇO",
+        copySignature: "COPY SIGNATURE",
         createWallet: "CRIAR CARTEIRA",
         delete: "APAGAR",
         edit: "EDITAR",
         export: "EXPORTAR",
+        generate: "GENERATE",
         import: "IMPORTAR",
         importWallet: "IMPORTAR CARTEIRA | IMPORTAR CARTEIRAS",
         next: "PRÓXIMO",
@@ -33,7 +38,7 @@ export default {
         showTxDetails: "MOSTRAR DETALHES DA TX",
         stake: "PARTICIPAÇÃO",
         sweepAll: "VARRER TUDO",
-        unlockServiceNode: "DESBLOQUEAR NÓDULO DE SERVIÇO",
+        unlock: "UNLOCK",
         viewOnExplorer: "VISUALIZAR NO EXPLORADOR"
     },
     dialog: {
@@ -118,6 +123,11 @@ export default {
             message: "Quer realmente varrer tudo?",
             ok: "VARRER TUDO"
         },
+        sweepAllWarning: {
+            title: "Sweep all warning",
+            message: "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
+            ok: "CONTINUE"
+        },
         switchWallet: {
             title: "Mudar de carteira",
             closeMessage: "Tem a certeza que deseja fechar a carteira actual?",
@@ -141,6 +151,11 @@ export default {
             confirmTitle: "Confirmar desbloqueio",
             message: "Deseja desbloquear o nódulo de serviço?",
             ok: "DESBLOQUEAR"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         }
     },
     fieldLabels: {
@@ -152,8 +167,8 @@ export default {
         daemonP2pPort: "PORTA P2P DO SERVIÇO",
         daemonZMQPort: "PORTA ZMQ DO SERVIÇO",
         dataStoragePath: "DIRECTÓRIO DE ARMAZENAMENTO DOS DADOS",
+        filter: "FILTER",
         filterTransactionType: "FILTRAR POR TIPO DE TRANSAÇÃO",
-        filterTxId: "FILTRAR POR TXID",
         internalWalletPort: "PORTA INTERNA DA CARTEIRA",
         keyImages: {
             exportDirectory: "DIRETORIA DE EXPORTAÇÃO DAS CHAVES DE IMAGEM",
@@ -165,6 +180,7 @@ export default {
         localDaemonPort: "PORTA LOCAL DO SERVIÇO",
         maxIncomingPeers: "NÚM. MAX DE PARES DE ENTRADA",
         maxOutgoingPeers: "NUM. MAX DE PARES DE SAÍDA",
+        message: "MESSAGE",
         mnemonicSeed: "SEMENTE MNEMÓNICA",
         name: "NOME",
         newWalletName: "NOME DA NOVA CARTEIRA",
@@ -180,6 +196,8 @@ export default {
         seedLanguage: "LINGUA DA SEMENTE",
         serviceNodeCommand: "COMANDO DO NÓDULO DE SERVIÇO",
         serviceNodeKey: "CHAVE DO NÓDULO DE SERVIÇO",
+        signature: "SIGNATURE",
+        transactionId: "TRANSACTION ID",
         walletFile: "FICHEIRO DA CARTEIRA",
         walletLogLevel: "NIVEL DE LOG DA CARTEIRA",
         walletName: "NOME DA CARTEIRA",
@@ -211,6 +229,7 @@ export default {
         copyQR: "Copiar código QR",
         copySeedWords: "Copiar palavras semente",
         copySpendKey: "Copiar chave de gasto",
+        copyServiceNodeKey: "Copy service node key",
         copyTransactionId: "Copira ID da transação",
         copyViewKey: "Copiar chave de visualização",
         createNewWallet: "Criar nova carteira",
@@ -245,6 +264,7 @@ export default {
             qrCopied: "Código QR ccopiado para o clipboard",
             registerServiceNodeSuccess: "Nódulo de serviço registado com sucesso",
             sendSuccess: "Transação enviada com sucesso.",
+            signatureCopied: "Signature copied to clipboard",
             stakeSuccess: "Participação com sucesso",
             transactionNotesSaved: "A nota de transação foi salva"
         },
@@ -257,6 +277,8 @@ export default {
             dataPathNotFound: "Directoria de armazenamento de dados não encontrada",
             differentNetType: "Nódulo remoto está usando um tipo de rede diferente",
             enterSeedWords: "Introduzir palavras semente",
+            enterTransactionId: "Enter transaction ID",
+            enterTransactionProof: "Enter transaction proof",
             enterWalletName: "Introduza o nome da carteira",
             errorSavingItem: "Erro salvando {item}",
             failedServiceNodeUnlock: "Falhou o desbloqueamento do nódulo de serviço",
@@ -303,9 +325,13 @@ export default {
     placeholders: {
         additionalNotes: "Notas adicionais",
         addressBookName: "Nome que pertence a este endereço",
-        enterAnId: "Introduza um ID",
+        filterTx: "Enter an ID, name, address or amount",
         hexCharacters: "{count} caracteres hexadecimais",
         mnemonicSeed: "25 (or 24) palavras semente mnemónicas",
+        pasteTransactionId: "Paste transaction ID",
+        pasteTransactionProof: "Paste transaction proof",
+        proveOptionalMessage: "Optional message against which the signature is signed",
+        recipientWalletAddress: "Recipient's wallet address",
         selectAFile: "Por favor selecione um ficheiro",
         transactionNotes: "Notas adicionais para anexar à transação",
         walletName: "Um nome para a sua carteira",
@@ -329,9 +355,22 @@ export default {
             bannedUntil: "Banido até {time}"
         },
         blockHeight: "Altura",
-        transactionConfirmed: "confirmado",
+        checkTransaction: {
+            description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+            infoTitles: {
+                confirmations: "Confirmations",
+                inPool: "In pool",
+                validTransaction: "Valid transaction",
+                received: "Received amount"
+            },
+            validTransaction: {
+                no: "NO",
+                yes: "YES"
+            }
+        },
         closing: "Fechando",
         connectingToBackend: "Conectado ao backend",
+        contribution: "Contribution",
         daemon: {
             local: {
                 title: "Serviço Local Apenas",
@@ -346,13 +385,6 @@ export default {
                 description: "Menos segurança, a carteira irá conectar a um nódulo remoto para todas as transações."
             }
         },
-        priorityOptions: {
-            automatic: "Automatico",
-            slow: "Lento",
-            normal: "Normal",
-            fast: "Rápido",
-            fastest: "O Mais Rápido"
-        },
         destinationUnknown: "Destino Desconhecido",
         editAddressBookEntry: "Editar registo do livro de endereços",
         loadingSettings: "Carregando configurações",
@@ -364,6 +396,14 @@ export default {
         numberOfUnspentOutputs: "Número de outputs não gastos",
         paymentID: "ID de Pagamento",
         peerList: "Lista de pares",
+        priorityOptions: {
+            automatic: "Automatico",
+            slow: "Lento",
+            normal: "Normal",
+            fast: "Rápido",
+            fastest: "O Mais Rápido"
+        },
+        proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
         readingWalletList: "Lendo lista da carteira",
         recentIncomingTransactionsToAddress: "Transações de entrada neste endereço",
         recentTransactionsWithAddress: "Transações recentes neste endereço",
@@ -379,6 +419,7 @@ export default {
         switchToDateSelect: "Mudar para data de seleção",
         switchToHeightSelect: "Mudar para altura de seleção",
         transactionID: "ID da Transação",
+        transactionConfirmed: "confirmado",
         transactions: {
             amount: "Quantidade",
             description: "{type} transação",
@@ -411,14 +452,18 @@ export default {
     titles: {
         addressBook: "Livro de endereços",
         addressDetails: "Detalhes do endereço",
+        advanced: {
+            checkTransaction: "CHECK TRANSACTION",
+            prove: "PROVE"
+        },
         changePassword: "Mudar palavra-passe",
         configure: "Configure",
+        currentlyStakedNodes: "Currently staked nodes",
         privateKeys: "Chaves privadas",
         rescanWallet: "Reexaminar carteira",
         serviceNode: {
             registration: "REGISTO",
-            staking: "PARTICIPAÇÃO",
-            unlock: "DESBLOQUEAR"
+            staking: "PARTICIPAÇÃO"
         },
         settings: {
             title: "Configurações",
