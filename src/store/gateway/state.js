@@ -1,8 +1,7 @@
 export default {
     app: {
         status: {
-            code: 1, // Connecting to backend
-            daemonInfo: "" // Any syncing string sent by the daemon while starting up
+            code: 1 // Connecting to backend
         },
         config: {
             appearance: {

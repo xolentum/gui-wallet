@@ -23,8 +23,8 @@
                 {{ message }}
             </div>
 
-            <div class="q-mt-xs" v-if="status.daemonInfo">
-                {{ status.daemonInfo }}
+            <div class="q-mt-xs" v-if="daemonStatus">
+                {{ $t('strings.syncingDaemon') }}: {{ daemonStatus }}
             </div>
 
         </div>
@@ -47,6 +47,24 @@ export default {
     },
     computed: mapState({
         status: state => state.gateway.app.status,
+        config: state => state.gateway.app.config,
+        isLocalDaemon (state) {
+            if (!this.config || !this.config.app.net_type) return false
+            return this.config.daemons[this.config.app.net_type].type === "local"
+        },
+        daemon: state => state.gateway.daemon,
+        daemonStatus (state) {
+            // Check to see if config is loaded
+            if (this.status.code < 3 || !this.isLocalDaemon) return null
+
+            const currentHeight = this.daemon.info.height_without_bootstrap
+            const targetHeight = Math.max(this.daemon.info.height, this.daemon.info.target_height)
+            const percentage = (100 * currentHeight / targetHeight).toFixed(1)
+
+            if (targetHeight === 0 || currentHeight >= targetHeight) return null
+
+            return `${currentHeight}/${targetHeight} (${percentage}%)`
+        },
     }),
     methods: {
         updateStatus() {

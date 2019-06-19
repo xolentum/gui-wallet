@@ -418,6 +418,7 @@ export default {
         startingWallet: "Starting wallet",
         switchToDateSelect: "Switch to date select",
         switchToHeightSelect: "Switch to height select",
+        syncingDaemon: "Syncing Daemon",
         transactionID: "Transaction ID",
         transactionConfirmed: "confirmed",
         transactions: {
