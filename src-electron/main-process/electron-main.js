@@ -1,4 +1,5 @@
 import { app, ipcMain, BrowserWindow, Menu, dialog } from "electron"
+import { version, productName } from "../../package.json"
 import { Backend } from "./modules/backend"
 import menuTemplate from "./menu"
 import isDev from "electron-is-dev"
@@ -19,6 +20,8 @@ if (process.env.PROD) {
 let mainWindow, backend
 let showConfirmClose = true
 let forceQuit = false
+
+const title = `${productName} v${version}`
 
 const selectionMenu = Menu.buildFromTemplate([
     { role: "copy" },
@@ -51,7 +54,8 @@ function createWindow () {
         height: mainWindowState.height,
         minWidth: 640,
         minHeight: 480,
-        icon: require("path").join(__statics, "icon_512x512.png")
+        icon: require("path").join(__statics, "icon_512x512.png"),
+        title
     })
 
     mainWindow.on("close", (e) => {
@@ -96,6 +100,9 @@ function createWindow () {
     })
 
     mainWindow.webContents.on("did-finish-load", () => {
+        // Set the title
+        mainWindow.setTitle(title)
+
         require("crypto").randomBytes(64, (err, buffer) => {
             // if err, then we may have to use insecure token generation perhaps
             if (err) throw err
