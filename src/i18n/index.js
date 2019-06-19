@@ -6,7 +6,8 @@ const languages = [
     { name: "Russian", code: "ru", flag: "ru" },
     { name: "German", code: "de", flag: "de" },
     { name: "French", code: "fr", flag: "fr" },
-    { name: "Spanish", code: "es", flag: "es" }
+    { name: "Spanish", code: "es", flag: "es" },
+    { name: "Portuguese", code: "pt-br", flag: "pt" }
 ]
 
 export { languages }
