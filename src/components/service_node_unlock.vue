@@ -12,7 +12,7 @@
                     <q-btn
                         color="primary"
                         size="md"
-                        :label="$t('buttons.unlockServiceNode')"
+                        :label="$t('buttons.unlock')"
                         :disabled="!is_ready || unlock_status.sending"
                         @click="unlockWarning(node.key)"
                     />

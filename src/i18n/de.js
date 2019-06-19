@@ -1,18 +1,23 @@
 export default {
     buttons: {
         // All button text is uppercased in the gui
+        advanced: "ADVANCED",
         all: "ALLES",
         back: "ZURÜCK",
         browse: "DURCHSUCHEN",
         cancel: "ABBRECHEN",
         change: "ÄNDERN",
+        check: "CHECK",
+        clear: "CLEAR",
         close: "SCHLIESSEN",
         contacts: "KONTAKTE",
         copyAddress: "ADRESSE KOPIEREN",
+        copySignature: "COPY SIGNATURE",
         createWallet: "WALLET ERSTELLEN",
         delete: "LÖSCHEN",
         edit: "BEARBEITEN",
         export: "EXPORTIEREN",
+        generate: "GENERATE",
         import: "IMPORTIEREN",
         importWallet: "WALLET IMPORTIEREN | WALLETS IMPORTIEREN",
         next: "WEITER",
@@ -33,7 +38,7 @@ export default {
         showTxDetails: "TX DETAILS ANZEIGEN",
         stake: "STAKE",
         sweepAll: "ALLES BEREINIGEN",
-        unlockServiceNode: "UNLOCK SERVICE NODE",
+        unlock: "UNLOCK",
         viewOnExplorer: "IN EXPLORER ANZEIGEN"
     },
     dialog: {
@@ -117,6 +122,11 @@ export default {
             message: "Möchtest du alles bereinigen?",
             ok: "ALLES BEREINIGEN"
         },
+        sweepAllWarning: {
+            title: "Sweep all warning",
+            message: "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
+            ok: "CONTINUE"
+        },
         switchWallet: {
             title: "Wallet wechseln",
             closeMessage: "Bist du sicher, dass du die aktuelle Wallet schliessen möchtest?",
@@ -140,6 +150,11 @@ export default {
             confirmTitle: "Unlock bestätigen",
             message: "Möchtest du den Service Node „unlocken“?",
             ok: "UNLOCK"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         }
     },
     fieldLabels: {
@@ -153,8 +168,8 @@ export default {
         daemonP2pPort: "DAEMON P2P PORT",
         daemonZMQPort: "DAEMON ZMQ PORT",
         dataStoragePath: "DATENSICHERUNGSPFAD",
+        filter: "FILTER",
         filterTransactionType: "FILTERN NACH TRANSAKTIONSTYP",
-        filterTxId: "FILTERN NACH TXID",
         internalWalletPort: "INTERNER WALLET PORT",
         keyImages: {
             exportDirectory: "KEY IMAGE EXPORTVERZEICHNIS",
@@ -166,6 +181,7 @@ export default {
         localDaemonPort: "LOKALER DAEMON PORT",
         maxIncomingPeers: "MAX EINGEHENDE PEERS",
         maxOutgoingPeers: "MAX AUSGEHENDE PEERS",
+        message: "MESSAGE",
         mnemonicSeed: "MNEMONIC SEED",
         name: "NAME",
         newWalletName: "NEUER WALLET NAME",
@@ -182,6 +198,8 @@ export default {
         seedLanguage: "SEED SPRACHE",
         serviceNodeCommand: "SERVICE NODE COMMAND",
         serviceNodeKey: "SERVICE NODE KEY",
+        signature: "SIGNATURE",
+        transactionId: "TRANSACTION ID",
         walletFile: "WALLET FILE",
         walletLogLevel: "WALLET LOG LEVEL",
         walletName: "WALLET NAME",
@@ -210,6 +228,7 @@ export default {
         copyQR: "QR Code kopieren",
         copySeedWords: "Seed Wörter kopieren",
         copySpendKey: "Spend Key kopieren",
+        copyServiceNodeKey: "Copy service node key",
         copyTransactionId: "Transaktions ID kopieren",
         copyViewKey: "View Key kopieren",
         createNewWallet: "Neue Wallet erstellen",
@@ -244,6 +263,7 @@ export default {
             qrCopied: "QR Code in die Zwischenablage kopiert",
             registerServiceNodeSuccess: "Service Node erfolgreich registriert ",
             sendSuccess: "Transaktion erfolgreich gesendet",
+            signatureCopied: "Signature copied to clipboard",
             stakeSuccess: "Staking erfolgreich",
             transactionNotesSaved: "Notizen zur Transaktion gesichert"
         },
@@ -256,6 +276,8 @@ export default {
             dataPathNotFound: "Pfad zur Speicherung nicht gefunden",
             differentNetType: "Remote Node benutzt einen anderen „nettype“",
             enterSeedWords: "Seed Wörter eingeben",
+            enterTransactionId: "Enter transaction ID",
+            enterTransactionProof: "Enter transaction proof",
             enterWalletName: "Wallet Namen eingeben",
             errorSavingItem: "Fehler beim Speichern {item}",
             failedServiceNodeUnlock: "Fehler beim Service Node unlock",
@@ -287,6 +309,7 @@ export default {
             notEnoughBalance: "Nicht genug frei verfügbares Guthaben",
             passwordNoMatch: "Passwörter stimmen nicht überein",
             remoteCannotBeReached: "Remote daemon ist nicht erreichbar",
+            selectWalletFile: "Select a wallet file",
             unknownError: "Ein unbekannter Fehler ist aufgetreten ",
             walletAlreadyExists: "Wallet mit diesem Namen existiert bereits",
             walletPathNotFound: "Wallet Daten Pfad nicht gefunden",
@@ -301,9 +324,13 @@ export default {
     placeholders: {
         additionalNotes: "Zusätzliche Notizen",
         addressBookName: "Zugehörige Namen zu dieser Adresse",
-        enterAnId: "ID eingeben",
+        filterTx: "Enter an ID, name, address or amount",
         hexCharacters: "{count} Hexadezimal Zeichen",
         mnemonicSeed: "25 (oder 24) mnemonic Seed Wörter",
+        pasteTransactionId: "Paste transaction ID",
+        pasteTransactionProof: "Paste transaction proof",
+        proveOptionalMessage: "Optional message against which the signature is signed",
+        recipientWalletAddress: "Recipient's wallet address",
         selectAFile: "Bitte Datei auswählen",
         transactionNotes: "Zusätzliche Notizen die an die Transaktions gehängt werden sollen",
         walletName: "Ein Name für deine Wallet",
@@ -326,16 +353,23 @@ export default {
             title: "Blockierte Peers (Blockierungen werden entfernt, wenn Wallet neu gestartet wird)",
             bannedUntil: "Blockieren bis {time}"
         },
-        priorityOptions: {
-            automatic: "Automatisch",
-            fast: "Schnell",
-            fastest: "Am schnellsten",
-            normal: "Normal",
-            slow: "Langsam"
-        },
         blockHeight: "Höhe",
+        checkTransaction: {
+            description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+            infoTitles: {
+                confirmations: "Confirmations",
+                inPool: "In pool",
+                validTransaction: "Valid transaction",
+                received: "Received amount"
+            },
+            validTransaction: {
+                no: "NO",
+                yes: "YES"
+            }
+        },
         closing: "schliessen",
         connectingToBackend: "Verbinden zum Backend",
+        contribution: "Contribution",
         daemon: {
             local: {
                 title: "Nur lokaler Daemon",
@@ -361,6 +395,14 @@ export default {
         numberOfUnspentOutputs: "Anzahl der unspent outputs",
         paymentID: "Payment ID",
         peerList: "Peer Liste",
+        priorityOptions: {
+            automatic: "Automatisch",
+            fast: "Schnell",
+            fastest: "Am schnellsten",
+            normal: "Normal",
+            slow: "Langsam"
+        },
+        proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
         readingWalletList: "Lese Wallet Liste",
         recentIncomingTransactionsToAddress: "Kürzlich eingegangene Transaktionen zu dieser Adresse",
         recentTransactionsWithAddress: "Kürzlich durchgeführte Transaktionen mit dieser Adresse",
@@ -409,14 +451,18 @@ export default {
     titles: {
         addressBook: "Adressbuch",
         addressDetails: "Adressdetails",
+        advanced: {
+            checkTransaction: "CHECK TRANSACTION",
+            prove: "PROVE"
+        },
         changePassword: "Passwort ändern",
         configure: "Konfiguaration",
+        currentlyStakedNodes: "Currently staked nodes",
         privateKeys: "Private Keys",
         rescanWallet: "Wallet erneut scannen",
         serviceNode: {
             registration: "REGISTRIERUNG",
-            staking: "STAKING",
-            unlock: "UNLOCK"
+            staking: "STAKING"
         },
         settings: {
             title: "Einstellungen",

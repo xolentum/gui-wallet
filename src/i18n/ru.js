@@ -1,18 +1,23 @@
 export default {
     buttons: {
         // All button text is uppercased in the gui
+        advanced: "ADVANCED",
         all: "ВСЕ",
         back: "НАЗАД",
         browse: "ОБЗОР",
         cancel: "ОТМЕНА",
         change: "ИЗМЕНИТЬ",
+        check: "CHECK",
+        clear: "CLEAR",
         close: "ЗАКРЫТЬ",
         contacts: "КОНТАКТЫ",
         copyAddress: "КОПИРОВАТЬ АДРЕС",
+        copySignature: "COPY SIGNATURE",
         createWallet: "СОЗДАТЬ КОШЕЛЕК",
         delete: "УДАЛИТЬ",
         edit: "РЕДАКТИРОВАТЬ",
         export: "ЭКСПОРТИРОВАТЬ",
+        generate: "GENERATE",
         import: "ИМПОРТИРОВАТЬ",
         importWallet: "ИМПОРТИРОВАТЬ КОШЕЛЕК | ИМПОРТИРОВАТЬ КОШЕЛЬКИ",
         next: "ДАЛЕЕ",
@@ -32,7 +37,8 @@ export default {
         showQRCode: "ПОКАЗАТЬ QR КОД",
         showTxDetails: "ПОКАЗАТЬ ДЕТАЛИ ТРАНЗАКЦИИ",
         stake: "СТЕЙК",
-        unlockServiceNode: "РАЗБЛОКИРОВАТЬ СЕРВИСНУЮ НОДУ",
+        sweepAll: "SWEEP ALL",
+        unlock: "UNLOCK",
         viewOnExplorer: "ПОСМОТРЕТЬ В ЭКСПЛОРЕРЕ"
     },
     dialog: {
@@ -112,6 +118,16 @@ export default {
             message: "Вы уверены, что хотите начать стейк ноды?",
             ok: "ПРОДОЛЖИТЬ"
         },
+        sweepAll: {
+            title: "Sweep all",
+            message: "Do you want to sweep all?",
+            ok: "SWEEP ALL"
+        },
+        sweepAllWarning: {
+            title: "Sweep all warning",
+            message: "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
+            ok: "CONTINUE"
+        },
         switchWallet: {
             title: "Переключить кошельки",
             closeMessage: "Вы уверены, что хотите закрыть текущий кошелек?",
@@ -135,6 +151,11 @@ export default {
             confirmTitle: "Подтверждение разблокировки",
             message: "Вы уверены, что хотите разблокировать сервисную ноду?",
             ok: "РАЗБЛОКИРОВАТЬ"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         }
     },
     fieldLabels: {
@@ -146,8 +167,8 @@ export default {
         daemonP2pPort: "P2P ПОРТ ДЕМОНА",
         daemonZMQPort: "ZMQ ПОРТ ДЕМОНА",
         dataStoragePath: "ПАПКА ХРАНИЛИЩА ДАННЫХ",
+        filter: "FILTER",
         filterTransactionType: "ТИП ТРАНЗАКЦИИ",
-        filterTxId: "ID ТРАНЗАКЦИИ",
         internalWalletPort: "ВНУТРЕННЫЙ ПОРТ КОШЕЛЬКА",
         keyImages: {
             exportDirectory: "ПАПКА ЭКСПОРТА КЛЮЧЕВОГО ОБРАЗА",
@@ -159,6 +180,7 @@ export default {
         localDaemonPort: "ПОРТ ЛОКАЛЬНОГО ДЕМОНА",
         maxIncomingPeers: "МАКСИМУМ ВХОДЯЩИХ ПИРОВ",
         maxOutgoingPeers: "МАКСИМУМ ИСХОДЯЩИХ ПИРОВ",
+        message: "MESSAGE",
         mnemonicSeed: "МНЕМОНИЧЕСКАЯ SEED-ФРАЗА",
         name: "ИМЯ",
         newWalletName: "ИМЯ НОВОГО КОШЕЛЬКА",
@@ -174,6 +196,8 @@ export default {
         seedLanguage: "ЯЗЫК SEED-ФРАЗЫ",
         serviceNodeCommand: "КОМАНДА РЕГИСТРАЦИИ СЕРВИСНОЙ НОДЫ",
         serviceNodeKey: "КЛЮЧ СЕРВИСНОЙ НОДЫ",
+        signature: "SIGNATURE",
+        transactionId: "TRANSACTION ID",
         walletFile: "ФАЙЛ КОШЕЛЬКА",
         walletLogLevel: "УРОВЕНЬ ЛОГА КОШЕЛЬКА",
         walletName: "ИМЯ КОШЕЛЬКА",
@@ -205,6 +229,7 @@ export default {
         copyQR: "Копировать QR код",
         copySeedWords: "Копировать seed-фразу",
         copySpendKey: "Копировать Ключ Отправки",
+        copyServiceNodeKey: "Copy service node key",
         copyTransactionId: "Копировать ID транзакции",
         copyViewKey: "Копировать Ключ Просмотра",
         createNewWallet: "Создать новый кошелек",
@@ -239,6 +264,7 @@ export default {
             qrCopied: "QR код скопирован в буфер",
             registerServiceNodeSuccess: "Сервисная нода успешно зарегистрирована",
             sendSuccess: "Транзакция успешно отправлена",
+            signatureCopied: "Signature copied to clipboard",
             stakeSuccess: "Стейк успешно начат",
             transactionNotesSaved: "Заметка о транзакции сохранена"
         },
@@ -251,6 +277,8 @@ export default {
             dataPathNotFound: "Папка хранилища данных не найдена",
             differentNetType: "Удаленная нода использует другой тип сети (nettype)",
             enterSeedWords: "Введите seed-фразу",
+            enterTransactionId: "Enter transaction ID",
+            enterTransactionProof: "Enter transaction proof",
             enterWalletName: "Введите имя кошелька",
             errorSavingItem: "Ошибка сохранения {item}",
             failedServiceNodeUnlock: "Не удалось разблокировать сервисную ноду",
@@ -282,6 +310,7 @@ export default {
             notEnoughBalance: "Разблокированный баланс недостаточен",
             passwordNoMatch: "Пароли не совпадают",
             remoteCannotBeReached: "Не удалось связаться с удаленным демоном",
+            selectWalletFile: "Select a wallet file",
             unknownError: "Произошла неизвестная ошибка",
             walletAlreadyExists: "Кошелек с таким именем уже существует",
             walletPathNotFound: "Путь к хранилищу данных кошелька не найден",
@@ -296,9 +325,13 @@ export default {
     placeholders: {
         additionalNotes: "Дополнительные заметки",
         addressBookName: "Имя для этого адреса",
-        enterAnId: "Введите ID",
+        filterTx: "Enter an ID, name, address or amount",
         hexCharacters: "Шестнадцатеричных символов: {count}",
         mnemonicSeed: "Seed-фраза, состоящая из 25 или 24 слов",
+        pasteTransactionId: "Paste transaction ID",
+        pasteTransactionProof: "Paste transaction proof",
+        proveOptionalMessage: "Optional message against which the signature is signed",
+        recipientWalletAddress: "Recipient's wallet address",
         selectAFile: "Пожалуйста, выберите файл",
         transactionNotes: "Дополнительные заметки для приосединения к транзакции",
         walletName: "Имя вашего кошелька",
@@ -322,9 +355,22 @@ export default {
             bannedUntil: "Забанено до {time}"
         },
         blockHeight: "Высота блока",
-        transactionConfirmed: "подтверждено",
+        checkTransaction: {
+            description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+            infoTitles: {
+                confirmations: "Confirmations",
+                inPool: "In pool",
+                validTransaction: "Valid transaction",
+                received: "Received amount"
+            },
+            validTransaction: {
+                no: "NO",
+                yes: "YES"
+            }
+        },
         closing: "Закрытие",
         connectingToBackend: "Подключение...",
+        contribution: "Contribution",
         daemon: {
             local: {
                 title: "Только Локальная Нода",
@@ -339,13 +385,6 @@ export default {
                 description: "Меньшая безопасность, кошелек подключится к удаленной ноде для проведения всех транзакций."
             }
         },
-        priorityOptions: {
-            automatic: "Автоматически",
-            slow: "Медленно",
-            normal: "Нормально",
-            fast: "Быстро",
-            fastest: "Очень быстро"
-        },
         destinationUnknown: "Назначение Неизвестно",
         editAddressBookEntry: "Редактировать запись адресной книги",
         loadingSettings: "Загрузка настроек",
@@ -357,6 +396,14 @@ export default {
         numberOfUnspentOutputs: "Количество непотраченных выходов",
         paymentID: "Payment ID",
         peerList: "Список пиров",
+        proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
+        priorityOptions: {
+            automatic: "Автоматически",
+            slow: "Медленно",
+            normal: "Нормально",
+            fast: "Быстро",
+            fastest: "Очень быстро"
+        },
         readingWalletList: "Получение списка кошельков",
         recentIncomingTransactionsToAddress: "Недавние входящие транзакции на этот адрес",
         recentTransactionsWithAddress: "Недавние транзакции с этим адресом",
@@ -372,6 +419,7 @@ export default {
         switchToDateSelect: "Переключиться на выбор даты",
         switchToHeightSelect: "Переключиться на выбор высоты блока",
         transactionID: "ID транзакции",
+        transactionConfirmed: "подтверждено",
         transactions: {
             amount: "Сумма",
             description: "Транзакция: {type}",
@@ -404,14 +452,18 @@ export default {
     titles: {
         addressBook: "Адресная книга",
         addressDetails: "Данные адреса",
+        advanced: {
+            checkTransaction: "CHECK TRANSACTION",
+            prove: "PROVE"
+        },
         changePassword: "Сменить пароль",
         configure: "Настройки",
+        currentlyStakedNodes: "Currently staked nodes",
         privateKeys: "Приватные ключи",
         rescanWallet: "Пересканировать кошелек",
         serviceNode: {
             registration: "РЕГИСТРАЦИЯ",
-            staking: "СТЕЙК",
-            unlock: "РАЗБЛОКИРОВКА"
+            staking: "СТЕЙК"
         },
         settings: {
             title: "Настройки",

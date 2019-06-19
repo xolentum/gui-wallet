@@ -1,18 +1,23 @@
 export default {
     buttons: {
         // All button text is uppercased in the gui
+        advanced: "ADVANCED",
         all: "TODO",
         back: "ATRÁS",
         browse: "EXAMINAR",
         cancel: "CANCELAR",
         change: "MODIFICAR",
+        check: "CHECK",
+        clear: "CLEAR",
         close: "CERRAR",
         contacts: "CONTACTOS",
         copyAddress: "COPIAR DIRECCIÓN",
+        copySignature: "COPY SIGNATURE",
         createWallet: "CREAR MONEDERO",
         delete: "ELIMINAR",
         edit: "EDITAR",
         export: "EXPORTAR",
+        generate: "GENERATE",
         import: "IMPORTAR",
         importWallet: "IMPORTAR MONEDERO | IMPORTAR MONEDEROS",
         next: "SIGUIENTE",
@@ -33,7 +38,7 @@ export default {
         showTxDetails: "MOSTRAR DETALLES DE LA TRANSACCIÓN",
         stake: "RETENER PARTICIPACIÓN",
         sweepAll: "TRANSFERIR/BARRER TODO",
-        unlockServiceNode: "LIBERAR NODO DE SERVICIO",
+        unlock: "UNLOCK",
         viewOnExplorer: "VER EN EL EXPLORADOR"
     },
     dialog: {
@@ -118,6 +123,11 @@ export default {
             message: "¿Está seguro de que quiere transferir/barrer todos sus fondos?",
             ok: "TRANSFERIR/BARRER TODO"
         },
+        sweepAllWarning: {
+            title: "Sweep all warning",
+            message: "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
+            ok: "CONTINUE"
+        },
         switchWallet: {
             title: "Cambiar de monedero",
             closeMessage: "¿Confirma que desea cerrar el monedero actual?",
@@ -141,6 +151,11 @@ export default {
             confirmTitle: "Confirmar liberación",
             message: "¿Desea liberar el nodo de servicio?",
             ok: "LIBERAR"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         }
     },
     fieldLabels: {
@@ -152,8 +167,8 @@ export default {
         daemonP2pPort: "PUERTO P2P SERVICIO",
         daemonZMQPort: "PUERTO ZMQ SERVICIO",
         dataStoragePath: "RUTA DE ALMACENAMIENTO DE DATOS",
+        filter: "FILTER",
         filterTransactionType: "FILTRAR POR TIPO DE TRANSACCIÓN",
-        filterTxId: "FILTRAR POR ID DE TRANSACCIÓN",
         internalWalletPort: "PUERTO INTERNO MONEDERO",
         keyImages: {
             exportDirectory: "DIRECTORIO AL QUE EXPORTAR LA IMAGEN DE LA CLAVE",
@@ -165,6 +180,7 @@ export default {
         localDaemonPort: "PUERTO SERVICIO LOCAL",
         maxIncomingPeers: "NÚM. MÁX. PARES ENTRANTES",
         maxOutgoingPeers: "NÚM. MÁX. PARES SALIENTES",
+        message: "MESSAGE",
         mnemonicSeed: "SEMILLA MNEMÓNICA",
         name: "NOMBRE",
         newWalletName: "NUEVO NOMBRE PARA EL MONEDERO",
@@ -180,6 +196,8 @@ export default {
         seedLanguage: "IDIOMA SEMILLA",
         serviceNodeCommand: "ORDEN PARA REGISTRAR EL NODO DE SERVICIO",
         serviceNodeKey: "CLAVE NODO DE SERVICIO",
+        signature: "SIGNATURE",
+        transactionId: "TRANSACTION ID",
         walletFile: "ARCHIVO MONEDERO",
         walletLogLevel: "NIVEL LOG MONEDERO",
         walletName: "NOMBRE MONEDERO",
@@ -211,6 +229,7 @@ export default {
         copyQR: "Copiar código QR",
         copySeedWords: "Copiar palabras semilla",
         copySpendKey: "Copiar clave de gasto",
+        copyServiceNodeKey: "Copy service node key",
         copyTransactionId: "Copiar ID de la transacción",
         copyViewKey: "Copiar clave de visualización",
         createNewWallet: "Crear nuevo monedero",
@@ -245,6 +264,7 @@ export default {
             qrCopied: "Código QR copiado al portapapeles",
             registerServiceNodeSuccess: "Nodo de servicio registrado correctamente",
             sendSuccess: "Transacción enviada correctamente",
+            signatureCopied: "Signature copied to clipboard",
             stakeSuccess: "Participación retenida correctamente",
             transactionNotesSaved: "Notas de la transacción guardadas"
         },
@@ -257,6 +277,8 @@ export default {
             dataPathNotFound: "No se ha encontrado la ruta de almacenamiento",
             differentNetType: "El nodo remoto usa un tipo de red diferente",
             enterSeedWords: "Introduzca las palabras semilla",
+            enterTransactionId: "Enter transaction ID",
+            enterTransactionProof: "Enter transaction proof",
             enterWalletName: "Introduzca un nombre para el monedero",
             errorSavingItem: "Error al guardar {item}",
             failedServiceNodeUnlock: "La liberación del nodo de servicio ha fallado",
@@ -288,6 +310,7 @@ export default {
             notEnoughBalance: "No hay suficiente saldo libre",
             passwordNoMatch: "Las contraseñas no coinciden",
             remoteCannotBeReached: "No se puede conectar con el servicio remoto",
+            selectWalletFile: "Select a wallet file",
             unknownError: "Ha ocurrido un error inesperado",
             walletAlreadyExists: "Ya existe un monedero con este nombre",
             walletPathNotFound: "Ruta no encontrada",
@@ -302,9 +325,13 @@ export default {
     placeholders: {
         additionalNotes: "Notas adicionales",
         addressBookName: "Nombre asociado a esta dirección",
-        enterAnId: "Introduzca un ID",
+        filterTx: "Enter an ID, name, address or amount",
         hexCharacters: "{count} caracteres hexadecimales",
         mnemonicSeed: "Semilla mnemónica de 25 (o 24) palabras",
+        pasteTransactionId: "Paste transaction ID",
+        pasteTransactionProof: "Paste transaction proof",
+        proveOptionalMessage: "Optional message against which the signature is signed",
+        recipientWalletAddress: "Recipient's wallet address",
         selectAFile: "Seleccione un archivo por favor",
         transactionNotes: "Notas adicionales para agregar a la transacción",
         walletName: "Nombre para identificar su monedero",
@@ -328,9 +355,22 @@ export default {
             bannedUntil: "Vetado hasta {time}"
         },
         blockHeight: "Altura",
-        transactionConfirmed: "confirmada",
+        checkTransaction: {
+            description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+            infoTitles: {
+                confirmations: "Confirmations",
+                inPool: "In pool",
+                validTransaction: "Valid transaction",
+                received: "Received amount"
+            },
+            validTransaction: {
+                no: "NO",
+                yes: "YES"
+            }
+        },
         closing: "Cerrando",
         connectingToBackend: "Conectando con el servicio",
+        contribution: "Contribution",
         daemon: {
             local: {
                 title: "Solo Servicio Local",
@@ -345,13 +385,6 @@ export default {
                 description: "Menor seguridad. El monedero se conectará a un nodo remoto para realizar cualquier operación."
             }
         },
-        priorityOptions: {
-            automatic: "Automática",
-            slow: "Lenta",
-            normal: "Normal",
-            fast: "Rápida",
-            fastest: "La más rápida"
-        },
         destinationUnknown: "Destino Desconocido",
         editAddressBookEntry: "Modificar un registro de la libreta de direcciones",
         loadingSettings: "Cargando configuración",
@@ -362,7 +395,15 @@ export default {
         notes: "Notas",
         numberOfUnspentOutputs: "Número de salidas no gastadas",
         paymentID: "ID de pago",
+        priorityOptions: {
+            automatic: "Automática",
+            slow: "Lenta",
+            normal: "Normal",
+            fast: "Rápida",
+            fastest: "La más rápida"
+        },
         peerList: "Lista de pares",
+        proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
         readingWalletList: "Leyendo el listado de monederos",
         recentIncomingTransactionsToAddress: "Transacciones recientes recibidas en esta dirección",
         recentTransactionsWithAddress: "Transacciones recientes con esta dirección",
@@ -378,6 +419,7 @@ export default {
         switchToDateSelect: "Cambiar a selección por fecha",
         switchToHeightSelect: "Cambiar a selección por altura",
         transactionID: "ID de la transacción",
+        transactionConfirmed: "confirmada",
         transactions: {
             amount: "Cantidad",
             description: "Transacción {type}",
@@ -410,14 +452,18 @@ export default {
     titles: {
         addressBook: "Libreta de direcciones",
         addressDetails: "Detalles de la dirección",
+        advanced: {
+            checkTransaction: "CHECK TRANSACTION",
+            prove: "PROVE"
+        },
         changePassword: "Modificar contraseña",
         configure: "Configurar",
+        currentlyStakedNodes: "Currently staked nodes",
         privateKeys: "Claves privadas",
         rescanWallet: "Volver a examinar monedero",
         serviceNode: {
             registration: "REGISTRO",
-            staking: "PARTICIPACIÓN",
-            unlock: "LIBERACIÓN"
+            staking: "PARTICIPACIÓN"
         },
         settings: {
             title: "Configuración",

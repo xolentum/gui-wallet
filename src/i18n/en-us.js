@@ -38,7 +38,7 @@ export default {
         showTxDetails: "SHOW TX DETAILS",
         stake: "STAKE",
         sweepAll: "SWEEP ALL",
-        unlockServiceNode: "UNLOCK",
+        unlock: "UNLOCK",
         viewOnExplorer: "VIEW ON EXPLORER"
     },
     dialog: {
@@ -146,16 +146,16 @@ export default {
             title: "Confirm unlock",
             ok: "UNLOCK"
         },
-        unlockServiceNodeWarning: {
-            title: "Unlock service node warning",
-            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
-            ok: "CONTINUE"
-        },
         unlockServiceNode: {
             title: "Unlock service node",
             confirmTitle: "Confirm unlock",
             message: "Do you want to unlock the service node?",
             ok: "UNLOCK"
+        },
+        unlockServiceNodeWarning: {
+            title: "Unlock service node warning",
+            message: "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
+            ok: "CONTINUE"
         }
     },
     fieldLabels: {
@@ -355,7 +355,6 @@ export default {
             bannedUntil: "Banned until {time}"
         },
         blockHeight: "Height",
-        transactionConfirmed: "confirmed",
         checkTransaction: {
             description: "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
             infoTitles: {
@@ -386,13 +385,6 @@ export default {
                 description: "Less security, wallet will connect to a remote node to make all transactions."
             }
         },
-        priorityOptions: {
-            automatic: "Automatic",
-            slow: "Slow",
-            normal: "Normal",
-            fast: "Fast",
-            fastest: "Fastest"
-        },
         destinationUnknown: "Destination Unknown",
         editAddressBookEntry: "Edit address book entry",
         loadingSettings: "Loading settings",
@@ -404,6 +396,13 @@ export default {
         numberOfUnspentOutputs: "Number of unspent outputs",
         paymentID: "Payment ID",
         peerList: "Peer list",
+        priorityOptions: {
+            automatic: "Automatic",
+            slow: "Slow",
+            normal: "Normal",
+            fast: "Fast",
+            fastest: "Fastest"
+        },
         proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
         readingWalletList: "Reading wallet list",
         recentIncomingTransactionsToAddress: "Recent incoming transactions to this address",
@@ -420,6 +419,7 @@ export default {
         switchToDateSelect: "Switch to date select",
         switchToHeightSelect: "Switch to height select",
         transactionID: "Transaction ID",
+        transactionConfirmed: "confirmed",
         transactions: {
             amount: "Amount",
             description: "{type} transaction",
