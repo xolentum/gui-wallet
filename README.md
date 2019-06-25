@@ -27,7 +27,18 @@ cd loki-electron-wallet
 cp path_to_loki_binaries/lokid bin/
 cp path_to_loki_binaries/loki-wallet-rpc bin/
 npm install
-quasar build -m electron -t mat
+```
+
+For dev:
+```
+npm run dev
+```
+
+For building:
+
+**Note:** This will only build the binaries for the system you run the command on. Running this command on `linux` will only make `linux` binaries, no `mac` or `windows` binaries.
+```
+npm run build
 ```
 
 ### Adding language support
