@@ -388,11 +388,11 @@ export default {
         },
         destinationUnknown: "Destination Unknown",
         editAddressBookEntry: "Edit address book entry",
-        fee: "Fee",
         loadingSettings: "Loading settings",
         lokiBalance: "Balance",
         lokiUnlockedBalance: "Unlocked balance",
         lokiUnlockedShort: "Unlocked",
+        me: "Me",
         noTransactionsFound: "No transactions found",
         notes: "Notes",
         numberOfUnspentOutputs: "Number of unspent outputs",
@@ -416,6 +416,17 @@ export default {
         seedWords: "Seed words",
         selectLanguage: "Select language",
         serviceNodeRegistrationDescription: "Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the \"{prepareCommand}\" command",
+        serviceNodeDetails: {
+            contributors: "Contributors",
+            lastRewardBlockHeight: "Last reward block height",
+            lastUptimeProof: "Last uptime proof",
+            operatorFee: "Operator Fee",
+            registrationHeight: "Registration height",
+            unlockHeight: "Unlock height",
+            serviceNodeKey: "Service Node Key",
+            stakingRequirement: "Staking requirement",
+            totalContributed: "Total contributed"
+        },
         spendKey: "Spend key",
         startingDaemon: "Starting daemon",
         startingWallet: "Starting wallet",
@@ -470,6 +481,7 @@ export default {
             registration: "REGISTRATION",
             staking: "STAKING"
         },
+        serviceNodeDetails: "Service node details",
         settings: {
             title: "Settings",
             tabs: {

@@ -3,7 +3,7 @@
     <div class="q-pa-md">
         <div class="q-pb-sm header">{{ $t('titles.currentlyStakedNodes') }}</div>
         <q-list class="service-node-list" no-border>
-            <q-item v-for="node in service_nodes" :key="node.service_node_pubkey">
+            <q-item v-for="node in service_nodes" :key="node.service_node_pubkey" @click.native="details(node)">
                 <q-item-main>
                     <q-item-tile class="ellipsis" label>{{ node.service_node_pubkey }}</q-item-tile>
                     <q-item-tile sublabel class="non-selectable">{{ getRole(node) }} • {{ getFee(node) }} • {{ $t('strings.contribution') }}: <FormatLoki :amount="node.ourContributionAmount" /></q-item-tile>
@@ -15,13 +15,11 @@
                         size="md"
                         :label="$t('buttons.unlock')"
                         :disabled="!is_ready || unlock_status.sending"
-                        @click="unlockWarning(node.service_node_pubkey)"
+                        @click.native="unlockWarning(node.service_node_pubkey, $event)"
                     />
-                    <q-item-label
-                        v-if="node.requested_unlock_height > 0"
-                    >
+                    <q-item-tile label v-if="node.requested_unlock_height > 0">
                         {{ $t('strings.unlockingAtHeight', { number: node.requested_unlock_height }) }}
-                    </q-item-label>
+                    </q-item-tile>
                 </q-item-side>
                  <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
@@ -37,6 +35,8 @@
         </q-list>
     </div>
 
+    <ServiceNodeDetails ref="serviceNodeDetails" :unlock="unlockWarning" />
+
     <q-inner-loading :visible="unlock_status.sending" :dark="theme=='dark'">
         <q-spinner color="primary" :size="30" />
     </q-inner-loading>
@@ -45,12 +45,14 @@
 
 <script>
 const objectAssignDeep = require("object-assign-deep");
+import { clipboard } from "electron"
 import { mapState } from "vuex"
 import { required } from "vuelidate/lib/validators"
 import { service_node_key } from "src/validators/common"
 import LokiField from "components/loki_field"
 import WalletPassword from "src/mixins/wallet_password"
 import FormatLoki from "components/format_loki"
+import ServiceNodeDetails from "components/service_node_details"
 
 export default {
     name: "ServiceNodeUnlock",
@@ -131,7 +133,12 @@ export default {
         },
     },
     methods: {
-        unlockWarning (key) {
+        details (node) {
+            this.$refs.serviceNodeDetails.isVisible = true
+            this.$refs.serviceNodeDetails.node = node
+        },
+        unlockWarning (key, event) {
+            event.stopPropagation()
             this.$q.dialog({
                 title: this.$t("dialog.unlockServiceNodeWarning.title"),
                 message: this.$t("dialog.unlockServiceNodeWarning.message"),
@@ -202,13 +209,14 @@ export default {
         getFee (node) {
             const operatorPortion = node.portions_for_operator
             const percentageFee = operatorPortion / 18446744073709551612 * 100
-            return `${percentageFee}% ${this.$t('strings.fee')}`
+            return `${percentageFee}% ${this.$t('strings.transactions.fee')}`
         },
     },
     mixins: [WalletPassword],
     components: {
         LokiField,
-        FormatLoki
+        FormatLoki,
+        ServiceNodeDetails
     }
 }
 </script>
