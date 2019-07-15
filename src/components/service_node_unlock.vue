@@ -3,26 +3,32 @@
     <div class="q-pa-md">
         <div class="q-pb-sm header">{{ $t('titles.currentlyStakedNodes') }}</div>
         <q-list class="service-node-list" no-border>
-            <q-item v-for="node in service_nodes" :key="node.key">
+            <q-item v-for="node in service_nodes" :key="node.service_node_pubkey">
                 <q-item-main>
-                    <q-item-tile class="ellipsis" label>{{ node.key }}</q-item-tile>
-                    <q-item-tile sublabel class="non-selectable">{{ $t('strings.contribution') }}: <FormatLoki :amount="node.amount" /></q-item-tile>
+                    <q-item-tile class="ellipsis" label>{{ node.service_node_pubkey }}</q-item-tile>
+                    <q-item-tile sublabel class="non-selectable">{{ $t('strings.contribution') }}: <FormatLoki :amount="node.ourContributionAmount" /></q-item-tile>
                 </q-item-main>
                 <q-item-side>
                     <q-btn
+                        v-if="node.requested_unlock_height === 0"
                         color="primary"
                         size="md"
                         :label="$t('buttons.unlock')"
                         :disabled="!is_ready || unlock_status.sending"
-                        @click="unlockWarning(node.key)"
+                        @click="unlockWarning(node.service_node_pubkey)"
                     />
+                    <q-item-label
+                        v-if="node.requested_unlock_height > 0"
+                    >
+                        Unlocking at height {{ node.requested_unlock_height }}
+                    </q-item-label>
                 </q-item-side>
                  <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
-                        <q-item v-close-overlay @click.native="copyKey(node.key, $event)">
+                        <q-item v-close-overlay @click.native="copyKey(node.service_node_pubkey, $event)">
                             <q-item-main :label="$t('menuItems.copyServiceNodeKey')" />
                         </q-item>
-                        <q-item v-close-overlay @click.native="openExplorer(node.key)">
+                        <q-item v-close-overlay @click.native="openExplorer(node.service_node_pubkey)">
                             <q-item-main :label="$t('menuItems.viewOnExplorer')" />
                         </q-item>
                     </q-list>
@@ -65,8 +71,8 @@ export default {
             return nodes.filter(getContribution).map(n => {
                 const ourContribution = getContribution(n)
                 return {
-                    key: n.service_node_pubkey,
-                    amount: ourContribution.amount
+                    ...n,
+                    ourContributionAmount: ourContribution.amount
                 }
             })
         }
