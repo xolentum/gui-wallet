@@ -6,7 +6,7 @@
             <q-item v-for="node in service_nodes" :key="node.service_node_pubkey">
                 <q-item-main>
                     <q-item-tile class="ellipsis" label>{{ node.service_node_pubkey }}</q-item-tile>
-                    <q-item-tile sublabel class="non-selectable">{{ $t('strings.contribution') }}: <FormatLoki :amount="node.ourContributionAmount" /></q-item-tile>
+                    <q-item-tile sublabel class="non-selectable">{{ getRole(node) }} • {{ getFee(node) }} • {{ $t('strings.contribution') }}: <FormatLoki :amount="node.ourContributionAmount" /></q-item-tile>
                 </q-item-main>
                 <q-item-side>
                     <q-btn
@@ -20,7 +20,7 @@
                     <q-item-label
                         v-if="node.requested_unlock_height > 0"
                     >
-                        Unlocking at height {{ node.requested_unlock_height }}
+                        {{ $t('strings.unlockingAtHeight', { number: node.requested_unlock_height }) }}
                     </q-item-label>
                 </q-item-side>
                  <q-context-menu>
@@ -194,9 +194,17 @@ export default {
         },
         openExplorer (key) {
             this.$gateway.send("core", "open_explorer", {type: "service_node", id: key})
-        }
+        },
+        getRole (node) {
+            const key = node.operator_address === this.our_address ? 'strings.operator' : 'strings.contributor'
+            return this.$t(key);
+        },
+        getFee (node) {
+            const operatorPortion = node.portions_for_operator
+            const percentageFee = operatorPortion / 18446744073709551612 * 100
+            return `${percentageFee}% ${this.$t('strings.fee')}`
+        },
     },
-
     mixins: [WalletPassword],
     components: {
         LokiField,

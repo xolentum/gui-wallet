@@ -371,6 +371,7 @@ export default {
         closing: "Closing",
         connectingToBackend: "Connecting to backend",
         contribution: "Contribution",
+        contributor: "Contributor",
         daemon: {
             local: {
                 title: "Local Daemon Only",
@@ -387,6 +388,7 @@ export default {
         },
         destinationUnknown: "Destination Unknown",
         editAddressBookEntry: "Edit address book entry",
+        fee: "Fee",
         loadingSettings: "Loading settings",
         lokiBalance: "Balance",
         lokiUnlockedBalance: "Unlocked balance",
@@ -394,6 +396,7 @@ export default {
         noTransactionsFound: "No transactions found",
         notes: "Notes",
         numberOfUnspentOutputs: "Number of unspent outputs",
+        operator: "Operator",
         paymentID: "Payment ID",
         peerList: "Peer list",
         priorityOptions: {
@@ -444,6 +447,7 @@ export default {
                 failed: "Failed"
             }
         },
+        unlockingAtHeight: "Unlocking at height {number}",
         unspentOutputs: "Unspent outputs",
         userNotUsedAddress: "You have not used this address",
         userUsedAddress: "You have used this address",
