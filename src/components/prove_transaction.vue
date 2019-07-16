@@ -6,7 +6,7 @@
         </div>
         <div>
             <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
-                <q-input v-model="txid"
+                <q-input v-model.trim="txid"
                     :dark="theme=='dark'"
                     :placeholder="$t('placeholders.pasteTransactionId')"
                     @blur="$v.txid.$touch"
@@ -14,7 +14,7 @@
                 />
             </LokiField>
             <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
-                <q-input v-model="address"
+                <q-input v-model.trim="address"
                     :dark="theme=='dark'"
                     :placeholder="$t('placeholders.recipientWalletAddress')"
                     @blur="$v.address.$touch"
@@ -22,7 +22,7 @@
                 />
             </LokiField>
             <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
-                <q-input v-model="message"
+                <q-input v-model.trim="message"
                     :dark="theme=='dark'"
                     :placeholder="$t('placeholders.proveOptionalMessage')"
                     hide-underline

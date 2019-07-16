@@ -7,10 +7,11 @@
         </i18n>
         <LokiField :label="$t('fieldLabels.serviceNodeCommand')" :error="$v.registration_string.$error" :disabled="registration_status.sending">
             <q-input
-                v-model="registration_string"
+                v-model.trim="registration_string"
                 type="textarea"
                 :dark="theme=='dark'"
                 @blur="$v.registration_string.$touch"
+                @paste="onPaste"
                 placeholder="register_service_node ..."
                 :disabled="registration_status.sending"
                 hide-underline
@@ -75,7 +76,7 @@ export default {
         },
     },
     methods: {
-        register: function() {
+        register() {
             this.$v.registration_string.$touch()
 
             if (this.$v.registration_string.$error) {
@@ -103,11 +104,16 @@ export default {
                 })
                 this.$gateway.send("wallet", "register_service_node", {
                     password,
-                    string: this.registration_string
+                    string: this.registration_string.trim()
                 })
             }).catch(() => {
             })
 
+        },
+        onPaste (event) {
+            this.$nextTick(() => {
+                this.registration_string = this.registration_string.trim()
+            });
         }
     },
     mixins: [WalletPassword],
