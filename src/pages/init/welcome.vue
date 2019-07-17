@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { version, daemonVersion } from "../../../package.json"
+import { version } from "../../../package.json"
 import { mapState } from "vuex"
 import LanguageSelect from "components/language_select"
 import SettingsGeneral from "components/settings_general"
@@ -59,18 +59,20 @@ export default {
         config_daemon (state) {
             return this.pending_config.daemons[this.pending_config.app.net_type]
         },
+        daemon: state => state.gateway.daemon,
+        daemonVersion (state) {
+            return this.daemon.info.version || 'N/A'
+        }
     }),
     data() {
         return {
             is_first_page: true,
             version: "",
-            daemonVersion: ""
         }
     },
     mounted () {
 
         this.version = version
-        this.daemonVersion = daemonVersion
 
         // set add status back to 2
         this.$store.commit("gateway/set_app_data", {

@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { version, daemonVersion } from "../../package.json"
+import { version } from "../../package.json"
 import { mapState } from "vuex"
 import SettingsModal from "components/settings"
 export default {
@@ -74,20 +74,22 @@ export default {
             default: false
         }
     },
+    computed: mapState({
+        theme: state => state.gateway.app.config.appearance.theme,
+        isRPCSyncing: state => state.gateway.wallet.isRPCSyncing,
+        daemon: state => state.gateway.daemon,
+        daemonVersion (state) {
+            return this.daemon.info.version || 'N/A'
+        }
+    }),
     data() {
         return {
             version: "",
-            daemonVersion: ""
         }
     },
     mounted () {
         this.version = version
-        this.daemonVersion = daemonVersion
     },
-    computed: mapState({
-        theme: state => state.gateway.app.config.appearance.theme,
-        isRPCSyncing: state => state.gateway.wallet.isRPCSyncing
-    }),
     methods: {
         openExternal (url) {
             this.$gateway.send("core", "open_url", {url})
