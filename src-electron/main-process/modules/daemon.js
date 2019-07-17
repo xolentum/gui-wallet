@@ -387,13 +387,7 @@ export class Daemon {
         this.getRPC("service_nodes").then(data => {
             if (!data.hasOwnProperty("result")) return
 
-            const states = data.result.service_node_states
-
-            // Only store the data we need
-            const service_nodes = states.map(s => ({
-                service_node_pubkey: s.service_node_pubkey,
-                contributors: s.contributors
-            }))
+            const service_nodes = data.result.service_node_states
             this.sendGateway("set_daemon_data", { service_nodes })
         })
     }

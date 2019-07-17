@@ -3,26 +3,30 @@
     <div class="q-pa-md">
         <div class="q-pb-sm header">{{ $t('titles.currentlyStakedNodes') }}</div>
         <q-list class="service-node-list" no-border>
-            <q-item v-for="node in service_nodes" :key="node.key">
+            <q-item v-for="node in service_nodes" :key="node.service_node_pubkey" @click.native="details(node)">
                 <q-item-main>
-                    <q-item-tile class="ellipsis" label>{{ node.key }}</q-item-tile>
-                    <q-item-tile sublabel class="non-selectable">{{ $t('strings.contribution') }}: <FormatLoki :amount="node.amount" /></q-item-tile>
+                    <q-item-tile class="ellipsis" label>{{ node.service_node_pubkey }}</q-item-tile>
+                    <q-item-tile sublabel class="non-selectable">{{ getRole(node) }} • {{ getFee(node) }} • {{ $t('strings.contribution') }}: <FormatLoki :amount="node.ourContributionAmount" /></q-item-tile>
                 </q-item-main>
                 <q-item-side>
                     <q-btn
+                        v-if="node.requested_unlock_height === 0"
                         color="primary"
                         size="md"
                         :label="$t('buttons.unlock')"
                         :disabled="!is_ready || unlock_status.sending"
-                        @click="unlockWarning(node.key)"
+                        @click.native="unlockWarning(node.service_node_pubkey, $event)"
                     />
+                    <q-item-tile label v-if="node.requested_unlock_height > 0">
+                        {{ $t('strings.unlockingAtHeight', { number: node.requested_unlock_height }) }}
+                    </q-item-tile>
                 </q-item-side>
                  <q-context-menu>
                     <q-list link separator style="min-width: 150px; max-height: 300px;">
-                        <q-item v-close-overlay @click.native="copyKey(node.key, $event)">
+                        <q-item v-close-overlay @click.native="copyKey(node.service_node_pubkey, $event)">
                             <q-item-main :label="$t('menuItems.copyServiceNodeKey')" />
                         </q-item>
-                        <q-item v-close-overlay @click.native="openExplorer(node.key)">
+                        <q-item v-close-overlay @click.native="openExplorer(node.service_node_pubkey)">
                             <q-item-main :label="$t('menuItems.viewOnExplorer')" />
                         </q-item>
                     </q-list>
@@ -30,6 +34,8 @@
             </q-item>
         </q-list>
     </div>
+
+    <ServiceNodeDetails ref="serviceNodeDetails" :unlock="unlockWarning" />
 
     <q-inner-loading :visible="unlock_status.sending" :dark="theme=='dark'">
         <q-spinner color="primary" :size="30" />
@@ -39,12 +45,14 @@
 
 <script>
 const objectAssignDeep = require("object-assign-deep");
+import { clipboard } from "electron"
 import { mapState } from "vuex"
 import { required } from "vuelidate/lib/validators"
 import { service_node_key } from "src/validators/common"
 import LokiField from "components/loki_field"
 import WalletPassword from "src/mixins/wallet_password"
 import FormatLoki from "components/format_loki"
+import ServiceNodeDetails from "components/service_node_details"
 
 export default {
     name: "ServiceNodeUnlock",
@@ -65,8 +73,8 @@ export default {
             return nodes.filter(getContribution).map(n => {
                 const ourContribution = getContribution(n)
                 return {
-                    key: n.service_node_pubkey,
-                    amount: ourContribution.amount
+                    ...n,
+                    ourContributionAmount: ourContribution.amount
                 }
             })
         }
@@ -125,7 +133,12 @@ export default {
         },
     },
     methods: {
-        unlockWarning (key) {
+        details (node) {
+            this.$refs.serviceNodeDetails.isVisible = true
+            this.$refs.serviceNodeDetails.node = node
+        },
+        unlockWarning (key, event) {
+            event.stopPropagation()
             this.$q.dialog({
                 title: this.$t("dialog.unlockServiceNodeWarning.title"),
                 message: this.$t("dialog.unlockServiceNodeWarning.message"),
@@ -188,13 +201,22 @@ export default {
         },
         openExplorer (key) {
             this.$gateway.send("core", "open_explorer", {type: "service_node", id: key})
-        }
+        },
+        getRole (node) {
+            const key = node.operator_address === this.our_address ? 'strings.operator' : 'strings.contributor'
+            return this.$t(key);
+        },
+        getFee (node) {
+            const operatorPortion = node.portions_for_operator
+            const percentageFee = operatorPortion / 18446744073709551612 * 100
+            return `${percentageFee}% ${this.$t('strings.transactions.fee')}`
+        },
     },
-
     mixins: [WalletPassword],
     components: {
         LokiField,
-        FormatLoki
+        FormatLoki,
+        ServiceNodeDetails
     }
 }
 </script>

@@ -42,7 +42,7 @@
             <!-- Address -->
             <div class="col q-mt-sm">
                 <LokiField :label="$t('fieldLabels.address')" :error="$v.newTx.address.$error">
-                     <q-input v-model="newTx.address"
+                     <q-input v-model.trim="newTx.address"
                         :dark="theme=='dark'"
                         @blur="$v.newTx.address.$touch"
                         :placeholder="address_placeholder"
@@ -57,7 +57,7 @@
             <!-- Payment ID -->
             <div class="col q-mt-sm">
                 <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
-                     <q-input v-model="newTx.payment_id"
+                     <q-input v-model.trim="newTx.payment_id"
                         :dark="theme=='dark'"
                         @blur="$v.newTx.payment_id.$touch"
                         :placeholder="$t('placeholders.hexCharacters', { count: '16 or 64' })"

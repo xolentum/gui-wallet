@@ -2,7 +2,7 @@
 <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
         <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
-            <q-input v-model="service_node.key"
+            <q-input v-model.trim="service_node.key"
                 :dark="theme=='dark'"
                 @blur="$v.service_node.key.$touch"
                 :placeholder="$t('placeholders.hexCharacters', { count: 64 })"
@@ -11,7 +11,7 @@
         </LokiField>
 
         <LokiField :label="$t('fieldLabels.amount')" class="q-mt-md" :error="$v.service_node.amount.$error">
-            <q-input v-model="service_node.amount"
+            <q-input v-model.trim="service_node.amount"
                 :dark="theme=='dark'"
                 type="number"
                 min="0"

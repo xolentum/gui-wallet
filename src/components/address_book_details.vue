@@ -18,7 +18,7 @@
         <div class="address-book-modal q-mx-md">
             <LokiField :label="$t('fieldLabels.address')" :error="$v.newEntry.address.$error">
                 <q-input
-                    v-model="newEntry.address"
+                    v-model.trim="newEntry.address"
                     :placeholder="address_placeholder"
                     @blur="$v.newEntry.address.$touch"
                     :dark="theme=='dark'"
@@ -34,14 +34,14 @@
             </LokiField>
             <LokiField :label="$t('fieldLabels.name')">
                 <q-input
-                    v-model="newEntry.name"
+                    v-model.trim="newEntry.name"
                     :dark="theme=='dark'"
                     hide-underline
                     />
             </LokiField>
             <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newEntry.payment_id.$error" optional>
                 <q-input
-                    v-model="newEntry.payment_id"
+                    v-model.trim="newEntry.payment_id"
                     :placeholder="$t('placeholders.hexCharacters', { count: '16 or 64' })"
                     @blur="$v.newEntry.payment_id.$touch"
                     :dark="theme=='dark'"

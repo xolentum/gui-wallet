@@ -371,6 +371,7 @@ export default {
         closing: "Closing",
         connectingToBackend: "Connecting to backend",
         contribution: "Contribution",
+        contributor: "Contributor",
         daemon: {
             local: {
                 title: "Local Daemon Only",
@@ -391,9 +392,11 @@ export default {
         lokiBalance: "Balance",
         lokiUnlockedBalance: "Unlocked balance",
         lokiUnlockedShort: "Unlocked",
+        me: "Me",
         noTransactionsFound: "No transactions found",
         notes: "Notes",
         numberOfUnspentOutputs: "Number of unspent outputs",
+        operator: "Operator",
         paymentID: "Payment ID",
         peerList: "Peer list",
         priorityOptions: {
@@ -413,6 +416,17 @@ export default {
         seedWords: "Seed words",
         selectLanguage: "Select language",
         serviceNodeRegistrationDescription: "Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the \"{prepareCommand}\" command",
+        serviceNodeDetails: {
+            contributors: "Contributors",
+            lastRewardBlockHeight: "Last reward block height",
+            lastUptimeProof: "Last uptime proof",
+            operatorFee: "Operator Fee",
+            registrationHeight: "Registration height",
+            unlockHeight: "Unlock height",
+            serviceNodeKey: "Service Node Key",
+            stakingRequirement: "Staking requirement",
+            totalContributed: "Total contributed"
+        },
         spendKey: "Spend key",
         startingDaemon: "Starting daemon",
         startingWallet: "Starting wallet",
@@ -444,6 +458,7 @@ export default {
                 failed: "Failed"
             }
         },
+        unlockingAtHeight: "Unlocking at height {number}",
         unspentOutputs: "Unspent outputs",
         userNotUsedAddress: "You have not used this address",
         userUsedAddress: "You have used this address",
@@ -466,6 +481,7 @@ export default {
             registration: "REGISTRATION",
             staking: "STAKING"
         },
+        serviceNodeDetails: "Service node details",
         settings: {
             title: "Settings",
             tabs: {
