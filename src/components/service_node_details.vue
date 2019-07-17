@@ -61,7 +61,7 @@
                 <div class="infoBox">
                     <div class="infoBoxContent">
                         <div class="text"><span>{{ $t("strings.serviceNodeDetails.lastUptimeProof") }}</span></div>
-                        <div class="value"><span>{{ formatDate(node.last_uptime_proof) }}</span></div>
+                        <div class="value"><span>{{ formatDate(node.last_uptime_proof * 1000) }}</span></div>
                     </div>
                 </div>
                 <div class="infoBox">
