@@ -14,7 +14,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "electron-is-dev": "^1.0.1",
     "electron-window-state": "^5.0.3",
     "flag-icon-css": "^3.3.0",
@@ -47,7 +47,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.2",
     "node-sass": "^4.11.0",
-    "quasar-cli": "^0.17.24",
+    "quasar-cli": "^0.17.26",
     "sass-loader": "^7.1.0",
     "strip-ansi": "^3.0.1"
   },
