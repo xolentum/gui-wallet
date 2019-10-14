@@ -3,7 +3,7 @@ const request = require("request-promise")
 const queue = require("promise-queue")
 const http = require("http")
 const fs = require("fs")
-const path = require("path")
+const path = require("upath")
 const portscanner = require("portscanner")
 
 export class Daemon {
