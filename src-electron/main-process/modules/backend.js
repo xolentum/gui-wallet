@@ -108,23 +108,11 @@ export class Backend {
                 port: "22020"
             },
             {
-                host: "daemons.cryptopool.space",
-                port: "22023"
-            },
-            {
-                host: "node.loki-pool.com",
-                port: "18081"
-            },
-            {
                 host: "imaginary.stream",
                 port: "22023"
             },
             {
                 host: "nodes.hashvault.pro",
-                port: "22023"
-            },
-            {
-                host: "rpc.stakeit.io",
                 port: "22023"
             }
         ]
