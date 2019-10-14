@@ -263,7 +263,7 @@ export default {
         }
     },
     created() {
-        const path = require("path")
+        const path = require("upath")
         this.modals.key_image.export_path = path.join(this.wallet_data_dir, "images", this.info.name)
         this.modals.key_image.import_path = path.join(this.wallet_data_dir, "images", this.info.name, "key_image_export")
     },

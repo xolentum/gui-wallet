@@ -4,7 +4,7 @@ const queue = require("promise-queue")
 const http = require("http")
 const os = require("os")
 const fs = require("fs-extra")
-const path = require("path")
+const path = require("upath")
 const crypto = require("crypto")
 const portscanner = require("portscanner")
 
