@@ -4,7 +4,7 @@ const queue = require("promise-queue")
 const http = require("http")
 const os = require("os")
 const fs = require("fs-extra")
-const path = require("path")
+const path = require("upath")
 const crypto = require("crypto")
 const portscanner = require("portscanner")
 
@@ -112,15 +112,20 @@ export class WalletRPC {
                 this.hostname = "127.0.0.1"
                 this.port = options.wallet.rpc_bind_port
 
+                const rpcExecutable = process.platform === "win32" ? "loki-wallet-rpc.exe" : "loki-wallet-rpc"
+                // eslint-disable-next-line no-undef
+                const rpcPath = path.join(__ryo_bin, rpcExecutable)
+
+                // Check if the rpc exists
+                if (!fs.existsSync(rpcPath)) {
+                    reject(new Error("Failed to find Loki Wallet RPC. Please make sure you anti-virus has not removed it."))
+                    return
+                }
+
                 portscanner.checkPortStatus(this.port, this.hostname).catch(e => "closed").then(status => {
                     if (status === "closed") {
-                        if (process.platform === "win32") {
-                            this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc.exe"), args)
-                        } else {
-                            this.walletRPCProcess = child_process.spawn(path.join(__ryo_bin, "loki-wallet-rpc"), args, {
-                                detached: true
-                            })
-                        }
+                        const options = process.platform === "win32" ? {} : { detached: true }
+                        this.walletRPCProcess = child_process.spawn(rpcPath, args, options)
 
                         this.walletRPCProcess.stdout.on("data", (data) => {
                             process.stdout.write(`Wallet: ${data}`)

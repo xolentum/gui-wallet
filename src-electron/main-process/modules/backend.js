@@ -6,7 +6,7 @@ import { dialog } from "electron"
 const WebSocket = require("ws")
 const os = require("os")
 const fs = require("fs-extra")
-const path = require("path")
+const path = require("upath")
 const objectAssignDeep = require("object-assign-deep")
 
 export class Backend {
@@ -108,23 +108,11 @@ export class Backend {
                 port: "22020"
             },
             {
-                host: "daemons.cryptopool.space",
-                port: "22023"
-            },
-            {
-                host: "node.loki-pool.com",
-                port: "18081"
-            },
-            {
                 host: "imaginary.stream",
                 port: "22023"
             },
             {
                 host: "nodes.hashvault.pro",
-                port: "22023"
-            },
-            {
-                host: "rpc.stakeit.io",
                 port: "22023"
             }
         ]
