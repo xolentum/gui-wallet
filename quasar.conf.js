@@ -175,7 +175,7 @@ module.exports = function (ctx) {
             builder: {
                 // https://www.electron.build/configuration/configuration
 
-                appId: "com.lokinetwork.wallet",
+                appId: "com.loki-project.electron-wallet",
                 productName: "Loki Electron Wallet",
                 copyright: "Copyright © 2018-2019 Loki Project, 2018 Ryo Currency Project",
 
@@ -184,12 +184,13 @@ module.exports = function (ctx) {
                 // },
 
                 linux: {
-                    target: ["AppImage", "snap", "tar.xz"],
+                    target: ["AppImage"],
                     icon: "src-electron/icons/icon_512x512.png",
                     category: "Finance"
                 },
 
                 mac: {
+                    target: ["zip"],
                     icon: "src-electron/icons/icon.icns",
                     category: "public.app-category.finance"
                 },
