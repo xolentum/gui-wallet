@@ -178,6 +178,7 @@ module.exports = function (ctx) {
                 appId: "com.loki-project.electron-wallet",
                 productName: "Loki Electron Wallet",
                 copyright: "Copyright © 2018-2019 Loki Project, 2018 Ryo Currency Project",
+                afterSign: "build/notarize.js",
 
                 // directories: {
                 //     buildResources: "src-electron/build"
@@ -190,19 +191,31 @@ module.exports = function (ctx) {
                 },
 
                 mac: {
-                    target: ["zip"],
+                    // Zip seems to corrupt the app after unzipping. Ref: https://github.com/electron-userland/electron-builder/issues/3534
+                    target: ["7z"],
                     icon: "src-electron/icons/icon.icns",
-                    category: "public.app-category.finance"
+                    category: "public.app-category.finance",
+                    // Notarizing: https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/
+                    hardenedRuntime: true,
+                    gatekeeperAssess: false,
+                    entitlements: "build/entitlements.mac.plist",
+                    entitlementsInherit: "build/entitlements.mac.plist"
                 },
 
                 dmg: {
-                    background: "src-electron/build/loki-dmg.tiff"
+                    background: "src-electron/build/loki-dmg.tiff",
+                    sign: false
                 },
 
                 nsis: {
                     oneClick: false,
                     allowToChangeInstallationDirectory: true
                 },
+
+                files: [
+                    "!build/notarize.js",
+                    "!.env"
+                ],
 
                 extraResources: [
                     "bin"
