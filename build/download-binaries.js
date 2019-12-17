@@ -11,6 +11,9 @@ async function download () {
         await fs.ensureDir(downloadDir)
 
         const { data } = await axios.get(repoUrl)
+        const { name } = data
+        console.log("Latest release: " + name)
+
         const url = (data.assets || [])
             .map(asset => asset["browser_download_url"])
             .find(url => {

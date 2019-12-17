@@ -154,7 +154,7 @@ export default {
                 value: 1
             },
             blink: {
-                multiplier: 4,
+                multiplier: 5,
                 value: 0x626c6e6b
             },
             normal: {
