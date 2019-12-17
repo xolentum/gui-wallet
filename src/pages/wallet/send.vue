@@ -148,52 +148,24 @@ export default {
         }
     }),
     data () {
-        const priorities = {
-            slow: {
-                multiplier: 1,
-                value: 1
-            },
-            blink: {
-                multiplier: 5,
-                value: 0x626c6e6b
-            },
-            normal: {
-                multiplier: 5,
-                value: 2
-            },
-            fast: {
-                multiplier: 25,
-                value: 3
-            },
-        }
-
-        const priorityOptions = [{
-            label: this.$t("strings.priorityOptions.automatic"),
-            value: 0
-        }]
-
-        for (const [priority, { multiplier, value }] of Object.entries(priorities)) {
-            const translation = this.$t(`strings.priorityOptions.${priority}`)
-            priorityOptions.push({
-                label: `${translation} (x${multiplier})`,
-                value
-            })
-        }
-
+        const blink = 0x626c6e6b
         return {
             sending: false,
             newTx: {
                 amount: 0,
                 address: "",
                 payment_id: "",
-                priority: 0,
+                priority: blink,
                 address_book: {
                     save: false,
                     name: "",
                     description: ""
                 }
             },
-            priorityOptions
+            priorityOptions: [
+                { label: this.$t("strings.priorityOptions.blink"), value: blink }, // Blink
+                { label: this.$t("strings.priorityOptions.slow"), value: 1 } // Slow
+            ]
         }
     },
     validations: {
