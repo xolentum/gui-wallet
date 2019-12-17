@@ -5,8 +5,6 @@ on:
     push:
         branches:
             - master
-            - build
-            - github-actions
 
 jobs:
     build:
@@ -48,14 +46,17 @@ jobs:
                 find ./downloads -type f -name "loki-wallet-rpc" -exec cp '{}' ./bin \;
               shell: bash
 
-            - name: Build window and linux binaries
+            - name: Publish window and linux binaries
               if: runner.os != 'macOS'
-              run: npm run build
-
-            - name: Build mac binaries
-              if: runner.os == 'macOS'
-              run: npm run build
+              run: npm run release
               env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish mac binaries
+              if: runner.os == 'macOS'
+              run: npm run release
+              env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
                 CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
                 SIGNING_APPLE_ID: ${{ secrets.SIGNING_APPLE_ID }}

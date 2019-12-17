@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 // Configuration for your app
 
 module.exports = function (ctx) {
@@ -179,6 +180,7 @@ module.exports = function (ctx) {
                 productName: "Loki Electron Wallet",
                 copyright: "Copyright © 2018-2019 Loki Project, 2018 Ryo Currency Project",
                 afterSign: "build/notarize.js",
+                artifactName: "loki-electron-wallet-${version}-${os}.${ext}",
 
                 // directories: {
                 //     buildResources: "src-electron/build"
