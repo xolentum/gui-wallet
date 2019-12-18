@@ -1398,6 +1398,21 @@ export class WalletRPC {
     copyOldGuiWallets (wallets) {
         this.sendGateway("set_old_gui_import_status", { code: 1, failed_wallets: [] })
 
+        /*
+        Old wallets were in the following format:
+            wallets:
+                <name>:
+                    <name>
+                    <name>.keys
+                    <name>.address.txt
+
+        We need to change it so it becomes:
+            wallets:
+                <name>
+                <name>.keys
+                <name>.address.txt
+        */
+
         const failed_wallets = []
 
         for (const wallet of wallets) {
@@ -1408,12 +1423,12 @@ export class WalletRPC {
             const stat = fs.statSync(dir_path)
             if (!stat.isDirectory()) continue
 
-            // Make sure the directory has the regular and keys file
+            // Make sure the directory has the keys file
             const wallet_file = path.join(dir_path, directory)
             const key_file = wallet_file + ".keys"
 
             // If we don't have them then don't bother copying
-            if (!(fs.existsSync(wallet_file) && fs.existsSync(key_file))) {
+            if (!fs.existsSync(key_file)) {
                 failed_wallets.push(directory)
                 continue
             }
@@ -1422,33 +1437,23 @@ export class WalletRPC {
             const destination = path.join(this.dirs[type], "wallets")
             if (!fs.existsSync(destination)) fs.mkdirpSync(destination)
 
-            const new_path = path.join(destination, directory)
-
             try {
-                // Copy into temp file
-                if (fs.existsSync(new_path + ".atom") || fs.existsSync(new_path + ".atom.keys")) {
+                // Don't move file if we already have copied the keys file
+                if (fs.existsSync(path.join(destination, directory) + ".keys")) {
                     failed_wallets.push(directory)
                     continue
                 }
 
-                fs.copyFileSync(wallet_file, new_path + ".atom", fs.constants.COPYFILE_EXCL)
-                fs.copyFileSync(key_file, new_path + ".atom.keys", fs.constants.COPYFILE_EXCL)
-
-                // Move the folder into a subfolder
+                // Archive the folder
                 if (!fs.existsSync(old_gui_path)) fs.mkdirpSync(old_gui_path)
-                fs.moveSync(dir_path, path.join(old_gui_path, directory), { overwrite: true })
+                const archive_path = path.join(old_gui_path, directory)
+                fs.moveSync(dir_path, archive_path, { overwrite: true })
+
+                // Copy contents of archived folder into the wallet folder
+                fs.copySync(archive_path, this.wallet_dir, { overwrite: true })
             } catch (e) {
-                // Cleanup the copied files if an error
-                if (fs.existsSync(new_path + ".atom")) fs.unlinkSync(new_path + ".atom")
-                if (fs.existsSync(new_path + ".atom.keys")) fs.unlinkSync(new_path + ".atom.keys")
                 failed_wallets.push(directory)
                 continue
-            }
-
-            // Rename the imported wallets if we can
-            if (!fs.existsSync(new_path) && !fs.existsSync(new_path + ".keys")) {
-                fs.renameSync(new_path + ".atom", new_path)
-                fs.renameSync(new_path + ".atom.keys", new_path + ".keys")
             }
         }
 
@@ -1479,35 +1484,38 @@ export class WalletRPC {
             const name = path.join(this.wallet_dir, filename)
             const stat = fs.statSync(name)
             if (stat.isDirectory()) {
-                // Make sure the directory has the regular and keys file
+                // Make sure the directory has keys file
                 const wallet_file = path.join(name, filename)
                 const key_file = wallet_file + ".keys"
 
                 // If we have them then it is an old gui wallet
-                if (fs.existsSync(wallet_file) && fs.existsSync(key_file)) {
+                if (fs.existsSync(key_file)) {
                     wallets.directories.push(filename)
                 }
                 return
             }
 
-            // Exclude all files with an extension
-            if (path.extname(filename) !== "") return
+            // Exclude all files without a keys extension
+            if (path.extname(filename) !== ".keys") return
+
+            const wallet_name = path.parse(filename).name
+            if (!wallet_name) return
 
             let wallet_data = {
-                name: filename,
+                name: wallet_name,
                 address: null,
                 password_protected: null
             }
 
-            if (fs.existsSync(path.join(this.wallet_dir, filename + ".meta.json"))) {
-                let meta = fs.readFileSync(path.join(this.wallet_dir, filename + ".meta.json"), "utf8")
+            if (fs.existsSync(path.join(this.wallet_dir, wallet_name + ".meta.json"))) {
+                let meta = fs.readFileSync(path.join(this.wallet_dir, wallet_name + ".meta.json"), "utf8")
                 if (meta) {
                     meta = JSON.parse(meta)
                     wallet_data.address = meta.address
                     wallet_data.password_protected = meta.password_protected
                 }
-            } else if (fs.existsSync(path.join(this.wallet_dir, filename + ".address.txt"))) {
-                let address = fs.readFileSync(path.join(this.wallet_dir, filename + ".address.txt"), "utf8")
+            } else if (fs.existsSync(path.join(this.wallet_dir, wallet_name + ".address.txt"))) {
+                let address = fs.readFileSync(path.join(this.wallet_dir, wallet_name + ".address.txt"), "utf8")
                 if (address) {
                     wallet_data.address = address
                 }
