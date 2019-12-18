@@ -174,7 +174,7 @@ export class WalletRPC {
                                     clearInterval(intrvl)
                                     resolve()
                                 } else {
-                                    if (data.error.cause &&
+                                    if (this.walletRPCProcess && data.error.cause &&
                                        data.error.cause.code === "ECONNREFUSED") {
                                         // Ignore
                                     } else {
