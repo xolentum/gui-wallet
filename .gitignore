@@ -27,3 +27,5 @@ bin/*
 !bin/.gitkeep
 
 .env
+
+/downloads

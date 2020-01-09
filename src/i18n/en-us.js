@@ -404,7 +404,8 @@ export default {
             slow: "Slow",
             normal: "Normal",
             fast: "Fast",
-            fastest: "Fastest"
+            fastest: "Fastest",
+            blink: "Blink"
         },
         proveTransactionDescription: "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
         readingWalletList: "Reading wallet list",

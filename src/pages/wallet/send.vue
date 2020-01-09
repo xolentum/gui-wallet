@@ -148,13 +148,14 @@ export default {
         }
     }),
     data () {
+        const blink = 0x626c6e6b
         return {
             sending: false,
             newTx: {
                 amount: 0,
                 address: "",
                 payment_id: "",
-                priority: 0,
+                priority: blink,
                 address_book: {
                     save: false,
                     name: "",
@@ -162,12 +163,9 @@ export default {
                 }
             },
             priorityOptions: [
-                {label: this.$t("strings.priorityOptions.automatic"), value: 0},
-                {label: this.$t("strings.priorityOptions.slow"), value: 1},
-                {label: this.$t("strings.priorityOptions.normal"), value: 2},
-                {label: this.$t("strings.priorityOptions.fast"), value: 3},
-                {label: this.$t("strings.priorityOptions.fastest"), value: 4},
-            ],
+                { label: this.$t("strings.priorityOptions.blink"), value: blink }, // Blink
+                { label: this.$t("strings.priorityOptions.slow"), value: 1 } // Slow
+            ]
         }
     },
     validations: {

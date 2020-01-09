@@ -168,7 +168,7 @@ export class Daemon {
                                 clearInterval(intrvl)
                                 resolve()
                             } else {
-                                if (data.error.cause &&
+                                if (this.daemonProcess && data.error.cause &&
                                    data.error.cause.code === "ECONNREFUSED") {
                                     // Ignore
                                 } else {
