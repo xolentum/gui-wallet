@@ -942,16 +942,22 @@ export class WalletRPC {
 
             let sweep_all = amount == this.wallet_state.unlocked_balance
 
+            // TODO(loki): Having to specify .blink = true will be deprecated in
+            // lokid v7, we can infer from the priority alone on the
+            // wallet_rpc_server itself, can't change without creating
+            // incompatible v6 releases (i think)
             const rpc_endpoint = sweep_all ? "sweep_all" : "transfer_split"
             const params = sweep_all ? {
                 "address": address,
                 "account_index": 0,
                 "priority": priority,
-                "mixin": 9 // Always force a ring size of 10 (ringsize = mixin + 1)
+                "blink": priority == 0x626c6e6b ? true : false,
+                "ring_size": 10
             } : {
                 "destinations": [{ "amount": amount, "address": address }],
                 "priority": priority,
-                "mixin": 9
+                "blink": priority == 0x626c6e6b ? true : false,
+                "ring_size": 10
             }
 
             if (payment_id) {
