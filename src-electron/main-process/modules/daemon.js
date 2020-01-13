@@ -122,7 +122,6 @@ export class Daemon {
             }
 
             args.push("--log-file", path.join(dirs[net_type], "logs", "lokid.log"))
-
             if (daemon.rpc_bind_ip !== "127.0.0.1") { args.push("--confirm-external-bind") }
 
             // TODO: Check if we need to push this command for staging too
