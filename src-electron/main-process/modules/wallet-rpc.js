@@ -1711,20 +1711,26 @@ export class WalletRPC {
                     // requests then we must forcefully close it below
                 })
                 setTimeout(() => {
-                    this.walletRPCProcess.on("close", code => {
-                        this.agent.destroy()
-                        clearTimeout(this.forceKill)
+                    if (this.walletRPCProcess) {
+                        this.walletRPCProcess.on("close", code => {
+                            this.agent.destroy()
+                            clearTimeout(this.forceKill)
+                            resolve()
+                        })
+
+                        // Force kill after 20 seconds
+                        this.forceKill = setTimeout(() => {
+                            if (this.walletRPCProcess) {
+                                this.walletRPCProcess.kill("SIGKILL")
+                            }
+                        }, 20000)
+
+                        // Force kill if the rpc is syncing
+                        const signal = this.isRPCSyncing ? "SIGKILL" : "SIGTERM"
+                        this.walletRPCProcess.kill(signal)
+                    } else {
                         resolve()
-                    })
-
-                    // Force kill after 20 seconds
-                    this.forceKill = setTimeout(() => {
-                        this.walletRPCProcess.kill("SIGKILL")
-                    }, 20000)
-
-                    // Force kill if the rpc is syncing
-                    const signal = this.isRPCSyncing ? "SIGKILL" : "SIGTERM"
-                    this.walletRPCProcess.kill(signal)
+                    }
                 }, 2500)
             } else {
                 resolve()

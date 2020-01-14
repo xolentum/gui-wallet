@@ -472,7 +472,9 @@ export class Daemon {
 
                 // Force kill after 20 seconds
                 this.forceKill = setTimeout(() => {
-                    this.daemonProcess.kill("SIGKILL")
+                    if (this.daemonProcess) {
+                        this.daemonProcess.kill("SIGKILL")
+                    }
                 }, 20000)
 
                 const signal = this.isDaemonSyncing ? "SIGKILL" : "SIGTERM"
