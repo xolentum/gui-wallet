@@ -285,6 +285,7 @@ export default {
             failedToSetLanguage: "Failed to set language: {lang}",
             failedWalletImport: "Failed to import wallet",
             failedWalletOpen: "Failed to open wallet. Please try again.",
+            failedWalletRead: "Failed to read wallets",
             internalError: "Internal error",
             invalidAddress: "Address not valid",
             invalidAmount: "Amount not valid",
