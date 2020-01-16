@@ -1473,61 +1473,73 @@ export class WalletRPC {
             directories: []
         }
 
-        fs.readdirSync(this.wallet_dir).forEach(filename => {
-            switch (filename) {
-            case ".DS_Store":
-            case ".DS_Store?":
-            case "._.DS_Store":
-            case ".Spotlight-V100":
-            case ".Trashes":
-            case "ehthumbs.db":
-            case "Thumbs.db":
-            case "old-gui":
-                return
-            }
+        let walletFiles = []
+        try {
+            walletFiles = fs.readdirSync(this.wallet_dir)
+        } catch (e) {
+            this.sendGateway("show_notification", { type: "negative", i18n: "notification.errors.failedWalletRead", timeout: 2000 })
+            return
+        }
 
-            // If it's a directory then check if it's an old gui wallet
-            const name = path.join(this.wallet_dir, filename)
-            const stat = fs.statSync(name)
-            if (stat.isDirectory()) {
-                // Make sure the directory has keys file
-                const wallet_file = path.join(name, filename)
-                const key_file = wallet_file + ".keys"
-
-                // If we have them then it is an old gui wallet
-                if (fs.existsSync(key_file)) {
-                    wallets.directories.push(filename)
+        walletFiles.forEach(filename => {
+            try {
+                switch (filename) {
+                case ".DS_Store":
+                case ".DS_Store?":
+                case "._.DS_Store":
+                case ".Spotlight-V100":
+                case ".Trashes":
+                case "ehthumbs.db":
+                case "Thumbs.db":
+                case "old-gui":
+                    return
                 }
-                return
-            }
 
-            // Exclude all files without a keys extension
-            if (path.extname(filename) !== ".keys") return
+                // If it's a directory then check if it's an old gui wallet
+                const name = path.join(this.wallet_dir, filename)
+                const stat = fs.statSync(name)
+                if (stat.isDirectory()) {
+                    // Make sure the directory has keys file
+                    const wallet_file = path.join(name, filename)
+                    const key_file = wallet_file + ".keys"
 
-            const wallet_name = path.parse(filename).name
-            if (!wallet_name) return
-
-            let wallet_data = {
-                name: wallet_name,
-                address: null,
-                password_protected: null
-            }
-
-            if (fs.existsSync(path.join(this.wallet_dir, wallet_name + ".meta.json"))) {
-                let meta = fs.readFileSync(path.join(this.wallet_dir, wallet_name + ".meta.json"), "utf8")
-                if (meta) {
-                    meta = JSON.parse(meta)
-                    wallet_data.address = meta.address
-                    wallet_data.password_protected = meta.password_protected
+                    // If we have them then it is an old gui wallet
+                    if (fs.existsSync(key_file)) {
+                        wallets.directories.push(filename)
+                    }
+                    return
                 }
-            } else if (fs.existsSync(path.join(this.wallet_dir, wallet_name + ".address.txt"))) {
-                let address = fs.readFileSync(path.join(this.wallet_dir, wallet_name + ".address.txt"), "utf8")
-                if (address) {
-                    wallet_data.address = address
-                }
-            }
 
-            wallets.list.push(wallet_data)
+                // Exclude all files without a keys extension
+                if (path.extname(filename) !== ".keys") return
+
+                const wallet_name = path.parse(filename).name
+                if (!wallet_name) return
+
+                let wallet_data = {
+                    name: wallet_name,
+                    address: null,
+                    password_protected: null
+                }
+
+                if (fs.existsSync(path.join(this.wallet_dir, wallet_name + ".meta.json"))) {
+                    let meta = fs.readFileSync(path.join(this.wallet_dir, wallet_name + ".meta.json"), "utf8")
+                    if (meta) {
+                        meta = JSON.parse(meta)
+                        wallet_data.address = meta.address
+                        wallet_data.password_protected = meta.password_protected
+                    }
+                } else if (fs.existsSync(path.join(this.wallet_dir, wallet_name + ".address.txt"))) {
+                    let address = fs.readFileSync(path.join(this.wallet_dir, wallet_name + ".address.txt"), "utf8")
+                    if (address) {
+                        wallet_data.address = address
+                    }
+                }
+
+                wallets.list.push(wallet_data)
+            } catch (e) {
+                // Something went wrong
+            }
         })
 
         // Check for legacy wallet files
@@ -1540,19 +1552,23 @@ export class WalletRPC {
                 legacy_paths = [path.join(os.homedir(), "Loki")]
             }
             for (var i = 0; i < legacy_paths.length; i++) {
-                let legacy_config_path = path.join(legacy_paths[i], "config", "wallet_info.json")
-                if (this.net_type === "test") { legacy_config_path = path.join(legacy_paths[i], "testnet", "config", "wallet_info.json") }
-                if (!fs.existsSync(legacy_config_path)) { continue }
+                try {
+                    let legacy_config_path = path.join(legacy_paths[i], "config", "wallet_info.json")
+                    if (this.net_type === "test") { legacy_config_path = path.join(legacy_paths[i], "testnet", "config", "wallet_info.json") }
+                    if (!fs.existsSync(legacy_config_path)) { continue }
 
-                let legacy_config = JSON.parse(fs.readFileSync(legacy_config_path, "utf8"))
-                let legacy_wallet_path = legacy_config.wallet_filepath
-                if (!fs.existsSync(legacy_wallet_path)) { continue }
+                    let legacy_config = JSON.parse(fs.readFileSync(legacy_config_path, "utf8"))
+                    let legacy_wallet_path = legacy_config.wallet_filepath
+                    if (!fs.existsSync(legacy_wallet_path)) { continue }
 
-                let legacy_address = ""
-                if (fs.existsSync(legacy_wallet_path + ".address.txt")) {
-                    legacy_address = fs.readFileSync(legacy_wallet_path + ".address.txt", "utf8")
+                    let legacy_address = ""
+                    if (fs.existsSync(legacy_wallet_path + ".address.txt")) {
+                        legacy_address = fs.readFileSync(legacy_wallet_path + ".address.txt", "utf8")
+                    }
+                    wallets.legacy.push({ path: legacy_wallet_path, address: legacy_address })
+                } catch (e) {
+                    // Something went wrong
                 }
-                wallets.legacy.push({ path: legacy_wallet_path, address: legacy_address })
             }
         }
 
@@ -1599,9 +1615,13 @@ export class WalletRPC {
 
             let wallet_path = path.join(this.wallet_dir, this.wallet_state.name)
             this.closeWallet().then(() => {
-                fs.unlinkSync(wallet_path)
-                fs.unlinkSync(wallet_path + ".keys")
-                fs.unlinkSync(wallet_path + ".address.txt")
+                try {
+                    if (fs.existsSync(wallet_path + ".keys")) fs.unlinkSync(wallet_path + ".keys")
+                    if (fs.existsSync(wallet_path + ".address.txt")) fs.unlinkSync(wallet_path + ".address.txt")
+                    if (fs.existsSync(wallet_path)) fs.unlinkSync(wallet_path)
+                } catch (e) {
+                    console.warn(`Failed to delete wallet files: ${e}`)
+                }
 
                 this.listWallets()
                 this.sendGateway("hide_loading")
@@ -1711,20 +1731,26 @@ export class WalletRPC {
                     // requests then we must forcefully close it below
                 })
                 setTimeout(() => {
-                    this.walletRPCProcess.on("close", code => {
-                        this.agent.destroy()
-                        clearTimeout(this.forceKill)
+                    if (this.walletRPCProcess) {
+                        this.walletRPCProcess.on("close", code => {
+                            this.agent.destroy()
+                            clearTimeout(this.forceKill)
+                            resolve()
+                        })
+
+                        // Force kill after 20 seconds
+                        this.forceKill = setTimeout(() => {
+                            if (this.walletRPCProcess) {
+                                this.walletRPCProcess.kill("SIGKILL")
+                            }
+                        }, 20000)
+
+                        // Force kill if the rpc is syncing
+                        const signal = this.isRPCSyncing ? "SIGKILL" : "SIGTERM"
+                        this.walletRPCProcess.kill(signal)
+                    } else {
                         resolve()
-                    })
-
-                    // Force kill after 20 seconds
-                    this.forceKill = setTimeout(() => {
-                        this.walletRPCProcess.kill("SIGKILL")
-                    }, 20000)
-
-                    // Force kill if the rpc is syncing
-                    const signal = this.isRPCSyncing ? "SIGKILL" : "SIGTERM"
-                    this.walletRPCProcess.kill(signal)
+                    }
                 }, 2500)
             } else {
                 resolve()

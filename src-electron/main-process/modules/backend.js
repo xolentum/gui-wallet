@@ -60,8 +60,8 @@ export class Backend {
         const daemons = {
             mainnet: {
                 ...daemon,
-                remote_host: "doopool.xyz",
-                remote_port: 22020
+                remote_host: "imaginary.stream",
+                remote_port: 22023
             },
             stagenet: {
                 ...daemon,
@@ -113,6 +113,14 @@ export class Backend {
             },
             {
                 host: "nodes.hashvault.pro",
+                port: "22023"
+            },
+            {
+                host: "node.loki-pool.com",
+                port: "18081"
+            },
+            {
+                host: "public.loki.foundation",
                 port: "22023"
             }
         ]
