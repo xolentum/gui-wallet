@@ -951,12 +951,12 @@ export class WalletRPC {
                 "address": address,
                 "account_index": 0,
                 "priority": priority,
-                "blink": priority == 0x626c6e6b ? true : false,
+                "blink": priority == 0x626c6e6b,
                 "ring_size": 10
             } : {
                 "destinations": [{ "amount": amount, "address": address }],
                 "priority": priority,
-                "blink": priority == 0x626c6e6b ? true : false,
+                "blink": priority == 0x626c6e6b,
                 "ring_size": 10
             }
 

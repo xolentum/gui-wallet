@@ -1,6 +1,7 @@
 import { app, ipcMain, BrowserWindow, Menu, dialog } from "electron"
 import { version, productName } from "../../package.json"
 import { Backend } from "./modules/backend"
+import { checkForUpdate } from "./auto-updater"
 import menuTemplate from "./menu"
 import isDev from "electron-is-dev"
 const portscanner = require("portscanner")
@@ -21,6 +22,7 @@ if (process.env.PROD) {
 let mainWindow, backend
 let showConfirmClose = true
 let forceQuit = false
+let installUpdate = false
 
 const title = `${productName} v${version}`
 
@@ -60,6 +62,9 @@ function createWindow () {
     })
 
     mainWindow.on("close", (e) => {
+        // Don't ask for confirmation if we're installing an update
+        if (installUpdate) { return }
+
         if (process.platform === "darwin") {
             if (forceQuit) {
                 forceQuit = false
@@ -90,14 +95,11 @@ function createWindow () {
         // In dev mode, this will launch a blank white screen
         if (restart && !isDev) app.relaunch()
 
-        if (backend) {
-            backend.quit().then(() => {
-                backend = null
-                app.quit()
-            })
-        } else {
+        const promise = backend ? backend.quit() : Promise.resolve()
+        promise.then(() => {
+            backend = null
             app.quit()
-        }
+        })
     })
 
     mainWindow.webContents.on("did-finish-load", () => {
@@ -113,7 +115,11 @@ function createWindow () {
                 token: buffer.toString("hex")
             }
 
-            portscanner.checkPortStatus(config.port, "127.0.0.1", (e, status) => {
+            portscanner.checkPortStatus(config.port, "127.0.0.1", (error, status) => {
+                if (error) {
+                    console.error(error)
+                }
+
                 if (status === "closed") {
                     backend = new Backend(mainWindow)
                     backend.init(config)
@@ -147,6 +153,18 @@ function createWindow () {
 }
 
 app.on("ready", () => {
+    checkForUpdate(autoUpdater => {
+        if (mainWindow) {
+            mainWindow.webContents.send("showQuitScreen")
+        }
+
+        const promise = backend ? backend.quit() : Promise.resolve()
+        promise.then(() => {
+            installUpdate = true
+            backend = null
+            autoUpdater.quitAndInstall()
+        })
+    })
     if (process.platform === "darwin") {
         const menu = Menu.buildFromTemplate(menuTemplate)
         Menu.setApplicationMenu(menu)
@@ -169,6 +187,11 @@ app.on("activate", () => {
 })
 
 app.on("before-quit", () => {
+    // Quit instantly if we are installing an update
+    if (installUpdate) {
+        return
+    }
+
     if (process.platform === "darwin") {
         forceQuit = true
     } else {

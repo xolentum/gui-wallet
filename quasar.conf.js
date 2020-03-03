@@ -181,10 +181,7 @@ module.exports = function (ctx) {
                 copyright: "Copyright © 2018-2019 Loki Project, 2018 Ryo Currency Project",
                 afterSign: "build/notarize.js",
                 artifactName: "loki-electron-wallet-${version}-${os}.${ext}",
-
-                // directories: {
-                //     buildResources: "src-electron/build"
-                // },
+                publish: "github",
 
                 linux: {
                     target: ["AppImage"],
@@ -215,7 +212,8 @@ module.exports = function (ctx) {
 
                 files: [
                     "!build/*.js",
-                    "!.env"
+                    "!.env",
+                    "!dev-app-update.yml"
                 ],
 
                 extraResources: [
