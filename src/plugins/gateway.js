@@ -1,4 +1,4 @@
-import { Gateway } from "src/gateway/gateway"
+import { Gateway } from "src/gateway/gateway";
 
 /* This plugin gets called early in the life-cycle
    In the future, we can detect what platform we
@@ -9,11 +9,6 @@ import { Gateway } from "src/gateway/gateway"
    frontend
 */
 
-export default ({
-    app,
-    router,
-    store,
-    Vue
-}) => {
-    Vue.prototype.$gateway = new Gateway(app, router)
-}
+export default ({ app, router, Vue }) => {
+  Vue.prototype.$gateway = new Gateway(app, router);
+};

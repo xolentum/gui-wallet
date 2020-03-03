@@ -9,5 +9,3 @@ Releasing the application to work with auto update is very simple.
    - E.g if the version was `2.1.1` then the github tag would be `v2.1.1`
 4. Add release notes
 5. Publish the release!
-
-
