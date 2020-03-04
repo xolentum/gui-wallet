@@ -338,7 +338,7 @@ export default {
     proveOptionalMessage: "Optional message against which the signature is signed",
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Please select a file",
-    transactionNotes: "Additional notes to attach to the transaction",
+    transactionNotes: "Additional notes to locally attach to the transaction",
     walletName: "A name for your wallet",
     walletPassword: "An optional password for the wallet"
   },
