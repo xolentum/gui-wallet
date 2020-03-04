@@ -173,7 +173,9 @@ module.exports = function(ctx) {
         },
 
         mac: {
-          target: ["dmg"],
+          // We need zip for auto-updating
+          // Ref: https://github.com/electron-userland/electron-builder/issues/2199
+          target: ["dmg", "zip"],
           icon: "src-electron/icons/icon.icns",
           category: "public.app-category.finance",
           // Notarizing: https://kilianvalkhof.com/2019/electron/notarizing-your-electron-application/
