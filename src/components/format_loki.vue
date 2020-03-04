@@ -1,38 +1,34 @@
 <template>
-<span>
-    {{ value }} LOKI
-</span>
+  <span> {{ value }} LOKI </span>
 </template>
 
 <script>
 export default {
-    name: "FormatLoki",
-    props: {
-        amount: {
-            required: true
-        },
-        round: {
-            type: Boolean,
-            required: false,
-            default: false
-        },
-        rawValue: {
-            type: Boolean,
-            required: false,
-            default: false
-        }
+  name: "FormatLoki",
+  props: {
+    amount: {
+      type: Number,
+      required: true
     },
-    computed: {
-        value () {
-            let value = this.amount / 1e9
-            if(this.round)
-                value = value.toFixed(3)
-            return this.rawValue ? value : value.toLocaleString()
-        }
-
+    round: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    rawValue: {
+      type: Boolean,
+      required: false,
+      default: false
     }
-}
+  },
+  computed: {
+    value() {
+      let value = this.amount / 1e9;
+      if (this.round) value = value.toFixed(3);
+      return this.rawValue ? value : value.toLocaleString();
+    }
+  }
+};
 </script>
 
-<style>
-</style>
+<style></style>
