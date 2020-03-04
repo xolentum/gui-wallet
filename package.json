@@ -24,7 +24,6 @@
   "dependencies": {
     "axios": "^0.18.1",
     "electron-is-dev": "^1.0.1",
-    "electron-progressbar": "^1.2.0",
     "electron-updater": "^4.2.0",
     "electron-window-state": "^5.0.3",
     "flag-icon-css": "^3.3.0",
