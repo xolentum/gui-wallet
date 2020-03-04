@@ -155,18 +155,21 @@ function createWindow() {
 }
 
 app.on("ready", () => {
-  checkForUpdate(autoUpdater => {
-    if (mainWindow) {
-      mainWindow.webContents.send("showQuitScreen");
-    }
+  checkForUpdate(
+    () => mainWindow,
+    autoUpdater => {
+      if (mainWindow) {
+        mainWindow.webContents.send("showQuitScreen");
+      }
 
-    const promise = backend ? backend.quit() : Promise.resolve();
-    promise.then(() => {
-      installUpdate = true;
-      backend = null;
-      autoUpdater.quitAndInstall();
-    });
-  });
+      const promise = backend ? backend.quit() : Promise.resolve();
+      promise.then(() => {
+        installUpdate = true;
+        backend = null;
+        autoUpdater.quitAndInstall();
+      });
+    }
+  );
   if (process.platform === "darwin") {
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
