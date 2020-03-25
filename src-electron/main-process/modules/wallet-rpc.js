@@ -1085,7 +1085,8 @@ export class WalletRPC {
 
     this.sendGateway("set_prove_transaction_status", {
       code: 1,
-      message: ""
+      message: "",
+      state: {}
     });
 
     this.sendRPC(rpc_endpoint, params).then(data => {
@@ -1124,7 +1125,8 @@ export class WalletRPC {
 
     this.sendGateway("set_check_transaction_status", {
       code: 1,
-      message: ""
+      message: "",
+      state: {}
     });
 
     this.sendRPC(rpc_endpoint, params).then(data => {
@@ -1260,11 +1262,7 @@ export class WalletRPC {
         // limit to 10 unused addresses
         wallet.address_list.unused = wallet.address_list.unused.slice(0, 10);
 
-        if (
-          wallet.address_list.unused.length < num_unused_addresses &&
-          !wallet.address_list.primary[0].address.startsWith("RYoK") &&
-          !wallet.address_list.primary[0].address.startsWith("RYoH")
-        ) {
+        if (wallet.address_list.unused.length < num_unused_addresses) {
           for (let n = wallet.address_list.unused.length; n < num_unused_addresses; n++) {
             this.sendRPC("create_address", {
               account_index: 0
@@ -1341,36 +1339,40 @@ export class WalletRPC {
           }
         };
 
-        if (data.result.entries) {
-          let i;
-          for (i = 0; i < data.result.entries.length; i++) {
-            let entry = data.result.entries[i];
-            let desc = entry.description.split("::");
-            if (desc.length == 3) {
-              entry.starred = desc[0] == "starred";
-              entry.name = desc[1];
-              entry.description = desc[2];
-            } else if (desc.length == 2) {
-              entry.starred = false;
-              entry.name = desc[0];
-              entry.description = desc[1];
-            } else {
-              entry.starred = false;
-              entry.name = entry.description;
-              entry.description = "";
-            }
+        const entries = data.result.entries || [];
+        const addresses = entries.map(e => {
+          const entry = { ...e };
+          const desc = entry.description.split("::");
+          if (desc.length == 3) {
+            entry.starred = desc[0] == "starred";
+            entry.name = desc[1];
+            entry.description = desc[2];
+          } else if (desc.length == 2) {
+            entry.starred = false;
+            entry.name = desc[0];
+            entry.description = desc[1];
+          } else {
+            entry.starred = false;
+            entry.name = entry.description;
+            entry.description = "";
+          }
 
-            if (/^0*$/.test(entry.payment_id)) {
-              entry.payment_id = "";
-            } else if (/^0*$/.test(entry.payment_id.substring(16))) {
-              entry.payment_id = entry.payment_id.substring(0, 16);
-            }
+          if (/^0*$/.test(entry.payment_id)) {
+            entry.payment_id = "";
+          } else if (/^0*$/.test(entry.payment_id.substring(16))) {
+            entry.payment_id = entry.payment_id.substring(0, 16);
+          }
 
-            if (entry.starred) {
-              wallet.address_list.address_book_starred.push(entry);
-            } else {
-              wallet.address_list.address_book.push(entry);
-            }
+          return entry;
+        });
+
+        for (const entry of addresses) {
+          const list = entry.starred ? wallet.address_list.address_book_starred : wallet.address_list.address_book;
+          const hasAddress = list.find(a => {
+            return a.address === entry.address && a.name === entry.name && a.payment_id === entry.payment_id;
+          });
+          if (!hasAddress) {
+            list.push(entry);
           }
         }
 
