@@ -1,7 +1,5 @@
-import axios from "axios"
+import axios from "axios";
 
-export default ({
-    Vue
-}) => {
-    Vue.prototype.$axios = axios
-}
+export default ({ Vue }) => {
+  Vue.prototype.$axios = axios;
+};
