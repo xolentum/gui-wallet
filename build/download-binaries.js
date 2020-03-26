@@ -11,7 +11,8 @@ async function download() {
     await fs.ensureDir(downloadDir);
 
     const headers = {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "User-Agent": "Loki-Electron-Wallet"
     };
     if (env.GH_TOKEN) {
       headers.Authorisation = `Bearer ${env.GH_TOKEN}`;
