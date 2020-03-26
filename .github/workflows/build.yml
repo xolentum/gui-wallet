@@ -26,6 +26,8 @@ jobs:
 
       - name: Download lokid binaries
         run: node ./build/download-binaries.js
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract zip binaries
         if: runner.os != 'Linux'
