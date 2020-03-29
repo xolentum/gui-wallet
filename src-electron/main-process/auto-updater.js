@@ -18,13 +18,14 @@ async function checkForUpdate(getMainWindow, onQuitAndInstall) {
 
   try {
     // Get the update using electron-updater
-    try {
-      const info = await autoUpdater.checkForUpdates();
-      if (!info.downloadPromise) {
-        console.info("auto-update: no update to download");
+    const info = await autoUpdater.checkForUpdates();
+    if (!info || !info.downloadPromise) {
+      console.info("auto-update: no update to download");
 
-        return;
-      }
+      return;
+    }
+
+    try {
       await info.downloadPromise;
     } catch (error) {
       await showCannotUpdateDialog(getMainWindow());
