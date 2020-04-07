@@ -429,6 +429,63 @@ export class Daemon {
     });
   }
 
+  async getLNSRecordsForOwners(owners) {
+    if (!Array.isArray(owners) || owners.length === 0) {
+      return [];
+    }
+
+    const data = await this.sendRPC("lns_owners_to_names", { entries: owners });
+    if (!data.hasOwnProperty("result")) return [];
+
+    // We need to map request_index to owner
+    const { entries } = data.result;
+    const recordsWithOwners = (entries || []).map(record => {
+      const owner = owners[record.request_index];
+      return {
+        ...record,
+        owner
+      };
+    });
+
+    return this._sanitizeLNSRecords(recordsWithOwners);
+  }
+
+  async getLNSRecord(nameHash) {
+    if (!nameHash || nameHash.length === 0) {
+      return null;
+    }
+
+    const params = {
+      entries: [
+        {
+          name_hash: nameHash,
+          types: [0] // Update this when we have other types. Type 0 = session
+        }
+      ]
+    };
+
+    const data = await this.sendRPC("lns_names_to_owners", params);
+    if (!data.hasOwnProperty("result")) return null;
+
+    const entries = this._sanitizeLNSRecords(data.result.entries);
+    if (entries.length === 0) return null;
+
+    return entries[0];
+  }
+
+  _sanitizeLNSRecords(records) {
+    return (records || []).map(record => {
+      // Record type is in uint16 format
+      // Session = 0
+      // For now since wallet and loki names haven't been implemented, we always assume it's session
+      const type = "session";
+      return {
+        ...record,
+        type
+      };
+    });
+  }
+
   sendGateway(method, data) {
     this.backend.send(method, data);
   }
