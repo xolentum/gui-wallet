@@ -142,6 +142,9 @@ export class Gateway extends EventEmitter {
       case "set_valid_address":
         this.emit("validate_address", decrypted_data.data);
         break;
+      case "set_decrypt_record_result":
+        this.emit("decrypt_record_result", decrypted_data.data);
+        break;
       case "set_app_data":
         this.app.store.commit("gateway/set_app_data", decrypted_data.data);
         break;
@@ -165,6 +168,16 @@ export class Gateway extends EventEmitter {
           data.message = this.geti18n(data.i18n);
         }
         this.app.store.commit("gateway/set_tx_status", data);
+        break;
+      }
+
+      case "set_lns_status": {
+        const data = { ...decrypted_data.data };
+        if (data.i18n) {
+          data.message = this.geti18n(data.i18n);
+        }
+
+        this.app.store.commit("gateway/set_lns_status", data);
         break;
       }
 
