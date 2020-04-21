@@ -116,7 +116,7 @@ export class Backend {
         port: "22023"
       },
       {
-        host: "node.loki-pool.com",
+        host: "explorer.loki.aussie-pools.com",
         port: "18081"
       },
       {
