@@ -1,7 +1,7 @@
 export default {
   buttons: {
     // All button text is uppercased in the gui
-    advanced: "ADVANZADO",
+    advanced: "AVANZADO",
     all: "TODO",
     back: "ATRÁS",
     browse: "EXAMINAR",
@@ -128,14 +128,14 @@ export default {
     sweepAllWarning: {
       title: "Advertencia transferir/barrer todo",
       message:
-        "Va a combinar todos sus fondos no gastados mediante una transacción a sí mismo. Su monederó mostrará temporalmente un balance de 0. Tras 10 bloques sus fondos serán liberados y podrá retener su participación a un nodo de servicio con normalidad.",
+        "Va a combinar todos sus fondos no gastados mediante una transacción a sí mismo. Su monedero mostrará temporalmente un balance de 0. Tras 10 bloques sus fondos serán liberados y podrá retener su participación a un nodo de servicio con normalidad.",
       ok: "CONTINUAR"
     },
     switchWallet: {
       title: "Cambiar de monedero",
       closeMessage: "¿Confirma que desea cerrar el monedero actual?",
       restartMessage:
-        "El monedero se está sincronizando. \nSi desea cambiar de monedero, tendrá que reiniciar la aplicación. \nEl proceso de sincronización se perderá y será necesario volver a examinar la cadena de bloques."
+        "El monedero se está sincronizando. \nSi desea cambiar de monedero, tendrá que reiniciar la aplicación. \nEl progreso de la sincronización no se guardará y será necesario volver a examinar la cadena de bloques."
     },
     transactionDetails: {
       title: "Detalles de la transacción",
@@ -172,7 +172,7 @@ export default {
     daemonP2pPort: "PUERTO P2P SERVICIO",
     daemonZMQPort: "PUERTO ZMQ SERVICIO",
     dataStoragePath: "RUTA DE ALMACENAMIENTO DE DATOS",
-    filter: "FILTER",
+    filter: "FILTRO",
     filterTransactionType: "FILTRAR POR TIPO DE TRANSACCIÓN",
     internalWalletPort: "PUERTO INTERNO MONEDERO",
     keyImages: {
@@ -234,7 +234,7 @@ export default {
     copyQR: "Copiar código QR",
     copySeedWords: "Copiar palabras semilla",
     copySpendKey: "Copiar clave de gasto",
-    copyServiceNodeKey: "Copy service node key",
+    copyServiceNodeKey: "Copiar clave de nodo de servicio",
     copyTransactionId: "Copiar ID de la transacción",
     copyViewKey: "Copiar clave de visualización",
     createNewWallet: "Crear nuevo monedero",
@@ -269,7 +269,7 @@ export default {
       qrCopied: "Código QR copiado al portapapeles",
       registerServiceNodeSuccess: "Nodo de servicio registrado correctamente",
       sendSuccess: "Transacción enviada correctamente",
-      signatureCopied: "Signature copied to clipboard",
+      signatureCopied: "Firma copiada al portapapeles",
       stakeSuccess: "Participación retenida correctamente",
       transactionNotesSaved: "Notas de la transacción guardadas"
     },
@@ -282,8 +282,8 @@ export default {
       dataPathNotFound: "No se ha encontrado la ruta de almacenamiento",
       differentNetType: "El nodo remoto usa un tipo de red diferente",
       enterSeedWords: "Introduzca las palabras semilla",
-      enterTransactionId: "Enter transaction ID",
-      enterTransactionProof: "Enter transaction proof",
+      enterTransactionId: "Introduzca ID de la transacción",
+      enterTransactionProof: "Introduzca prueba de transacción",
       enterWalletName: "Introduzca un nombre para el monedero",
       errorSavingItem: "Error al guardar {item}",
       failedServiceNodeUnlock: "La liberación del nodo de servicio ha fallado",
@@ -315,7 +315,7 @@ export default {
       notEnoughBalance: "No hay suficiente saldo libre",
       passwordNoMatch: "Las contraseñas no coinciden",
       remoteCannotBeReached: "No se puede conectar con el servicio remoto",
-      selectWalletFile: "Select a wallet file",
+      selectWalletFile: "Seleccione un archivo monedero",
       unknownError: "Ha ocurrido un error inesperado",
       walletAlreadyExists: "Ya existe un monedero con este nombre",
       walletPathNotFound: "Ruta no encontrada",
@@ -464,7 +464,7 @@ export default {
     addressBook: "Libreta de direcciones",
     addressDetails: "Detalles de la dirección",
     advanced: {
-      checkTransaction: "COMPROVAR TRANSACCIÓN",
+      checkTransaction: "COMPROBAR TRANSACCIÓN",
       prove: "PRUEBA"
     },
     changePassword: "Modificar contraseña",
