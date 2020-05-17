@@ -1,23 +1,23 @@
 export default {
   buttons: {
     // All button text is uppercased in the gui
-    advanced: "ADVANCED",
+    advanced: "ADVANZADO",
     all: "TODO",
     back: "ATRÁS",
     browse: "EXAMINAR",
     cancel: "CANCELAR",
     change: "MODIFICAR",
-    check: "CHECK",
-    clear: "CLEAR",
+    check: "COMPROBAR",
+    clear: "RESTABLECER",
     close: "CERRAR",
     contacts: "CONTACTOS",
     copyAddress: "COPIAR DIRECCIÓN",
-    copySignature: "COPY SIGNATURE",
+    copySignature: "COPIAR FIRMA",
     createWallet: "CREAR MONEDERO",
     delete: "ELIMINAR",
     edit: "EDITAR",
     export: "EXPORTAR",
-    generate: "GENERATE",
+    generate: "GENERAR",
     import: "IMPORTAR",
     importWallet: "IMPORTAR MONEDERO | IMPORTAR MONEDEROS",
     next: "SIGUIENTE",
@@ -38,7 +38,7 @@ export default {
     showTxDetails: "MOSTRAR DETALLES DE LA TRANSACCIÓN",
     stake: "RETENER PARTICIPACIÓN",
     sweepAll: "TRANSFERIR/BARRER TODO",
-    unlock: "UNLOCK",
+    unlock: "LIBERAR",
     viewOnExplorer: "VER EN EL EXPLORADOR"
   },
   dialog: {
@@ -126,10 +126,10 @@ export default {
       ok: "TRANSFERIR/BARRER TODO"
     },
     sweepAllWarning: {
-      title: "Sweep all warning",
+      title: "Advertencia transferir/barrer todo",
       message:
-        "You are about to combine all of your unspent funds by sending a transaction to yourself, your wallet may show a balance of 0 temporarily, after 10 blocks your funds will unlock and you may stake normally.",
-      ok: "CONTINUE"
+        "Va a combinar todos sus fondos no gastados mediante una transacción a sí mismo. Su monederó mostrará temporalmente un balance de 0. Tras 10 bloques sus fondos serán liberados y podrá retener su participación a un nodo de servicio con normalidad.",
+      ok: "CONTINUAR"
     },
     switchWallet: {
       title: "Cambiar de monedero",
@@ -157,10 +157,10 @@ export default {
       ok: "LIBERAR"
     },
     unlockServiceNodeWarning: {
-      title: "Unlock service node warning",
+      title: "Advertencia liberación nodo de servicio",
       message:
-        "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
-      ok: "CONTINUE"
+        "Liberar una participación parcial a un nodo hará que el resto de participaciones de otras personas también se liberen. Si se trata de una participación a un nodo compartido, estaría bien que comunicara sus intenciones al operador y al resto de participantes.",
+      ok: "CONTINUAR"
     }
   },
   fieldLabels: {
@@ -185,7 +185,7 @@ export default {
     localDaemonPort: "PUERTO SERVICIO LOCAL",
     maxIncomingPeers: "NÚM. MÁX. PARES ENTRANTES",
     maxOutgoingPeers: "NÚM. MÁX. PARES SALIENTES",
-    message: "MESSAGE",
+    message: "MENSAJE",
     mnemonicSeed: "SEMILLA MNEMÓNICA",
     name: "NOMBRE",
     newWalletName: "NUEVO NOMBRE PARA EL MONEDERO",
@@ -201,8 +201,8 @@ export default {
     seedLanguage: "IDIOMA SEMILLA",
     serviceNodeCommand: "ORDEN PARA REGISTRAR EL NODO DE SERVICIO",
     serviceNodeKey: "CLAVE NODO DE SERVICIO",
-    signature: "SIGNATURE",
-    transactionId: "TRANSACTION ID",
+    signature: "FIRMA",
+    transactionId: "ID DE LA TRANSACCIÓN",
     walletFile: "ARCHIVO MONEDERO",
     walletLogLevel: "NIVEL LOG MONEDERO",
     walletName: "NOMBRE MONEDERO",
@@ -330,13 +330,13 @@ export default {
   placeholders: {
     additionalNotes: "Notas adicionales",
     addressBookName: "Nombre asociado a esta dirección",
-    filterTx: "Enter an ID, name, address or amount",
+    filterTx: "Introduzca un ID, nombre, dirección o cantidad",
     hexCharacters: "{count} caracteres hexadecimales",
     mnemonicSeed: "Semilla mnemónica de 25 (o 24) palabras",
-    pasteTransactionId: "Paste transaction ID",
-    pasteTransactionProof: "Paste transaction proof",
-    proveOptionalMessage: "Optional message against which the signature is signed",
-    recipientWalletAddress: "Recipient's wallet address",
+    pasteTransactionId: "Pegar ID de la transacción",
+    pasteTransactionProof: "Pegar prueba de la transacción",
+    proveOptionalMessage: "Mensaje opcional contra el qué se firma la firma",
+    recipientWalletAddress: "Dirección del monedero de destino",
     selectAFile: "Seleccione un archivo por favor",
     transactionNotes: "Notas adicionales para agregar a la transacción",
     walletName: "Nombre para identificar su monedero",
@@ -362,21 +362,21 @@ export default {
     blockHeight: "Altura",
     checkTransaction: {
       description:
-        "Verify that funds were paid to an address by supplying the transaction ID, the recipient address, the message used for signing and the signature.\nFor a 'Spend Proof' you dont need to provide the recipient address.",
+        "Verificar que los fondos fueron transferidos a un monedero proporcionando el ID de la transacción, la dirección de destino, el mensaje usado para firmar y la firma.\nPara obtener una 'Prueba de Gasto' no es necesario proporcionar la dirección de destino.",
       infoTitles: {
-        confirmations: "Confirmations",
-        inPool: "In pool",
-        validTransaction: "Valid transaction",
-        received: "Received amount"
+        confirmations: "Confirmaciones",
+        inPool: "En el grupo",
+        validTransaction: "Transacción válida",
+        received: "Cantidad recibida"
       },
       validTransaction: {
         no: "NO",
-        yes: "YES"
+        yes: "SÍ"
       }
     },
     closing: "Cerrando",
     connectingToBackend: "Conectando con el servicio",
-    contribution: "Contribution",
+    contribution: "Contribución",
     daemon: {
       local: {
         title: "Solo Servicio Local",
@@ -412,7 +412,7 @@ export default {
     },
     peerList: "Lista de pares",
     proveTransactionDescription:
-      "Generate a proof of your incoming/outgoing payment by supplying the transaction ID, the recipient address and an optional message.\nFor the case of outgoing payments, you can get a 'Spend Proof' that proves the authorship of a transaction. In this case, you don't need to specify the recipient address.",
+      "Generar una prueba de sus pagos recibidos/emitidos proporcionando el ID de la transacción, la dirección destinataria y un mensaje opcional.\nPara pagos emitidos, puede obtener una 'Pueba de Gasto' que certifica la autoría de la transacción. En este caso, no es necesario indicar la dirección destinataria.",
     readingWalletList: "Leyendo el listado de monederos",
     recentIncomingTransactionsToAddress: "Transacciones recientes recibidas en esta dirección",
     recentTransactionsWithAddress: "Transacciones recientes con esta dirección",
@@ -449,7 +449,7 @@ export default {
         miner: "Minería",
         serviceNode: "Nodo de Servicio",
         governance: "Gobernanza",
-        stake: "Retención participación",
+        stake: "Participación retenida",
         failed: "Fallida"
       }
     },
@@ -464,12 +464,12 @@ export default {
     addressBook: "Libreta de direcciones",
     addressDetails: "Detalles de la dirección",
     advanced: {
-      checkTransaction: "CHECK TRANSACTION",
-      prove: "PROVE"
+      checkTransaction: "COMPROVAR TRANSACCIÓN",
+      prove: "PRUEBA"
     },
     changePassword: "Modificar contraseña",
     configure: "Configurar",
-    currentlyStakedNodes: "Currently staked nodes",
+    currentlyStakedNodes: "Nodos en los que actualmente participa",
     privateKeys: "Claves privadas",
     rescanWallet: "Volver a examinar monedero",
     serviceNode: {
