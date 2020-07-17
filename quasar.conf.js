@@ -167,7 +167,7 @@ module.exports = function(ctx) {
         publish: "github",
 
         linux: {
-          target: ["AppImage"],
+          target: ["AppImage", "deb"],
           icon: "src-electron/icons/icon_512x512.png",
           category: "Finance"
         },
