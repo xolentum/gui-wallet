@@ -1949,8 +1949,8 @@ var xolentumConfig = {
     coinUnitPlaces: 12,
     coinSymbol: 'XOL',
     coinName: 'Xolentum',
-    coinUriPrefix: 'xolentum:',
-    addressPrefix: 114,
+    coinUriPrefix: 'xol:',
+    addressPrefix: 185,
 };
 
 var cnUtilGen = function(initConfig) {
