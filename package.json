@@ -1,8 +1,8 @@
 {
-  "name": "xolentum-gui",
+  "name": "xolentum-gui-wallet",
   "version": "1.0.0",
   "description": "GUI interface for Xolentum",
-  "productName": "Xolentum GUI",
+  "productName": "Xolentum GUI Wallet",
   "repository": {
     "type": "git",
     "url": "https://github.com/xolentum/xolentum-gui.git"
