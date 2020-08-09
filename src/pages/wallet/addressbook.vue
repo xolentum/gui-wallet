@@ -5,11 +5,11 @@
     </div>
 
     <template v-if="address_book_combined.length">
-      <q-list link no-border :dark="theme == 'dark'" class="loki-list">
+      <q-list link no-border :dark="theme == 'dark'" class="xolentum-list">
         <q-item
           v-for="entry in address_book_combined"
           :key="`${entry.address}-${entry.name}-${entry.payment_id}`"
-          class="loki-list-item"
+          class="xolentum-list-item"
           @click.native="details(entry)"
         >
           <q-item-main>
@@ -152,7 +152,7 @@ export default {
     font-weight: 500;
   }
 
-  .loki-list-item {
+  .xolentum-list-item {
     cursor: pointer;
     padding-top: 12px;
     padding-bottom: 12px;

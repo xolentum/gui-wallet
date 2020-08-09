@@ -24,10 +24,10 @@
               <div class="infoBox">
                 <div class="infoBoxContent">
                   <div class="text">
-                    <span>{{ $t("strings.lokiBalance") }}</span>
+                    <span>{{ $t("strings.xolentumBalance") }}</span>
                   </div>
                   <div class="value">
-                    <span><FormatLoki :amount="address.balance"/></span>
+                    <span><FormatXolentum :amount="address.balance"/></span>
                   </div>
                 </div>
               </div>
@@ -35,10 +35,10 @@
               <div class="infoBox">
                 <div class="infoBoxContent">
                   <div class="text">
-                    <span>{{ $t("strings.lokiUnlockedBalance") }}</span>
+                    <span>{{ $t("strings.xolentumUnlockedBalance") }}</span>
                   </div>
                   <div class="value">
-                    <span><FormatLoki :amount="address.unlocked_balance"/></span>
+                    <span><FormatXolentum :amount="address.unlocked_balance"/></span>
                   </div>
                 </div>
               </div>
@@ -60,7 +60,7 @@
               <div class="infoBox">
                 <div class="infoBoxContent">
                   <div class="text">
-                    <span>{{ $t("strings.lokiBalance") }}</span>
+                    <span>{{ $t("strings.xolentumBalance") }}</span>
                   </div>
                   <div class="value"><span>N/A</span></div>
                 </div>
@@ -69,7 +69,7 @@
               <div class="infoBox">
                 <div class="infoBoxContent">
                   <div class="text">
-                    <span>{{ $t("strings.lokiUnlockedBalance") }}</span>
+                    <span>{{ $t("strings.xolentumUnlockedBalance") }}</span>
                   </div>
                   <div class="value"><span>N/A</span></div>
                 </div>
@@ -131,7 +131,7 @@
 import { mapState } from "vuex";
 const { clipboard, nativeImage } = require("electron");
 import AddressHeader from "components/address_header";
-import FormatLoki from "components/format_loki";
+import FormatXolentum from "components/format_xolentum";
 import QrcodeVue from "qrcode.vue";
 import TxList from "components/tx_list";
 export default {
@@ -139,7 +139,7 @@ export default {
   components: {
     AddressHeader,
     TxList,
-    FormatLoki,
+    FormatXolentum,
     QrcodeVue
   },
   data() {

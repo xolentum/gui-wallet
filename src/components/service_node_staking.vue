@@ -1,7 +1,7 @@
 <template>
   <div class="service-node-staking">
     <div class="q-px-md q-pt-md">
-      <LokiField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
+      <XolentumField :label="$t('fieldLabels.serviceNodeKey')" :error="$v.service_node.key.$error">
         <q-input
           v-model.trim="service_node.key"
           :dark="theme == 'dark'"
@@ -9,9 +9,9 @@
           hide-underline
           @blur="$v.service_node.key.$touch"
         />
-      </LokiField>
+      </XolentumField>
 
-      <LokiField :label="$t('fieldLabels.amount')" class="q-mt-md" :error="$v.service_node.amount.$error">
+      <XolentumField :label="$t('fieldLabels.amount')" class="q-mt-md" :error="$v.service_node.amount.$error">
         <q-input
           v-model.trim="service_node.amount"
           :dark="theme == 'dark'"
@@ -29,7 +29,7 @@
         >
           {{ $t("buttons.all") }}
         </q-btn>
-      </LokiField>
+      </XolentumField>
 
       <q-field class="buttons q-pt-sm">
         <q-btn :disable="!is_able_to_send" color="primary" :label="$t('buttons.stake')" @click="stake()" />
@@ -55,14 +55,14 @@ const objectAssignDeep = require("object-assign-deep");
 import { mapState } from "vuex";
 import { required, decimal } from "vuelidate/lib/validators";
 import { service_node_key, greater_than_zero } from "src/validators/common";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 import WalletPassword from "src/mixins/wallet_password";
 import ServiceNodeUnlock from "components/service_node_unlock";
 
 export default {
   name: "ServiceNodeStaking",
   components: {
-    LokiField,
+    XolentumField,
     ServiceNodeUnlock
   },
   mixins: [WalletPassword],

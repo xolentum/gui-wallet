@@ -125,13 +125,13 @@ export class WalletRPC {
         this.hostname = "127.0.0.1";
         this.port = options.wallet.rpc_bind_port;
 
-        const rpcExecutable = process.platform === "win32" ? "loki-wallet-rpc.exe" : "loki-wallet-rpc";
+        const rpcExecutable = process.platform === "win32" ? "xolentum-wallet-rpc.exe" : "xolentum-wallet-rpc";
         // eslint-disable-next-line no-undef
         const rpcPath = path.join(__ryo_bin, rpcExecutable);
 
         // Check if the rpc exists
         if (!fs.existsSync(rpcPath)) {
-          reject(new Error("Failed to find Loki Wallet RPC. Please make sure you anti-virus has not removed it."));
+          reject(new Error("Failed to find Xolentum Wallet RPC. Please make sure you anti-virus has not removed it."));
           return;
         }
 
@@ -256,7 +256,7 @@ export class WalletRPC {
         break;
 
       case "restore_view_wallet":
-        // TODO: Decide if we want this for loki
+        // TODO: Decide if we want this for xolentum
         this.restoreViewWallet(
           params.name,
           params.password,
@@ -2019,9 +2019,9 @@ export class WalletRPC {
       wallets.legacy = [];
       let legacy_paths = [];
       if (os.platform() == "win32") {
-        legacy_paths = ["C:\\ProgramData\\Loki"];
+        legacy_paths = ["C:\\ProgramData\\Xolentum"];
       } else {
-        legacy_paths = [path.join(os.homedir(), "Loki")];
+        legacy_paths = [path.join(os.homedir(), "Xolentum")];
       }
       for (var i = 0; i < legacy_paths.length; i++) {
         try {

@@ -21,7 +21,7 @@ export default {
     generate: "GENERATE",
     import: "IMPORT",
     importWallet: "IMPORT WALLET | IMPORT WALLETS",
-    lns: "LOKI NAME SERVICE",
+    lns: "XOL NAME SERVICE",
     next: "NEXT",
     openWallet: "OPEN WALLET",
     purchase: "PURCHASE",
@@ -262,7 +262,7 @@ export default {
     copyViewKey: "Copy view key",
     createNewWallet: "Create new wallet",
     deleteWallet: "Delete Wallet",
-    exit: "Exit Loki GUI Wallet",
+    exit: "Exit Xolentum GUI Wallet",
     importOldGUIWallet: "Import wallets from old GUI",
     manageKeyImages: "Manage Key Images",
     openWallet: "Open wallet",
@@ -363,7 +363,7 @@ export default {
     warnings: {
       noKeyImageExport: "No key images found to export",
       usingLocalNode: "Could not access remote node, switching to local only",
-      usingRemoteNode: "lokid not found, using remote node"
+      usingRemoteNode: "xolentumd not found, using remote node"
     }
   },
   placeholders: {
@@ -371,7 +371,7 @@ export default {
     addressBookName: "Name that belongs to this address",
     filterTx: "Enter an ID, name, address or amount",
     hexCharacters: "{count} hexadecimal characters",
-    lnsName: "The name to purchase via Loki Name Service",
+    lnsName: "The name to purchase via Xolentum Name Service",
     lnsBackupOwner: "The wallet address of the backup owner",
     lnsDecryptName: "A LNS name that belongs to you",
     mnemonicSeed: "25 (or 24) word mnemonic seed",
@@ -380,7 +380,7 @@ export default {
     proveOptionalMessage: "Optional message against which the signature is signed",
     recipientWalletAddress: "Recipient's wallet address",
     selectAFile: "Please select a file",
-    sessionId: "The Session ID to link to Loki Name Service",
+    sessionId: "The Session ID to link to Xolentum Name Service",
     transactionNotes: "Additional notes to locally attach to the transaction",
     walletName: "A name for your wallet",
     walletPassword: "An optional password for the wallet"
@@ -442,9 +442,9 @@ export default {
     lnsDescription:
       "Purchase or update a name for a Session ID. If you purchase a name, it may take a minute or two for it to show up in the list.",
     loadingSettings: "Loading settings",
-    lokiBalance: "Balance",
-    lokiUnlockedBalance: "Unlocked balance",
-    lokiUnlockedShort: "Unlocked",
+    xolentumBalance: "Balance",
+    xolentumUnlockedBalance: "Unlocked balance",
+    xolentumUnlockedShort: "Unlocked",
     me: "Me",
     noTransactionsFound: "No transactions found",
     notes: "Notes",

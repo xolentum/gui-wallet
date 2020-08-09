@@ -10,7 +10,7 @@
             <q-item-tile class="ellipsis" label>{{ node.service_node_pubkey }}</q-item-tile>
             <q-item-tile sublabel class="non-selectable"
               >{{ getRole(node) }} • {{ getFee(node) }} • {{ $t("strings.contribution") }}:
-              <FormatLoki :amount="node.ourContributionAmount"
+              <FormatXolentum :amount="node.ourContributionAmount"
             /></q-item-tile>
           </q-item-main>
           <q-item-side>
@@ -58,13 +58,13 @@ import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { service_node_key } from "src/validators/common";
 import WalletPassword from "src/mixins/wallet_password";
-import FormatLoki from "components/format_loki";
+import FormatXolentum from "components/format_xolentum";
 import ServiceNodeDetails from "components/service_node_details";
 
 export default {
   name: "ServiceNodeUnlock",
   components: {
-    FormatLoki,
+    FormatXolentum,
     ServiceNodeDetails
   },
   mixins: [WalletPassword],

@@ -1,6 +1,6 @@
 <template>
   <q-page class="receive">
-    <q-list link no-border :dark="theme == 'dark'" class="loki-list">
+    <q-list link no-border :dark="theme == 'dark'" class="xolentum-list">
       <q-list-header>{{ $t("strings.addresses.myPrimaryAddress") }}</q-list-header>
       <ReceiveItem
         v-for="address in address_list.primary"
@@ -166,7 +166,7 @@ export default {
     font-size: 13px;
   }
 
-  .loki-list-item {
+  .xolentum-list-item {
     cursor: pointer;
 
     .q-item {

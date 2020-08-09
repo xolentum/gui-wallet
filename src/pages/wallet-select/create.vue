@@ -1,7 +1,7 @@
 <template>
   <q-page class="create-wallet">
     <div class="fields q-mx-md q-mt-md">
-      <LokiField :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
+      <XolentumField :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
         <q-input
           v-model="wallet.name"
           :dark="theme == 'dark'"
@@ -10,13 +10,13 @@
           @keyup.enter="create"
           @blur="$v.wallet.name.$touch"
         />
-      </LokiField>
+      </XolentumField>
 
-      <LokiField :label="$t('fieldLabels.seedLanguage')">
+      <XolentumField :label="$t('fieldLabels.seedLanguage')">
         <q-select v-model="wallet.language" :options="languageOptions" :dark="theme == 'dark'" hide-underline />
-      </LokiField>
+      </XolentumField>
 
-      <LokiField :label="$t('fieldLabels.password')" optional>
+      <XolentumField :label="$t('fieldLabels.password')" optional>
         <q-input
           v-model="wallet.password"
           type="password"
@@ -25,9 +25,9 @@
           hide-underline
           @keyup.enter="create"
         />
-      </LokiField>
+      </XolentumField>
 
-      <LokiField :label="$t('fieldLabels.confirmPassword')">
+      <XolentumField :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -35,7 +35,7 @@
           hide-underline
           @keyup.enter="create"
         />
-      </LokiField>
+      </XolentumField>
 
       <q-field>
         <q-btn color="primary" :label="$t('buttons.createWallet')" @click="create" />
@@ -47,10 +47,10 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 export default {
   components: {
-    LokiField
+    XolentumField
   },
   data() {
     return {

@@ -2,7 +2,7 @@
   <div class="lns-input-form">
     <!-- Name -->
     <div class="col q-mt-sm">
-      <LokiField :label="$t('fieldLabels.name')" :disable="disableName" :error="$v.record.name.$error">
+      <XolentumField :label="$t('fieldLabels.name')" :disable="disableName" :error="$v.record.name.$error">
         <q-input
           v-model.trim="record.name"
           :dark="theme == 'dark'"
@@ -11,12 +11,12 @@
           :disable="disableName"
           @blur="$v.record.name.$touch"
         />
-      </LokiField>
+      </XolentumField>
     </div>
 
-    <!-- Value (Session ID, Wallet Address or .loki address) -->
+    <!-- Value (Session ID, Wallet Address or .xolentum address) -->
     <div class="col q-mt-sm">
-      <LokiField class="q-mt-md" :label="value_field_label" :error="$v.record.value.$error">
+      <XolentumField class="q-mt-md" :label="value_field_label" :error="$v.record.value.$error">
         <q-input
           v-model.trim="record.value"
           :dark="theme == 'dark'"
@@ -24,12 +24,12 @@
           hide-underline
           @blur="$v.record.value.$touch"
         />
-      </LokiField>
+      </XolentumField>
     </div>
 
     <!-- Owner -->
     <div class="col q-mt-sm">
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.owner')" :error="$v.record.owner.$error" optional>
+      <XolentumField class="q-mt-md" :label="$t('fieldLabels.owner')" :error="$v.record.owner.$error" optional>
         <q-input
           v-model.trim="record.owner"
           :dark="theme == 'dark'"
@@ -37,12 +37,12 @@
           hide-underline
           @blur="$v.record.owner.$touch"
         />
-      </LokiField>
+      </XolentumField>
     </div>
 
     <!-- Backup owner -->
     <div class="col q-mt-sm">
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.backupOwner')" :error="$v.record.backup_owner.$error" optional>
+      <XolentumField class="q-mt-md" :label="$t('fieldLabels.backupOwner')" :error="$v.record.backup_owner.$error" optional>
         <q-input
           v-model.trim="record.backup_owner"
           :dark="theme == 'dark'"
@@ -50,7 +50,7 @@
           hide-underline
           @blur="$v.record.backup_owner.$touch"
         />
-      </LokiField>
+      </XolentumField>
     </div>
 
     <q-field class="buttons q-pt-sm">
@@ -69,13 +69,13 @@
 import { mapState } from "vuex";
 import { required, maxLength } from "vuelidate/lib/validators";
 import { address, session_id, lns_name } from "src/validators/common";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 import WalletPassword from "src/mixins/wallet_password";
 
 export default {
   name: "LNSInputForm",
   components: {
-    LokiField
+    XolentumField
   },
   mixins: [WalletPassword],
   props: {

@@ -60,7 +60,7 @@
                 <span>{{ $t("strings.transactions.amount") }}</span>
               </div>
               <div class="value">
-                <span><FormatLoki :amount="tx.amount" raw-value/></span>
+                <span><FormatXolentum :amount="tx.amount" raw-value/></span>
               </div>
             </div>
           </div>
@@ -76,7 +76,7 @@
                 </span>
               </div>
               <div class="value">
-                <span><FormatLoki :amount="tx.fee" raw-value/></span>
+                <span><FormatXolentum :amount="tx.fee" raw-value/></span>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@
                 <q-item-main>
                   <q-item-tile label>{{ destination.name }}</q-item-tile>
                   <q-item-tile class="monospace ellipsis" sublabel>{{ destination.address }}</q-item-tile>
-                  <q-item-tile sublabel><FormatLoki :amount="destination.amount"/></q-item-tile>
+                  <q-item-tile sublabel><FormatXolentum :amount="destination.amount"/></q-item-tile>
                 </q-item-main>
                 <q-context-menu>
                   <q-list link separator style="min-width: 150px; max-height: 300px;">
@@ -205,12 +205,12 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { date } from "quasar";
 import TxTypeIcon from "components/tx_type_icon";
-import FormatLoki from "components/format_loki";
+import FormatXolentum from "components/format_xolentum";
 export default {
   name: "TxDetails",
   components: {
     TxTypeIcon,
-    FormatLoki
+    FormatXolentum
   },
   data() {
     return {

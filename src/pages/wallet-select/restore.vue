@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-mx-md">
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
+      <XolentumField class="q-mt-md" :label="$t('fieldLabels.walletName')" :error="$v.wallet.name.$error">
         <q-input
           v-model="wallet.name"
           :placeholder="$t('placeholders.walletName')"
@@ -10,9 +10,9 @@
           @keyup.enter="restore_wallet"
           @blur="$v.wallet.name.$touch"
         />
-      </LokiField>
+      </XolentumField>
 
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.mnemonicSeed')" :error="$v.wallet.seed.$error">
+      <XolentumField class="q-mt-md" :label="$t('fieldLabels.mnemonicSeed')" :error="$v.wallet.seed.$error">
         <q-input
           v-model="wallet.seed"
           :placeholder="$t('placeholders.mnemonicSeed')"
@@ -21,11 +21,11 @@
           hide-underline
           @blur="$v.wallet.seed.$touch"
         />
-      </LokiField>
+      </XolentumField>
 
       <div class="row items-end q-mt-md">
         <div class="col">
-          <LokiField v-if="wallet.refresh_type == 'date'" :label="$t('fieldLabels.restoreFromDate')">
+          <XolentumField v-if="wallet.refresh_type == 'date'" :label="$t('fieldLabels.restoreFromDate')">
             <q-datetime
               v-model="wallet.refresh_start_date"
               type="date"
@@ -35,8 +35,8 @@
               :dark="theme == 'dark'"
               hide-underline
             />
-          </LokiField>
-          <LokiField
+          </XolentumField>
+          <XolentumField
             v-else-if="wallet.refresh_type == 'height'"
             :label="$t('fieldLabels.restoreFromBlockHeight')"
             :error="$v.wallet.refresh_start_height.$error"
@@ -49,7 +49,7 @@
               hide-underline
               @blur="$v.wallet.refresh_start_height.$touch"
             />
-          </LokiField>
+          </XolentumField>
         </div>
         <div class="col-auto q-ml-sm">
           <template v-if="wallet.refresh_type == 'date'">
@@ -85,7 +85,7 @@
         </div>
       </div>
 
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.password')">
+      <XolentumField class="q-mt-md" :label="$t('fieldLabels.password')">
         <q-input
           v-model="wallet.password"
           :placeholder="$t('placeholders.walletPassword')"
@@ -94,9 +94,9 @@
           hide-underline
           @keyup.enter="restore_wallet"
         />
-      </LokiField>
+      </XolentumField>
 
-      <LokiField class="q-mt-md" :label="$t('fieldLabels.confirmPassword')">
+      <XolentumField class="q-mt-md" :label="$t('fieldLabels.confirmPassword')">
         <q-input
           v-model="wallet.password_confirm"
           type="password"
@@ -104,7 +104,7 @@
           hide-underline
           @keyup.enter="restore_wallet"
         />
-      </LokiField>
+      </XolentumField>
 
       <q-field>
         <q-btn color="primary" :label="$t('buttons.restoreWallet')" @click="restore_wallet" />
@@ -116,10 +116,10 @@
 <script>
 import { required, numeric } from "vuelidate/lib/validators";
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 export default {
   components: {
-    LokiField
+    XolentumField
   },
   data() {
     return {

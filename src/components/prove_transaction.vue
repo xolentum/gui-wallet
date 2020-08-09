@@ -5,7 +5,7 @@
         {{ $t("strings.proveTransactionDescription") }}
       </div>
       <div>
-        <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
+        <XolentumField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
           <q-input
             v-model.trim="txid"
             :dark="theme == 'dark'"
@@ -13,8 +13,8 @@
             hide-underline
             @blur="$v.txid.$touch"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
+        </XolentumField>
+        <XolentumField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
           <q-input
             v-model.trim="address"
             :dark="theme == 'dark'"
@@ -22,15 +22,15 @@
             hide-underline
             @blur="$v.address.$touch"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+        </XolentumField>
+        <XolentumField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
           <q-input
             v-model.trim="message"
             :dark="theme == 'dark'"
             :placeholder="$t('placeholders.proveOptionalMessage')"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
         <q-field class="buttons q-pt-sm">
           <q-btn color="primary" :label="$t('buttons.generate')" @click="generate" />
           <q-btn v-if="canClear" color="secondary" :label="$t('buttons.clear')" @click="clear" />
@@ -54,13 +54,13 @@
 import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { address } from "src/validators/common";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 import { clipboard } from "electron";
 
 export default {
   name: "ProveTransaction",
   components: {
-    LokiField
+    XolentumField
   },
   data() {
     return {

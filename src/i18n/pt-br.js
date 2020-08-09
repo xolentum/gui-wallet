@@ -240,7 +240,7 @@ export default {
     copyViewKey: "Copiar chave de visualização",
     createNewWallet: "Criar nova carteira",
     deleteWallet: "Apagar carteira",
-    exit: "Saír da Carteira GUI Loki",
+    exit: "Saír da Carteira GUI Xolentum",
     importOldGUIWallet: "Importar carteiras da antiga carteira GUI",
     manageKeyImages: "Administrar Imagens de Chave",
     openWallet: "Abrir carteira",
@@ -325,7 +325,7 @@ export default {
     warnings: {
       noKeyImageExport: "Nenhuma chave de imagem encontrada para exportar",
       usingLocalNode: "Não foi possível aceder ao nódulo remoto, mudando para nódulo local apenas",
-      usingRemoteNode: "lokid não encontrado, utilizando nódulo remoto"
+      usingRemoteNode: "xolentumd não encontrado, utilizando nódulo remoto"
     }
   },
   placeholders: {
@@ -397,9 +397,9 @@ export default {
     destinationUnknown: "Destino Desconhecido",
     editAddressBookEntry: "Editar registo do livro de endereços",
     loadingSettings: "Carregando configurações",
-    lokiBalance: "Saldo",
-    lokiUnlockedBalance: "Saldo desbloqueado",
-    lokiUnlockedShort: "Desbloqueado",
+    xolentumBalance: "Saldo",
+    xolentumUnlockedBalance: "Saldo desbloqueado",
+    xolentumUnlockedShort: "Desbloqueado",
     noTransactionsFound: "Nenhuma transação encontrada",
     notes: "Notas",
     numberOfUnspentOutputs: "Número de outputs não gastos",

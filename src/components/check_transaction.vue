@@ -3,7 +3,7 @@
     <div class="q-pa-md">
       <div class="q-mb-lg description">{{ $t("strings.checkTransaction.description") }}</div>
       <div>
-        <LokiField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
+        <XolentumField :label="$t('fieldLabels.transactionId')" :error="$v.txid.$error">
           <q-input
             v-model.trim="txid"
             :dark="theme == 'dark'"
@@ -11,8 +11,8 @@
             hide-underline
             @blur="$v.txid.$touch"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
+        </XolentumField>
+        <XolentumField class="q-mt-md" :label="$t('fieldLabels.address')" :error="$v.address.$error" optional>
           <q-input
             v-model.trim="address"
             :dark="theme == 'dark'"
@@ -20,23 +20,23 @@
             hide-underline
             @blur="$v.address.$touch"
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
+        </XolentumField>
+        <XolentumField class="q-mt-md" :label="$t('fieldLabels.message')" optional>
           <q-input
             v-model.trim="message"
             :dark="theme == 'dark'"
             :placeholder="$t('placeholders.proveOptionalMessage')"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="q-mt-md" :label="$t('fieldLabels.signature')" :error="$v.signature.$error">
+        </XolentumField>
+        <XolentumField class="q-mt-md" :label="$t('fieldLabels.signature')" :error="$v.signature.$error">
           <q-input
             v-model.trim="signature"
             :dark="theme == 'dark'"
             :placeholder="$t('placeholders.pasteTransactionProof')"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
         <q-field class="buttons q-pt-sm">
           <q-btn color="primary" :label="$t('buttons.check')" @click="check" />
           <q-btn v-if="canClear" color="secondary" :label="$t('buttons.clear')" @click="clear" />
@@ -54,7 +54,7 @@
         <div v-if="status.state.received != null" class="q-mb-sm">
           <div class="title">{{ $t("strings.checkTransaction.infoTitles.received") }}</div>
           <div>
-            <FormatLoki :amount="status.state.received" raw-value />
+            <FormatXolentum :amount="status.state.received" raw-value />
           </div>
         </div>
         <div v-if="status.state.in_pool != null" class="q-mb-sm">
@@ -75,14 +75,14 @@ import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
 import { address } from "src/validators/common";
 import { i18n } from "plugins/i18n";
-import LokiField from "components/loki_field";
-import FormatLoki from "components/format_loki";
+import XolentumField from "components/xolentum_field";
+import FormatXolentum from "components/format_xolentum";
 
 export default {
   name: "CheckTransaction",
   components: {
-    LokiField,
-    FormatLoki
+    XolentumField,
+    FormatXolentum
   },
   data() {
     return {

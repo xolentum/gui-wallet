@@ -1,6 +1,6 @@
 <template>
   <div class="column wallet-info">
-    <div class="row justify-between items-center wallet-header loki-green">
+    <div class="row justify-between items-center wallet-header xolentum-green">
       <div class="title">{{ info.name }}</div>
       <WalletSettings />
     </div>
@@ -9,14 +9,14 @@
         <div class="funds column items-center">
           <div class="balance">
             <div class="text">
-              <span>{{ $t("strings.lokiBalance") }}</span>
+              <span>{{ $t("strings.xolentumBalance") }}</span>
             </div>
             <div class="value">
-              <span><FormatLoki :amount="info.balance"/></span>
+              <span><FormatXolentum :amount="info.balance"/></span>
             </div>
           </div>
           <div class="row unlocked">
-            <span>{{ $t("strings.lokiUnlockedShort") }}: <FormatLoki :amount="info.unlocked_balance"/></span>
+            <span>{{ $t("strings.xolentumUnlockedShort") }}: <FormatXolentum :amount="info.unlocked_balance"/></span>
           </div>
         </div>
       </div>
@@ -35,12 +35,12 @@
 <script>
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
-import FormatLoki from "components/format_loki";
+import FormatXolentum from "components/format_xolentum";
 import WalletSettings from "components/wallet_settings";
 export default {
   name: "WalletDetails",
   components: {
-    FormatLoki,
+    FormatXolentum,
     WalletSettings
   },
   computed: mapState({

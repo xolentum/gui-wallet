@@ -24,7 +24,7 @@
 
     <template v-if="config_daemon.type != 'remote'">
       <div class="row pl-sm">
-        <LokiField class="col-8" :label="$t('fieldLabels.localDaemonIP')" disable>
+        <XolentumField class="col-8" :label="$t('fieldLabels.localDaemonIP')" disable>
           <q-input
             v-model="config_daemon.rpc_bind_ip"
             :placeholder="daemon_defaults.rpc_bind_ip"
@@ -32,8 +32,8 @@
             disable
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-4" :label="$t('fieldLabels.localDaemonPort') + '(RPC)'">
+        </XolentumField>
+        <XolentumField class="col-4" :label="$t('fieldLabels.localDaemonPort') + '(RPC)'">
           <q-input
             v-model="config_daemon.rpc_bind_port"
             :placeholder="toString(daemon_defaults.rpc_bind_port)"
@@ -45,13 +45,13 @@
             :dark="theme == 'dark'"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
       </div>
     </template>
 
     <template v-if="config_daemon.type != 'local'">
       <div class="row q-mt-md pl-sm">
-        <LokiField class="col-8" :label="$t('fieldLabels.remoteNodeHost')">
+        <XolentumField class="col-8" :label="$t('fieldLabels.remoteNodeHost')">
           <q-input
             v-model="config_daemon.remote_host"
             :placeholder="daemon_defaults.remote_host"
@@ -68,8 +68,8 @@
               </q-item>
             </q-list>
           </q-btn-dropdown>
-        </LokiField>
-        <LokiField class="col-4" :label="$t('fieldLabels.remoteNodePort')">
+        </XolentumField>
+        <XolentumField class="col-4" :label="$t('fieldLabels.remoteNodePort')">
           <q-input
             v-model="config_daemon.remote_port"
             :placeholder="toString(daemon_defaults.remote_port)"
@@ -81,19 +81,19 @@
             :dark="theme == 'dark'"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
       </div>
     </template>
 
     <div class="col q-mt-md pt-sm">
-      <LokiField :label="$t('fieldLabels.dataStoragePath')" disable-hover>
+      <XolentumField :label="$t('fieldLabels.dataStoragePath')" disable-hover>
         <q-input v-model="config.app.data_dir" disable :dark="theme == 'dark'" hide-underline />
         <input id="dataPath" ref="fileInputData" type="file" webkitdirectory directory hidden @change="setDataPath" />
         <q-btn color="secondary" :text-color="theme == 'dark' ? 'white' : 'dark'" @click="selectPath('data')">{{
           $t("buttons.selectLocation")
         }}</q-btn>
-      </LokiField>
-      <LokiField :label="$t('fieldLabels.walletStoragePath')" disable-hover>
+      </XolentumField>
+      <XolentumField :label="$t('fieldLabels.walletStoragePath')" disable-hover>
         <q-input v-model="config.app.wallet_data_dir" disable :dark="theme == 'dark'" hide-underline />
         <input
           id="walletPath"
@@ -107,7 +107,7 @@
         <q-btn color="secondary" :text-color="theme == 'dark' ? 'white' : 'dark'" @click="selectPath('wallet')">{{
           $t("buttons.selectLocation")
         }}</q-btn>
-      </LokiField>
+      </XolentumField>
     </div>
 
     <q-collapsible
@@ -115,7 +115,7 @@
       header-class="q-mt-sm non-selectable row reverse advanced-options-label"
     >
       <div class="row pl-sm q-mt-sm">
-        <LokiField class="col-6" :label="$t('fieldLabels.daemonLogLevel')" :disable="is_remote">
+        <XolentumField class="col-6" :label="$t('fieldLabels.daemonLogLevel')" :disable="is_remote">
           <q-input
             v-model="config_daemon.log_level"
             :placeholder="toString(daemon_defaults.log_level)"
@@ -128,8 +128,8 @@
             max="4"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-6" :label="$t('fieldLabels.walletLogLevel')">
+        </XolentumField>
+        <XolentumField class="col-6" :label="$t('fieldLabels.walletLogLevel')">
           <q-input
             v-model="config.wallet.log_level"
             :placeholder="toString(defaults.wallet.log_level)"
@@ -141,11 +141,11 @@
             max="4"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
       </div>
 
       <div class="row pl-sm q-mt-md">
-        <LokiField class="col-3" :label="$t('fieldLabels.maxIncomingPeers')" :disable="is_remote">
+        <XolentumField class="col-3" :label="$t('fieldLabels.maxIncomingPeers')" :disable="is_remote">
           <q-input
             v-model="config_daemon.in_peers"
             :placeholder="toString(daemon_defaults.in_peers)"
@@ -158,8 +158,8 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.maxOutgoingPeers')" :disable="is_remote">
+        </XolentumField>
+        <XolentumField class="col-3" :label="$t('fieldLabels.maxOutgoingPeers')" :disable="is_remote">
           <q-input
             v-model="config_daemon.out_peers"
             :placeholder="toString(daemon_defaults.out_peers)"
@@ -172,8 +172,8 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.limitUploadRate')" :disable="is_remote">
+        </XolentumField>
+        <XolentumField class="col-3" :label="$t('fieldLabels.limitUploadRate')" :disable="is_remote">
           <q-input
             v-model="config_daemon.limit_rate_up"
             :placeholder="toString(daemon_defaults.limit_rate_up)"
@@ -187,8 +187,8 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.limitDownloadRate')" :disable="is_remote">
+        </XolentumField>
+        <XolentumField class="col-3" :label="$t('fieldLabels.limitDownloadRate')" :disable="is_remote">
           <q-input
             v-model="config_daemon.limit_rate_down"
             :placeholder="toString(daemon_defaults.limit_rate_down)"
@@ -202,10 +202,10 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
       </div>
       <div class="row pl-sm q-mt-md">
-        <LokiField class="col-3" :label="$t('fieldLabels.daemonP2pPort')" :disable="is_remote">
+        <XolentumField class="col-3" :label="$t('fieldLabels.daemonP2pPort')" :disable="is_remote">
           <q-input
             v-model="config_daemon.p2p_bind_port"
             :placeholder="toString(daemon_defaults.p2p_bind_port)"
@@ -219,8 +219,8 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.daemonZMQPort')" :disable="is_remote">
+        </XolentumField>
+        <XolentumField class="col-3" :label="$t('fieldLabels.daemonZMQPort')" :disable="is_remote">
           <q-input
             v-model="config_daemon.zmq_rpc_bind_port"
             :placeholder="toString(daemon_defaults.zmq_rpc_bind_port)"
@@ -234,8 +234,8 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.internalWalletPort')">
+        </XolentumField>
+        <XolentumField class="col-3" :label="$t('fieldLabels.internalWalletPort')">
           <q-input
             v-model="config.app.ws_bind_port"
             :placeholder="toString(defaults.app.ws_bind_port)"
@@ -248,8 +248,8 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
-        <LokiField class="col-3" :label="$t('fieldLabels.walletRPCPort')" :disable="is_remote">
+        </XolentumField>
+        <XolentumField class="col-3" :label="$t('fieldLabels.walletRPCPort')" :disable="is_remote">
           <q-input
             v-model="config.wallet.rpc_bind_port"
             :placeholder="toString(defaults.wallet.rpc_bind_port)"
@@ -263,7 +263,7 @@
             max="65535"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
       </div>
       <q-field :helper="$t('fieldLabels.chooseNetwork')" :label="$t('fieldLabels.network')" orientation="vertical">
         <q-option-group
@@ -282,11 +282,11 @@
 
 <script>
 import { mapState } from "vuex";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 export default {
   name: "SettingsGeneral",
   components: {
-    LokiField
+    XolentumField
   },
   props: {
     randomiseRemote: {

@@ -5,7 +5,7 @@
         <b place="registerCommand">register_service_node</b>
         <b place="prepareCommand">prepare_registration</b>
       </i18n>
-      <LokiField
+      <XolentumField
         :label="$t('fieldLabels.serviceNodeCommand')"
         :error="$v.registration_string.$error"
         :disabled="registration_status.sending"
@@ -20,7 +20,7 @@
           @blur="$v.registration_string.$touch"
           @paste="onPaste"
         />
-      </LokiField>
+      </XolentumField>
       <q-field class="q-pt-sm">
         <q-btn
           color="primary"
@@ -40,13 +40,13 @@
 <script>
 import { mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 import WalletPassword from "src/mixins/wallet_password";
 
 export default {
   name: "ServiceNodeRegistration",
   components: {
-    LokiField
+    XolentumField
   },
   mixins: [WalletPassword],
   data() {

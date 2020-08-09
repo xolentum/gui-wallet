@@ -1,10 +1,10 @@
 <template>
-  <span> {{ value }} LOKI </span>
+  <span> {{ value }} XOL </span>
 </template>
 
 <script>
 export default {
-  name: "FormatLoki",
+  name: "FormatXolentum",
   props: {
     amount: {
       type: Number,

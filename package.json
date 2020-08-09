@@ -1,16 +1,16 @@
 {
-  "name": "loki-electron-wallet",
+  "name": "xolentum-electron-wallet",
   "version": "1.4.4",
-  "description": "Modern GUI interface for Loki Currency",
-  "productName": "Loki Electron Wallet",
+  "description": "Modern GUI interface for Xolentum Currency",
+  "productName": "Xolentum Electron Wallet",
   "repository": {
     "type": "git",
-    "url": "https://github.com/loki-project/loki-electron-gui-wallet.git"
+    "url": "https://github.com/xolentum-project/xolentum-electron-gui-wallet.git"
   },
-  "cordovaId": "com.lokinetwork.wallet",
+  "cordovaId": "com.xolentumnetwork.wallet",
   "author": {
-    "name": "Loki",
-    "email": "team@loki.network"
+    "name": "Xolentum",
+    "email": "team@xolentum.network"
   },
   "private": true,
   "scripts": {

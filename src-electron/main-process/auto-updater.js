@@ -96,8 +96,8 @@ async function showUpdateDialog(mainWindow) {
   const options = {
     type: "info",
     buttons: ["Restart Wallet", "Later"],
-    title: "Loki Electron Wallet update available",
-    message: "There is a new version of Loki Electron Wallet available.",
+    title: "Xolentum Electron Wallet update available",
+    message: "There is a new version of Xolentum Electron Wallet available.",
     detail: "Press Restart Wallet to apply the update",
     defaultId: LATER_BUTTON,
     cancelId: RESTART_BUTTON
@@ -115,7 +115,7 @@ async function showCannotUpdateDialog(mainWindow) {
     buttons: ["Ok"],
     title: "Cannot update",
     message:
-      "Loki Electron Wallet failed to update but there is a new version available. Please go to https://loki.network/ and install the new version manually."
+      "Xolentum Electron Wallet failed to update but there is a new version available. Please go to https://xolentum.network/ and install the new version manually."
   };
 
   return new Promise(resolve => {

@@ -30,7 +30,7 @@
                 <span>{{ $t("strings.serviceNodeDetails.stakingRequirement") }}</span>
               </div>
               <div class="value">
-                <span><FormatLoki :amount="node.staking_requirement" raw-value/></span>
+                <span><FormatXolentum :amount="node.staking_requirement" raw-value/></span>
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@
                 <span>{{ $t("strings.serviceNodeDetails.totalContributed") }}</span>
               </div>
               <div class="value">
-                <span><FormatLoki :amount="node.total_contributed" raw-value/></span>
+                <span><FormatXolentum :amount="node.total_contributed" raw-value/></span>
               </div>
             </div>
           </div>
@@ -95,9 +95,9 @@
             </div>
           </div>
         </div>
-        <q-list no-border :dark="theme == 'dark'" class="loki-list">
+        <q-list no-border :dark="theme == 'dark'" class="xolentum-list">
           <q-list-header class="q-px-none">{{ $t("strings.serviceNodeDetails.contributors") }}:</q-list-header>
-          <q-item v-for="contributor in contributors" :key="contributor.address" class="loki-list-item">
+          <q-item v-for="contributor in contributors" :key="contributor.address" class="xolentum-list-item">
             <q-item-main>
               <q-item-tile v-if="isMe(contributor)" class="name non-selectable">{{ $t("strings.me") }}</q-item-tile>
               <q-item-tile v-else class="name non-selectable">{{ contributor.name }}</q-item-tile>
@@ -105,7 +105,7 @@
               <q-item-tile class="non-selectable" sublabel>
                 <span v-if="isOperator(contributor)">{{ $t("strings.operator") }} • </span>
                 {{ $t("strings.contribution") }}:
-                <FormatLoki :amount="contributor.amount" raw-value />
+                <FormatXolentum :amount="contributor.amount" raw-value />
               </q-item-tile>
             </q-item-main>
             <q-context-menu>
@@ -130,11 +130,11 @@
 const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { date } from "quasar";
-import FormatLoki from "components/format_loki";
+import FormatXolentum from "components/format_xolentum";
 export default {
   name: "ServiceNodeDetails",
   components: {
-    FormatLoki
+    FormatXolentum
   },
   props: {
     unlock: {
