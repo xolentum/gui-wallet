@@ -115,7 +115,7 @@ async function showCannotUpdateDialog(mainWindow) {
     buttons: ["Ok"],
     title: "Cannot update",
     message:
-      "Xolentum GUI Wallet failed to update but there is a new version available. Please go to https://xolentum.network/ and install the new version manually."
+      "Xolentum GUI Wallet failed to update but there is a new version available. Please go to https://xolentum.org/ and install the new version manually."
   };
 
   return new Promise(resolve => {

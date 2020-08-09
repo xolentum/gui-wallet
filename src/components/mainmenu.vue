@@ -39,7 +39,7 @@
 
         <div class="q-mt-md q-mb-lg external-links">
           <p>
-            <a href="#" @click="openExternal('https://xolentum.network/')">https://xolentum.network/</a>
+            <a href="#" @click="openExternal('https://xolentum.org/')">https://xolentum.org/</a>
           </p>
           <p>
             <a href="#" @click="openExternal('https://t.me/joinchat/DeNvR0JJ4JPn6TVSQjCsZQ')">Telegram</a>

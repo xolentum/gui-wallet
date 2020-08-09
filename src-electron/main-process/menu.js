@@ -33,7 +33,7 @@ let template = [
       {
         label: "Learn More",
         click() {
-          require("electron").shell.openExternal("https://xolentum.network/");
+          require("electron").shell.openExternal("https://xolentum.org/");
         }
       }
     ]
