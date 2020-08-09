@@ -7,7 +7,6 @@
     "type": "git",
     "url": "https://github.com/xolentum/xolentum-gui.git"
   },
-  "cordovaId": "com.xolentumnetwork.wallet",
   "author": {
     "name": "The Xolentum Developers",
     "email": "atom@xolentum.org"
