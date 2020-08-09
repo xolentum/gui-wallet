@@ -160,7 +160,7 @@ module.exports = function(ctx) {
         // https://www.electron.build/configuration/configuration
 
         appId: "com.xolentum-project.electron-wallet",
-        productName: "Xolentum Electron Wallet",
+        productName: "Xolentum GUI Wallet",
         copyright: "Copyright © 2020 The Xolentum Developers, 2018-2019 Loki Project, 2018 Ryo Currency Project",
         afterSign: "build/notarize.js",
         artifactName: "xolentum-electron-wallet-${version}-${os}.${ext}",

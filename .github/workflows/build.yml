@@ -1,4 +1,4 @@
-name: Xolentum Electron Wallet Build
+name: Xolentum GUI Wallet Build
 
 on:
   push:

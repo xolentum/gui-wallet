@@ -42,7 +42,7 @@ let template = [
 
 if (process.platform === "darwin") {
   template.unshift({
-    label: "Xolentum Electron Wallet",
+    label: "Xolentum GUI Wallet",
     submenu: [
       { role: "about" },
       { type: "separator" },

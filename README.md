@@ -1,8 +1,8 @@
-# Xolentum Electron GUI Wallet
+# Xolentum GUI Wallet
 
 ### Introduction
 
-This is the electron GUI for Xolentum. It is open source and completely free to use without restrictions, anyone may create an alternative implementation of the Xolentum Electron GUI that uses the protocol and network in a compatible manner.
+This is the electron GUI for Xolentum. It is open source and completely free to use without restrictions, anyone may create an alternative implementation of the Xolentum GUI that uses the protocol and network in a compatible manner.
 
 Please submit any changes as pull requests to the development branch, all changes are assessed in the development branch before being merged to master, release tags are considered stable builds for the GUI.
 

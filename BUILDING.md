@@ -1,6 +1,6 @@
 # Building
 
-Building xolentum electron wallet binaries is done using github actions. Windows and linux binaries will build right out of the box but there are some extra steps needed for Mac OS
+Building xolentum GUI wallet binaries is done using github actions. Windows and linux binaries will build right out of the box but there are some extra steps needed for Mac OS
 
 ## Mac OS
 
