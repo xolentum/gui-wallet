@@ -8,7 +8,7 @@ Please submit any changes as pull requests to the development branch, all change
 
 #### Pre-requisites
 
-- Download latest [Xolentumd](https://github.com/xolentum/xolentum/releases/latest)
+- Download latest [xolentumd](https://github.com/xolentum/xolentum/releases/latest)
 
 #### Commands
 
@@ -55,3 +55,11 @@ Adding a new language is fairly simple.
 4. Add your language locale to Vue Timeago. Add it in `src/plugins/timeago.js` under `locales`.
    - Ref: https://github.com/egoist/vue-timeago#update-locale-globally
 5. Submit a PR with your changes.
+
+### License
+
+[BSD 3-Clause License](LICENSE)
+
+Copyright © 2020 The Xolentum Developers
+Copyright © 2018-2019 Loki Project
+Copyright © 2018 Ryo Currency Project
