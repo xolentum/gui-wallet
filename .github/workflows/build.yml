@@ -19,7 +19,7 @@ jobs:
           node-version: "11.9.0"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --verbose
 
       - name: Download xolentumd binaries
         run: node ./build/download-binaries.js
