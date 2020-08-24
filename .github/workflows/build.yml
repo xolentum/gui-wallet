@@ -1,9 +1,6 @@
 name: Xolentum GUI Wallet Build
 
-on:
-  push:
-    branches:
-      - master
+on: [push, pull_request]
 
 jobs:
   build:
@@ -51,13 +48,13 @@ jobs:
         run: ls ./bin
         shell: bash
 
-      - name: Publish window and linux binaries
+      - name: Publish Window and Linux binaries
         if: runner.os != 'macOS'
         run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish mac binaries
+      - name: Publish Mac binaries
         if: runner.os == 'macOS'
         run: npm run release
         env:
