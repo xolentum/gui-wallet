@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: "11.9.0"
 
+      - name: Update npm
+        run: npm install npm@latest -g
+
       - name: Install dependencies
         run: npm install
 
