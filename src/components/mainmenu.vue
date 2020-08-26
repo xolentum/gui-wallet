@@ -29,7 +29,7 @@
     <SettingsModal ref="settingsModal" />
     <q-modal ref="aboutModal" minimized>
       <div class="about-modal">
-        <img class="q-mb-md" src="statics/xolentum.svg" height="42" />
+        <img class="q-mb-md" src="statics/xolentum.png" height="42" />
 
         <p class="q-my-sm">Wallet Version: v{{ version }}</p>
         <p class="q-my-sm">Deaemon Version: v{{ daemonVersion }}</p>
