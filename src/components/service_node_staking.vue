@@ -17,7 +17,7 @@
           :dark="theme == 'dark'"
           type="number"
           min="0"
-          :max="unlocked_balance / 1e9"
+          :max="unlocked_balance / 1e12"
           placeholder="0"
           hide-underline
           @blur="$v.service_node.amount.$touch"
@@ -25,7 +25,7 @@
         <q-btn
           color="secondary"
           :text-color="theme == 'dark' ? 'white' : 'dark'"
-          @click="service_node.amount = unlocked_balance / 1e9"
+          @click="service_node.amount = unlocked_balance / 1e12"
         >
           {{ $t("buttons.all") }}
         </q-btn>
@@ -179,7 +179,7 @@ export default {
       const { unlocked_balance } = this.info;
 
       const tx = {
-        amount: unlocked_balance / 1e9,
+        amount: unlocked_balance / 1e12,
         address: this.award_address,
         priority: 0
       };
@@ -228,7 +228,7 @@ export default {
           message: this.$t("notification.errors.zeroAmount")
         });
         return;
-      } else if (this.service_node.amount > this.unlocked_balance / 1e9) {
+      } else if (this.service_node.amount > this.unlocked_balance / 1e12) {
         this.$q.notify({
           type: "negative",
           timeout: 1000,
