@@ -26,7 +26,6 @@ export default {
     openWallet: "OPEN WALLET",
     purchase: "PURCHASE",
     receive: "RECEIVE",
-    registerServiceNode: "REGISTER SERVICE NODE",
     rescan: "RESCAN",
     restoreWallet: "RESTORE WALLET",
     save: "SAVE",
@@ -35,7 +34,6 @@ export default {
     selectWalletFile: "SELECT WALLET FILE",
     send: "SEND",
     sendCoins: "SEND COINS",
-    serviceNode: "SERVICE NODE",
     settings: "SETTINGS",
     showQRCode: "SHOW QR CODE",
     showTxDetails: "SHOW TX DETAILS",
@@ -108,11 +106,6 @@ export default {
       message: "Do you want to purchase the name?",
       ok: "PURCHASE"
     },
-    registerServiceNode: {
-      title: "Register service node",
-      message: "Do you want to register the service node?",
-      ok: "REGISTER"
-    },
     rescan: {
       title: "Rescan wallet",
       message: "Warning: Some information about previous transactions\nsuch as the recipient's address will be lost.",
@@ -165,18 +158,6 @@ export default {
       title: "Confirm unlock",
       ok: "UNLOCK"
     },
-    unlockServiceNode: {
-      title: "Unlock service node",
-      confirmTitle: "Confirm unlock",
-      message: "Do you want to unlock the service node?",
-      ok: "UNLOCK"
-    },
-    unlockServiceNodeWarning: {
-      title: "Unlock service node warning",
-      message:
-        "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
-      ok: "CONTINUE"
-    }
   },
   fieldLabels: {
     // Field labels are also all uppercased
@@ -217,8 +198,6 @@ export default {
     restoreFromBlockHeight: "RESTORE FROM BLOCK HEIGHT",
     restoreFromDate: "RESTORE FROM DATE",
     seedLanguage: "SEED LANGUAGE",
-    serviceNodeCommand: "SERVICE NODE COMMAND",
-    serviceNodeKey: "SERVICE NODE KEY",
     sessionId: "SESSION ID",
     signature: "SIGNATURE",
     transactionId: "TRANSACTION ID",
@@ -257,7 +236,6 @@ export default {
     copySeedWords: "Copy seed words",
     copySessionId: "Copy session ID",
     copySpendKey: "Copy spend key",
-    copyServiceNodeKey: "Copy service node key",
     copyTransactionId: "Copy transaction ID",
     copyViewKey: "Copy view key",
     createNewWallet: "Create new wallet",
@@ -296,7 +274,6 @@ export default {
       nameCopied: "Name copied to clipboard",
       ownerCopied: "Owner copied to clipboard",
       qrCopied: "QR code copied to clipboard",
-      registerServiceNodeSuccess: "Successfully registered service node",
       sendSuccess: "Transaction successfully sent",
       sessionIdCopied: "Session ID copied to clipboard",
       signatureCopied: "Signature copied to clipboard",
@@ -318,7 +295,6 @@ export default {
       enterWalletName: "Enter a wallet name",
       enterName: "Enter a name",
       errorSavingItem: "Error saving {item}",
-      failedServiceNodeUnlock: "Failed to unlock service node",
       failedToSetLanguage: "Failed to set language: {lang}",
       failedWalletImport: "Failed to import wallet",
       failedWalletOpen: "Failed to open wallet. Please try again.",
@@ -339,8 +315,6 @@ export default {
       invalidRestoreDate: "Invalid restore date",
       invalidRestoreHeight: "Invalid restore height",
       invalidSeedLength: "Invalid seed word length",
-      invalidServiceNodeCommand: "Please enter the service node registration command",
-      invalidServiceNodeKey: "Service node key not valid",
       invalidSessionId: "Session ID not valid",
       invalidWalletPath: "Invalid wallet path",
       keyImages: {
@@ -470,19 +444,6 @@ export default {
     saveToAddressBook: "Save to address book",
     seedWords: "Seed words",
     selectLanguage: "Select language",
-    serviceNodeRegistrationDescription:
-      'Enter the {registerCommand} command produced by the daemon that is registering to become a Service Node using the "{prepareCommand}" command',
-    serviceNodeDetails: {
-      contributors: "Contributors",
-      lastRewardBlockHeight: "Last reward block height",
-      lastUptimeProof: "Last uptime proof",
-      operatorFee: "Operator Fee",
-      registrationHeight: "Registration height",
-      unlockHeight: "Unlock height",
-      serviceNodeKey: "Service Node Key",
-      stakingRequirement: "Staking requirement",
-      totalContributed: "Total contributed"
-    },
     spendKey: "Spend key",
     startingDaemon: "Starting daemon",
     startingWallet: "Starting wallet",
@@ -508,7 +469,6 @@ export default {
         pendingIncoming: "Pending incoming",
         pendingOutgoing: "Pending outgoing",
         miner: "Miner",
-        serviceNode: "Service Node",
         governance: "Governance",
         stake: "Stake",
         failed: "Failed"
@@ -534,11 +494,6 @@ export default {
     lnsRecordDetails: "LNS record details",
     privateKeys: "Private keys",
     rescanWallet: "Rescan wallet",
-    serviceNode: {
-      registration: "REGISTRATION",
-      staking: "STAKING"
-    },
-    serviceNodeDetails: "Service node details",
     settings: {
       title: "Settings",
       tabs: {

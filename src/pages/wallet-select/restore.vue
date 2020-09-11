@@ -30,7 +30,7 @@
               v-model="wallet.refresh_start_date"
               type="date"
               modal
-              :min="1525305600000"
+              :min="1599490585000"
               :max="Date.now()"
               :dark="theme == 'dark'"
               hide-underline
@@ -128,7 +128,7 @@ export default {
         seed: "",
         refresh_type: "date",
         refresh_start_height: 0,
-        refresh_start_date: 1525305600000, // timestamp of block 1
+        refresh_start_date: 1599490585000, // timestamp of block 1
         password: "",
         password_confirm: ""
       }

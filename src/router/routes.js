@@ -90,14 +90,6 @@ export default [
         component: () => import("pages/wallet/addressbook")
       },
       {
-        path: "servicenode",
-        component: () => import("pages/wallet/service-node")
-      },
-      {
-        path: "lns",
-        component: () => import("pages/wallet/lns")
-      },
-      {
         path: "advanced",
         component: () => import("pages/wallet/advanced")
       }

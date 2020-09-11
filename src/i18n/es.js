@@ -23,7 +23,6 @@ export default {
     next: "SIGUIENTE",
     openWallet: "ABRIR MONEDERO",
     receive: "RECIBIR",
-    registerServiceNode: "REGISTRAR NODO DE SERVICIO",
     rescan: "VOLVER A EXAMINAR",
     restoreWallet: "RESTAURAR MONEDERO",
     save: "GUARDAR",
@@ -32,7 +31,6 @@ export default {
     selectWalletFile: "SELECCIONAR ARCHIVO DEL MONEDERO",
     send: "ENVIAR",
     sendCoins: "ENVIAR MONEDAS",
-    serviceNode: "NODO DE SERVICIO",
     settings: "CONFIGURACIÓN",
     showQRCode: "MOSTRAR CÓDIGO QR",
     showTxDetails: "MOSTRAR DETALLES DE LA TRANSACCIÓN",
@@ -94,11 +92,6 @@ export default {
       title: "Contraseña",
       message: "Introduzca la contraseña del monedero para continuar."
     },
-    registerServiceNode: {
-      title: "Registrar nodo de servicio",
-      message: "¿Desea registrar el nodo de servicio?",
-      ok: "REGISTRAR"
-    },
     rescan: {
       title: "Volver a examinar el monedero",
       message:
@@ -150,18 +143,6 @@ export default {
       title: "Confirmar liberación",
       ok: "LIBERAR"
     },
-    unlockServiceNode: {
-      title: "Liberar nodo de servicio",
-      confirmTitle: "Confirmar liberación",
-      message: "¿Desea liberar el nodo de servicio?",
-      ok: "LIBERAR"
-    },
-    unlockServiceNodeWarning: {
-      title: "Advertencia liberación nodo de servicio",
-      message:
-        "Liberar una participación parcial a un nodo hará que el resto de participaciones de otras personas también se liberen. Si se trata de una participación a un nodo compartido, estaría bien que comunicara sus intenciones al operador y al resto de participantes.",
-      ok: "CONTINUAR"
-    }
   },
   fieldLabels: {
     // Field labels are also all uppercased
@@ -199,8 +180,6 @@ export default {
     restoreFromBlockHeight: "RESTAURAR DESDE EL BLOQUE NÚMERO",
     restoreFromDate: "RESTAURAR DESDE EL DÍA",
     seedLanguage: "IDIOMA SEMILLA",
-    serviceNodeCommand: "ORDEN PARA REGISTRAR EL NODO DE SERVICIO",
-    serviceNodeKey: "CLAVE NODO DE SERVICIO",
     signature: "FIRMA",
     transactionId: "ID DE LA TRANSACCIÓN",
     walletFile: "ARCHIVO MONEDERO",
@@ -234,7 +213,6 @@ export default {
     copyQR: "Copiar código QR",
     copySeedWords: "Copiar palabras semilla",
     copySpendKey: "Copiar clave de gasto",
-    copyServiceNodeKey: "Copiar clave de nodo de servicio",
     copyTransactionId: "Copiar ID de la transacción",
     copyViewKey: "Copiar clave de visualización",
     createNewWallet: "Crear nuevo monedero",
@@ -267,7 +245,6 @@ export default {
       },
       passwordUpdated: "Contraseña actualizada",
       qrCopied: "Código QR copiado al portapapeles",
-      registerServiceNodeSuccess: "Nodo de servicio registrado correctamente",
       sendSuccess: "Transacción enviada correctamente",
       signatureCopied: "Firma copiada al portapapeles",
       stakeSuccess: "Participación retenida correctamente",
@@ -286,7 +263,6 @@ export default {
       enterTransactionProof: "Introduzca prueba de transacción",
       enterWalletName: "Introduzca un nombre para el monedero",
       errorSavingItem: "Error al guardar {item}",
-      failedServiceNodeUnlock: "La liberación del nodo de servicio ha fallado",
       failedToSetLanguage: "Fallo al cambiar de idioma: {lang}",
       failedWalletImport: "Fallo al importar el monedero",
       failedWalletOpen: "Fallo al abrir el monedero. Inténtelo de nuevo.",
@@ -301,8 +277,6 @@ export default {
       invalidRestoreDate: "Fecha de restauración no válida",
       invalidRestoreHeight: "Altura de bloque no válida",
       invalidSeedLength: "Cantidad de palabras en la semilla incorrecta",
-      invalidServiceNodeCommand: "Por favor, introduzca el comando para registrar el nodo de servicio",
-      invalidServiceNodeKey: "Clave de nodo de servicio no válida",
       invalidWalletPath: "Ruta del monedero no válida",
       keyImages: {
         exporting: "Error exportando imágenes de clave",
@@ -421,8 +395,6 @@ export default {
     saveToAddressBook: "Guardar en la libreta de direcciones",
     seedWords: "Palabras semilla",
     selectLanguage: "Escoja un idioma",
-    serviceNodeRegistrationDescription:
-      'Introduzca la orden {registerCommand} generada por el servicio (xolentumd) que se está intentado registrar como Nodo de Servicio usando la instrucción "{prepareCommand}"',
     spendKey: "Clave de gasto",
     startingDaemon: "Iniciando servicio",
     startingWallet: "Iniciando monedero",
@@ -447,7 +419,6 @@ export default {
         pendingIncoming: "Recibida pendiente",
         pendingOutgoing: "Emitida pendiente",
         miner: "Minería",
-        serviceNode: "Nodo de Servicio",
         governance: "Gobernanza",
         stake: "Participación retenida",
         failed: "Fallida"
@@ -472,10 +443,6 @@ export default {
     currentlyStakedNodes: "Nodos en los que actualmente participa",
     privateKeys: "Claves privadas",
     rescanWallet: "Volver a examinar monedero",
-    serviceNode: {
-      registration: "REGISTRO",
-      staking: "PARTICIPACIÓN"
-    },
     settings: {
       title: "Configuración",
       tabs: {

@@ -20,9 +20,9 @@ export class Daemon {
 
     // Settings for timestamp to height conversion
     // These are initial values used to calculate the height
-    this.PIVOT_BLOCK_HEIGHT = 119681;
-    this.PIVOT_BLOCK_TIMESTAMP = 1539676273;
-    this.PIVOT_BLOCK_TIME = 120;
+    this.PIVOT_BLOCK_HEIGHT = 1;
+    this.PIVOT_BLOCK_TIMESTAMP = 1599490585;
+    this.PIVOT_BLOCK_TIME = 60;
   }
 
   checkVersion() {
@@ -353,12 +353,6 @@ export class Daemon {
       this.heartbeatSlowAction();
     }, 30 * 1000); // 30 seconds
     this.heartbeatSlowAction();
-
-    clearInterval(this.serviceNodeHeartbeat);
-    this.serviceNodeHeartbeat = setInterval(() => {
-      this.updateServiceNodes();
-    }, 5 * 60 * 1000); // 5 minutes
-    this.updateServiceNodes();
   }
 
   heartbeatAction() {
@@ -416,73 +410,6 @@ export class Daemon {
         }
       }
       this.sendGateway("set_daemon_data", daemon_info);
-    });
-  }
-
-  updateServiceNodes() {
-    // Get the latest service node data
-    this.getRPC("service_nodes").then(data => {
-      if (!data.hasOwnProperty("result")) return;
-
-      const service_nodes = data.result.service_node_states;
-      this.sendGateway("set_daemon_data", { service_nodes });
-    });
-  }
-
-  async getLNSRecordsForOwners(owners) {
-    if (!Array.isArray(owners) || owners.length === 0) {
-      return [];
-    }
-
-    const data = await this.sendRPC("lns_owners_to_names", { entries: owners });
-    if (!data.hasOwnProperty("result")) return [];
-
-    // We need to map request_index to owner
-    const { entries } = data.result;
-    const recordsWithOwners = (entries || []).map(record => {
-      const owner = owners[record.request_index];
-      return {
-        ...record,
-        owner
-      };
-    });
-
-    return this._sanitizeLNSRecords(recordsWithOwners);
-  }
-
-  async getLNSRecord(nameHash) {
-    if (!nameHash || nameHash.length === 0) {
-      return null;
-    }
-
-    const params = {
-      entries: [
-        {
-          name_hash: nameHash,
-          types: [0] // Update this when we have other types. Type 0 = session
-        }
-      ]
-    };
-
-    const data = await this.sendRPC("lns_names_to_owners", params);
-    if (!data.hasOwnProperty("result")) return null;
-
-    const entries = this._sanitizeLNSRecords(data.result.entries);
-    if (entries.length === 0) return null;
-
-    return entries[0];
-  }
-
-  _sanitizeLNSRecords(records) {
-    return (records || []).map(record => {
-      // Record type is in uint16 format
-      // Session = 0
-      // For now since wallet and xolentum names haven't been implemented, we always assume it's session
-      const type = "session";
-      return {
-        ...record,
-        type
-      };
     });
   }
 

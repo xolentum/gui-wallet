@@ -23,7 +23,6 @@ export default {
     next: "PRÓXIMO",
     openWallet: "ABRIR CARTEIRA",
     receive: "RECEBER",
-    registerServiceNode: "REGISTAR NÓDULO DE SERVIÇO",
     rescan: "REEXAMINAR",
     restoreWallet: "RESTAURAR CARTEIRA",
     save: "SALVAR",
@@ -32,7 +31,6 @@ export default {
     selectWalletFile: "SELECIONAR FICHEIRO DA CARTEIRA",
     send: "ENVIAR",
     sendCoins: "ENVIAR MOEDAS",
-    serviceNode: "NÓDULO DE SERVIÇO",
     settings: "CONFIGURAÇÕES",
     showQRCode: "MOSTRAR CÓDIGO QR",
     showTxDetails: "MOSTRAR DETALHES DA TX",
@@ -95,11 +93,6 @@ export default {
       title: "Palavra-passe",
       message: "Introduza a sua palavra-passe para continuar"
     },
-    registerServiceNode: {
-      title: "Registar um nódulo de serviço",
-      message: "Pretende registar um nódulo de serviço?",
-      ok: "REGISTAR"
-    },
     rescan: {
       title: "Reexaminar carteira",
       message:
@@ -151,18 +144,6 @@ export default {
       title: "Confirmar desbloqueamento",
       ok: "DESBLOQUEAR"
     },
-    unlockServiceNode: {
-      title: "Desbloquear nódulo de serviço",
-      confirmTitle: "Confirmar desbloqueio",
-      message: "Deseja desbloquear o nódulo de serviço?",
-      ok: "DESBLOQUEAR"
-    },
-    unlockServiceNodeWarning: {
-      title: "Unlock service node warning",
-      message:
-        "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
-      ok: "CONTINUE"
-    }
   },
   fieldLabels: {
     // Field labels are also all uppercased
@@ -200,8 +181,6 @@ export default {
     restoreFromBlockHeight: "RESTAURE DESDE ALTURA DO BLOCO",
     restoreFromDate: "RESTAURAR DESDE DATA",
     seedLanguage: "LINGUA DA SEMENTE",
-    serviceNodeCommand: "COMANDO DO NÓDULO DE SERVIÇO",
-    serviceNodeKey: "CHAVE DO NÓDULO DE SERVIÇO",
     signature: "SIGNATURE",
     transactionId: "TRANSACTION ID",
     walletFile: "FICHEIRO DA CARTEIRA",
@@ -235,7 +214,6 @@ export default {
     copyQR: "Copiar código QR",
     copySeedWords: "Copiar palavras semente",
     copySpendKey: "Copiar chave de gasto",
-    copyServiceNodeKey: "Copy service node key",
     copyTransactionId: "Copira ID da transação",
     copyViewKey: "Copiar chave de visualização",
     createNewWallet: "Criar nova carteira",
@@ -268,7 +246,6 @@ export default {
       },
       passwordUpdated: "Palavra-Passe actualizada",
       qrCopied: "Código QR ccopiado para o clipboard",
-      registerServiceNodeSuccess: "Nódulo de serviço registado com sucesso",
       sendSuccess: "Transação enviada com sucesso.",
       signatureCopied: "Signature copied to clipboard",
       stakeSuccess: "Participação com sucesso",
@@ -287,7 +264,6 @@ export default {
       enterTransactionProof: "Enter transaction proof",
       enterWalletName: "Introduza o nome da carteira",
       errorSavingItem: "Erro salvando {item}",
-      failedServiceNodeUnlock: "Falhou o desbloqueamento do nódulo de serviço",
       failedToSetLanguage: "Falhou mudança de língua: {lang}",
       failedWalletImport: "Falhou importação da carteira",
       failedWalletOpen: "Falhou abertura da carteira. Por favor tente de novo.",
@@ -302,8 +278,6 @@ export default {
       invalidRestoreDate: "Data de restauro inválido",
       invalidRestoreHeight: "Altura de restauro inválido",
       invalidSeedLength: "Comprimento da palavra semente inválido",
-      invalidServiceNodeCommand: "Por favor introduza o comando de registro do nódulo de serviço",
-      invalidServiceNodeKey: "Chave do nódulo de serviço inválido",
       invalidWalletPath: "Caminho da carteira inválido",
       keyImages: {
         exporting: "Erro ao exportar as chaves de imagem",
@@ -422,8 +396,6 @@ export default {
     saveToAddressBook: "Salvar para o livro de endereço",
     seedWords: "Palavras semente",
     selectLanguage: "Selecione língua",
-    serviceNodeRegistrationDescription:
-      'Introduza o {registerCommand} commando produzido pelo serviço que está se registando para se tornar un Nódulo de Serviço utilizando o commando "{prepareCommand}" ',
     spendKey: "Chave de gasto",
     startingDaemon: "Começando serviço",
     startingWallet: "Começando carteira",
@@ -448,7 +420,6 @@ export default {
         pendingIncoming: "Entradas pendentes",
         pendingOutgoing: "Saídas pendentes",
         miner: "Mineiro",
-        serviceNode: "Nódulo de Serviço",
         governance: "Governança",
         stake: "Participação",
         failed: "Falhou"
@@ -472,10 +443,6 @@ export default {
     currentlyStakedNodes: "Currently staked nodes",
     privateKeys: "Chaves privadas",
     rescanWallet: "Reexaminar carteira",
-    serviceNode: {
-      registration: "REGISTO",
-      staking: "PARTICIPAÇÃO"
-    },
     settings: {
       title: "Configurações",
       tabs: {

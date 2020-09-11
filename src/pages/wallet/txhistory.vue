@@ -57,16 +57,8 @@ export default {
           value: "miner"
         },
         {
-          label: this.$t("strings.transactions.types.serviceNode"),
-          value: "snode"
-        },
-        {
           label: this.$t("strings.transactions.types.governance"),
           value: "gov"
-        },
-        {
-          label: this.$t("strings.transactions.types.stake"),
-          value: "stake"
         },
         {
           label: this.$t("strings.transactions.types.failed"),
