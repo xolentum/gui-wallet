@@ -5,7 +5,7 @@
   "productName": "Xolentum GUI Wallet",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xolentum/xolentum-gui-wallet.git"
+    "url": "https://github.com/xolentum/gui-wallet.git"
   },
   "author": {
     "name": "The Xolentum Developers",
