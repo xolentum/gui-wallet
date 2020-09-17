@@ -30,7 +30,7 @@ exports.default = async function notarizing(context) {
   }
 
   const options = {
-    appBundleId: "com.xolentum.electron-wallet",
+    appBundleId: "com.xolentum.gui-wallet",
     appPath: `${appOutDir}/${appName}.app`,
     appleId: SIGNING_APPLE_ID,
     appleIdPassword: SIGNING_APP_PASSWORD
