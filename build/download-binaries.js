@@ -12,7 +12,7 @@ async function download() {
 
     const headers = {
       "Content-Type": "application/json",
-      "User-Agent": "Xolentum-Electron-Wallet"
+      "User-Agent": "Xolentum-GUI-Wallet"
     };
     if (env.GH_TOKEN) {
       headers.Authorisation = `Bearer ${env.GH_TOKEN}`;
@@ -26,11 +26,11 @@ async function download() {
       .map(asset => asset["browser_download_url"])
       .find(url => {
         if (platform === "darwin") {
-          return url.includes("osx") || url.includes("mac");
-        } else if (platform === "win32") {
-          return url.includes("win") || url.includes("windows");
+          return url.includes("MacOS") || url.includes("mac");
+        } else if (platform === "win64") {
+          return url.includes("Win64") || url.includes("windows");
         }
-        return url.includes("linux");
+        return url.includes("Linux");
       });
 
     if (!url) {
