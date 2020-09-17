@@ -23,8 +23,11 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v1
         with:
-          node-version: "11.9.0"
-
+          node-version: "12.18.3"
+      
+      - name: Install quasar
+        run: npm install -g @quasar/cli      
+      
       - name: Install dependencies
         run: npm install
 
