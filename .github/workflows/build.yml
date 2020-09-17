@@ -1,6 +1,13 @@
 name: Xolentum GUI Wallet Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - development
+  pull_request:
+    branches:
+      - development 
 
 jobs:
   build:
@@ -26,15 +33,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract zip binaries
-        if: runner.os != 'Linux'
+      - name: Extract binaries
         run: unzip latest.zip
-        shell: bash
-        working-directory: ./downloads
-
-      - name: Extract xz binaries
-        if: runner.os == 'Linux'
-        run: tar -xf latest.xz
         shell: bash
         working-directory: ./downloads
 
@@ -50,13 +50,13 @@ jobs:
 
       - name: Publish Window and Linux binaries
         if: runner.os != 'macOS'
-        run: npm run release
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Mac binaries
         if: runner.os == 'macOS'
-        run: npm run release
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
