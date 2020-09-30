@@ -13,6 +13,7 @@ module.exports = function(ctx) {
       // "mdi",
       // "fontawesome"
     ],
+    
     supportIE: false,
     build: {
       scopeHoisting: true,
@@ -162,7 +163,7 @@ module.exports = function(ctx) {
         appId: "com.xolentum.gui-wallet",
         productName: "Xolentum GUI Wallet",
         copyright: "Copyright © 2020 The Xolentum Developers, 2018-2019 Loki Project, 2018 Ryo Currency Project",
-        afterSign: "build/notarize.js",
+        // afterSign: "build/notarize.js",
         artifactName: "xolentum-electron-wallet-${version}-${os}.${ext}",
         publish: "github",
 
