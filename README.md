@@ -60,6 +60,6 @@ Adding a new language is fairly simple.
 
 [BSD 3-Clause License](LICENSE)
 
-Copyright © 2020 The Xolentum Developers  
+Copyright © 2020 The Xolentum Project  
 Copyright © 2018-2019 Loki Project  
 Copyright © 2018 Ryo Currency Project
