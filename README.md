@@ -15,7 +15,7 @@ Please submit any changes as pull requests to the development branch, all change
 ```
 nvm use 11.9.0
 npm install -g quasar-cli
-git clone https://github.com/xolentum/xolentum-gui
+git clone https://github.com/xolentum/gui-wallet
 cd xolentum-gui
 cp path_to_xolentum_binaries/xolentumd bin/
 cp path_to_xolentum_binaries/xolentum-wallet-rpc bin/
@@ -60,6 +60,6 @@ Adding a new language is fairly simple.
 
 [BSD 3-Clause License](LICENSE)
 
-Copyright © 2020 The Xolentum Developers
-Copyright © 2018-2019 Loki Project
+Copyright © 2020 The Xolentum Developers  
+Copyright © 2018-2019 Loki Project  
 Copyright © 2018 Ryo Currency Project
