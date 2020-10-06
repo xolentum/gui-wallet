@@ -8,11 +8,11 @@
 
     <template v-else>
       <q-infinite-scroll ref="scroller" :handler="loadMore">
-        <q-list link no-border :dark="theme == 'dark'" class="loki-list tx-list">
+        <q-list link no-border :dark="theme == 'dark'" class="xolentum-list tx-list">
           <q-item
             v-for="tx in tx_list_paged"
             :key="`${tx.txid}-${tx.type}`"
-            class="loki-list-item transaction"
+            class="xolentum-list-item transaction"
             :class="'tx-' + tx.type"
             @click.native="details(tx)"
           >
@@ -21,7 +21,7 @@
             </q-item-side>
             <q-item-main class="main">
               <q-item-tile class="amount" label>
-                <FormatLoki :amount="tx.amount" />
+                <FormatXolentum :amount="tx.amount" />
               </q-item-tile>
               <q-item-tile sublabel>{{ tx.txid }}</q-item-tile>
             </q-item-main>
@@ -62,7 +62,7 @@ const { clipboard } = require("electron");
 import { mapState } from "vuex";
 import { QSpinnerDots } from "quasar";
 import TxDetails from "components/tx_details";
-import FormatLoki from "components/format_loki";
+import FormatXolentum from "components/format_xolentum";
 import { i18n } from "plugins/i18n";
 
 export default {
@@ -81,12 +81,8 @@ export default {
           return i18n.t("strings.transactions.types.pending");
         case "miner":
           return i18n.t("strings.transactions.types.miner");
-        case "snode":
-          return i18n.t("strings.transactions.types.serviceNode");
         case "gov":
           return i18n.t("strings.transactions.types.governance");
-        case "stake":
-          return i18n.t("strings.transactions.types.stake");
         default:
           return "-";
       }
@@ -95,7 +91,7 @@ export default {
   components: {
     QSpinnerDots,
     TxDetails,
-    FormatLoki
+    FormatXolentum
   },
   props: {
     limit: {
@@ -242,7 +238,7 @@ export default {
       // id, address, notes, amount, recipient name
       const fields = [tx.txid, tx.note];
 
-      const formattedAmount = tx.amount / 1e9;
+      const formattedAmount = tx.amount / 1e12;
       fields.push(String(formattedAmount));
 
       // Get all addresses and names and add them on
@@ -314,7 +310,7 @@ export default {
 
 <style lang="scss">
 .tx-list {
-  .loki-list-item {
+  .xolentum-list-item {
     padding-top: 0;
     padding-bottom: 0;
   }

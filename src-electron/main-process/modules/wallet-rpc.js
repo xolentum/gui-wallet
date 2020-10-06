@@ -17,7 +17,6 @@ export class WalletRPC {
     this.id = 0;
     this.net_type = "mainnet";
     this.heartbeat = null;
-    this.lnsHeartbeat = null;
     this.wallet_state = {
       open: false,
       name: "",
@@ -125,13 +124,13 @@ export class WalletRPC {
         this.hostname = "127.0.0.1";
         this.port = options.wallet.rpc_bind_port;
 
-        const rpcExecutable = process.platform === "win32" ? "loki-wallet-rpc.exe" : "loki-wallet-rpc";
+        const rpcExecutable = process.platform === "win32" ? "xolentum-wallet-rpc.exe" : "xolentum-wallet-rpc";
         // eslint-disable-next-line no-undef
         const rpcPath = path.join(__ryo_bin, rpcExecutable);
 
         // Check if the rpc exists
         if (!fs.existsSync(rpcPath)) {
-          reject(new Error("Failed to find Loki Wallet RPC. Please make sure you anti-virus has not removed it."));
+          reject(new Error("Failed to find Xolentum Wallet RPC. Please make sure you anti-virus has not removed it."));
           return;
         }
 
@@ -256,7 +255,7 @@ export class WalletRPC {
         break;
 
       case "restore_view_wallet":
-        // TODO: Decide if we want this for loki
+        // TODO: Decide if we want this for xolentum
         this.restoreViewWallet(
           params.name,
           params.password,
@@ -749,12 +748,6 @@ export class WalletRPC {
       this.heartbeatAction();
     }, 5000);
     this.heartbeatAction(true);
-
-    clearInterval(this.lnsHeartbeat);
-    this.lnsHeartbeat = setInterval(() => {
-      this.updateLocalLNSRecords();
-    }, 30 * 1000); // Every 30 seconds
-    this.updateLocalLNSRecords();
   }
 
   heartbeatAction(extended = false) {
@@ -854,346 +847,6 @@ export class WalletRPC {
     });
   }
 
-  async updateLocalLNSRecords() {
-    try {
-      const addressData = await this.sendRPC("get_address", { account_index: 0 }, 5000);
-      if (addressData.hasOwnProperty("error") || !addressData.hasOwnProperty("result")) {
-        return;
-      }
-
-      // Pull out all our addresses from the data and make sure they're valid
-      const results = addressData.result.addresses || [];
-      const addresses = results.map(a => a.address).filter(a => !!a);
-      if (addresses.length === 0) return;
-
-      const records = await this.backend.daemon.getLNSRecordsForOwners(addresses);
-
-      // We need to ensure that we decrypt any incoming records that we already have
-      const currentRecords = this.wallet_state.lnsRecords;
-      const recordsToUpdate = { ...this.purchasedNames };
-      const newRecords = records.map(record => {
-        // If we have a new record or we haven't decrypted our current record then we should return the new record
-        const current = currentRecords.find(c => c.name_hash === record.name_hash);
-        if (!current || !current.name) return record;
-
-        // We need to check if we need to re-decrypt the record.
-        // This is only necessary if the encrypted_value changed.
-        const needsToUpdate = current.encrypted_value !== record.encrypted_value;
-        if (needsToUpdate) {
-          const { name, type } = current;
-          recordsToUpdate[name] = type;
-
-          return {
-            name,
-            ...record
-          };
-        }
-
-        // Otherwise just update our current record with new information (in the case that owner or backup_owner was updated)
-        return {
-          ...current,
-          ...record
-        };
-      });
-      this.wallet_state.lnsRecords = newRecords;
-      this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
-
-      // Decrypt the records serially
-      let updatePromise = Promise.resolve();
-      for (const [name, type] of Object.entries(recordsToUpdate)) {
-        updatePromise = updatePromise.then(() => {
-          this.decryptLNSRecord(type, name);
-        });
-      }
-    } catch (e) {
-      console.debug("Something went wrong when updating lns records: ", e);
-    }
-  }
-
-  /*
-  Get our LNS record and update our wallet state with decrypted values.
-  This will return `null` if the record is not in our currently stored records.
-  */
-  async decryptLNSRecord(type, name) {
-    try {
-      const record = await this.getLNSRecord(type, name);
-      if (!record) return null;
-
-      // Update our current records with the new decrypted record
-      const currentRecords = this.wallet_state.lnsRecords;
-      const isOurRecord = currentRecords.find(c => c.name_hash === record.name_hash);
-      if (!isOurRecord) return null;
-
-      const newRecords = currentRecords.map(current => {
-        if (current.name_hash === record.name_hash) {
-          return record;
-        }
-        return current;
-      });
-      this.wallet_state.lnsRecords = newRecords;
-      this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
-      return record;
-    } catch (e) {
-      console.debug("Something went wrong when updating lns record: ", e);
-      return null;
-    }
-  }
-
-  /*
-  Get a LNS record associated with the given name
-  */
-  async getLNSRecord(type, name) {
-    const types = ["session"]; // We currently only support session
-    if (!types.includes(type)) return null;
-
-    if (!name || name.trim().length === 0) return null;
-
-    const lowerCaseName = name.toLowerCase();
-
-    const nameHash = await this.hashLNSName(type, lowerCaseName);
-    if (!nameHash) return null;
-
-    const record = await this.backend.daemon.getLNSRecord(nameHash);
-    if (!record || !record.encrypted_value) return null;
-
-    // Decrypt the value if possible
-    const value = await this.decryptLNSValue(type, lowerCaseName, record.encrypted_value);
-
-    return {
-      name,
-      value,
-      ...record
-    };
-  }
-
-  async hashLNSName(type, name) {
-    if (!type || !name) return null;
-
-    try {
-      const data = await this.sendRPC("lns_hash_name", {
-        type,
-        name
-      });
-
-      if (data.hasOwnProperty("error")) {
-        let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-        throw new Error(error);
-      }
-
-      return (data.result && data.result.name) || null;
-    } catch (e) {
-      console.debug("Failed to hash lsn name: ", e);
-      return null;
-    }
-  }
-
-  async decryptLNSValue(type, name, encrypted_value) {
-    if (!type || !name || !encrypted_value) return null;
-
-    try {
-      const data = await this.sendRPC("lns_decrypt_value", {
-        type,
-        name,
-        encrypted_value
-      });
-
-      if (data.hasOwnProperty("error")) {
-        let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-        throw new Error(error);
-      }
-
-      return (data.result && data.result.value) || null;
-    } catch (e) {
-      console.debug("Failed to decrypt lsn value: ", e);
-      return null;
-    }
-  }
-
-  stake(password, amount, service_node_key, destination) {
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
-      if (err) {
-        this.sendGateway("set_snode_status", {
-          stake: {
-            code: -1,
-            i18n: "notification.errors.internalError",
-            sending: false
-          }
-        });
-        return;
-      }
-      if (!this.isValidPasswordHash(password_hash)) {
-        this.sendGateway("set_snode_status", {
-          stake: {
-            code: -1,
-            i18n: "notification.errors.invalidPassword",
-            sending: false
-          }
-        });
-        return;
-      }
-
-      amount = (parseFloat(amount) * 1e9).toFixed(0);
-
-      this.sendRPC("stake", {
-        amount,
-        destination,
-        service_node_key
-      }).then(data => {
-        if (data.hasOwnProperty("error")) {
-          let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-          this.sendGateway("set_snode_status", {
-            stake: {
-              code: -1,
-              message: error,
-              sending: false
-            }
-          });
-          return;
-        }
-
-        // Update the new snode list
-        this.backend.daemon.updateServiceNodes();
-
-        this.sendGateway("set_snode_status", {
-          stake: {
-            code: 0,
-            i18n: "notification.positive.stakeSuccess",
-            sending: false
-          }
-        });
-      });
-    });
-  }
-
-  registerSnode(password, register_service_node_str) {
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
-      if (err) {
-        this.sendGateway("set_snode_status", {
-          registration: {
-            code: -1,
-            i18n: "notification.errors.internalError",
-            sending: false
-          }
-        });
-        return;
-      }
-
-      if (!this.isValidPasswordHash(password_hash)) {
-        this.sendGateway("set_snode_status", {
-          registration: {
-            code: -1,
-            i18n: "notification.errors.invalidPassword",
-            sending: false
-          }
-        });
-        return;
-      }
-
-      this.sendRPC("register_service_node", {
-        register_service_node_str
-      }).then(data => {
-        if (data.hasOwnProperty("error")) {
-          const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-          this.sendGateway("set_snode_status", {
-            registration: {
-              code: -1,
-              message: error,
-              sending: false
-            }
-          });
-          return;
-        }
-
-        // Update the new snode list
-        this.backend.daemon.updateServiceNodes();
-
-        this.sendGateway("set_snode_status", {
-          registration: {
-            code: 0,
-            i18n: "notification.positive.registerServiceNodeSuccess",
-            sending: false
-          }
-        });
-      });
-    });
-  }
-
-  unlockStake(password, service_node_key, confirmed = false) {
-    const sendError = (message, i18n = true) => {
-      const key = i18n ? "i18n" : "message";
-      this.sendGateway("set_snode_status", {
-        unlock: {
-          code: -1,
-          [key]: message,
-          sending: false
-        }
-      });
-    };
-
-    // Unlock code 0 means success, 1 means can unlock, -1 means error
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
-      if (err) {
-        sendError("notification.errors.internalError");
-        return;
-      }
-
-      if (!this.isValidPasswordHash(password_hash)) {
-        sendError("notification.errors.invalidPassword");
-        return;
-      }
-
-      const sendRPC = path => {
-        return this.sendRPC(path, {
-          service_node_key
-        }).then(data => {
-          if (data.hasOwnProperty("error")) {
-            const error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-            sendError(error, false);
-            return null;
-          }
-
-          if (!data.hasOwnProperty("result")) {
-            sendError("notification.errors.failedServiceNodeUnlock");
-            return null;
-          }
-
-          return data.result;
-        });
-      };
-
-      if (confirmed) {
-        sendRPC("request_stake_unlock").then(data => {
-          if (!data) return;
-
-          const unlock = {
-            code: data.unlocked ? 0 : -1,
-            message: data.msg,
-            sending: false
-          };
-
-          // Update the new snode list
-          if (data.unlocked) {
-            this.backend.daemon.updateServiceNodes();
-          }
-
-          this.sendGateway("set_snode_status", { unlock });
-        });
-      } else {
-        sendRPC("can_request_stake_unlock").then(data => {
-          if (!data) return;
-
-          const unlock = {
-            code: data.can_unlock ? 1 : -1,
-            message: data.msg,
-            sending: false
-          };
-
-          this.sendGateway("set_snode_status", { unlock });
-        });
-      }
-    });
-  }
-
   transfer(password, amount, address, payment_id, priority, note, address_book = {}) {
     crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
       if (err) {
@@ -1262,135 +915,6 @@ export class WalletRPC {
       if (address_book.hasOwnProperty("save") && address_book.save) {
         this.addAddressBook(address, payment_id, address_book.description, address_book.name);
       }
-    });
-  }
-
-  purchaseLNS(password, type, name, value, owner, backupOwner) {
-    const _name = name.trim().toLowerCase();
-    const _owner = owner.trim() === "" ? null : owner;
-    const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
-
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
-      if (err) {
-        this.sendGateway("set_lns_status", {
-          code: -1,
-          i18n: "notification.errors.internalError",
-          sending: false
-        });
-        return;
-      }
-      if (!this.isValidPasswordHash(password_hash)) {
-        this.sendGateway("set_lns_status", {
-          code: -1,
-          i18n: "notification.errors.invalidPassword",
-          sending: false
-        });
-        return;
-      }
-
-      const params = {
-        type,
-        owner: _owner,
-        backup_owner,
-        name: _name,
-        value
-      };
-
-      this.sendRPC("lns_buy_mapping", params).then(data => {
-        if (data.hasOwnProperty("error")) {
-          let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-          this.sendGateway("set_lns_status", {
-            code: -1,
-            message: error,
-            sending: false
-          });
-          return;
-        }
-
-        this.purchasedNames[name.trim()] = type;
-
-        // Fetch new records and then get the decrypted record for the one we just inserted
-        setTimeout(() => this.updateLocalLNSRecords(), 5000);
-
-        this.sendGateway("set_lns_status", {
-          code: 0,
-          i18n: "notification.positive.namePurchased",
-          sending: false
-        });
-      });
-    });
-  }
-
-  updateLNSMapping(password, type, name, value, owner, backupOwner) {
-    const _name = name.trim().toLowerCase();
-    const _owner = owner.trim() === "" ? null : owner;
-    const backup_owner = backupOwner.trim() === "" ? null : backupOwner;
-
-    crypto.pbkdf2(password, this.auth[2], 1000, 64, "sha512", (err, password_hash) => {
-      if (err) {
-        this.sendGateway("set_lns_status", {
-          code: -1,
-          i18n: "notification.errors.internalError",
-          sending: false
-        });
-        return;
-      }
-      if (!this.isValidPasswordHash(password_hash)) {
-        this.sendGateway("set_lns_status", {
-          code: -1,
-          i18n: "notification.errors.invalidPassword",
-          sending: false
-        });
-        return;
-      }
-
-      const params = {
-        type,
-        owner: _owner,
-        backup_owner,
-        name: _name,
-        value
-      };
-
-      this.sendRPC("lns_update_mapping", params).then(data => {
-        if (data.hasOwnProperty("error")) {
-          let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
-          this.sendGateway("set_lns_status", {
-            code: -1,
-            message: error,
-            sending: false
-          });
-          return;
-        }
-
-        this.purchasedNames[name.trim()] = type;
-
-        // Fetch new records and then get the decrypted record for the one we just inserted
-        setTimeout(() => this.updateLocalLNSRecords(), 5000);
-
-        // Optimistically update our record
-        const { lnsRecords } = this.wallet_state;
-        const newRecords = lnsRecords.map(record => {
-          if (record.type === type && record.name && record.name.toLowerCase() === _name) {
-            return {
-              ...record,
-              owner: _owner,
-              backup_owner,
-              value
-            };
-          }
-
-          return record;
-        });
-        this.wallet_state.lnsRecords = newRecords;
-        this.sendGateway("set_wallet_data", { lnsRecords: newRecords });
-
-        this.sendGateway("set_lns_status", {
-          code: 0,
-          i18n: "notification.positive.lnsRecordUpdated",
-          sending: false
-        });
-      });
     });
   }
 
@@ -2019,9 +1543,9 @@ export class WalletRPC {
       wallets.legacy = [];
       let legacy_paths = [];
       if (os.platform() == "win32") {
-        legacy_paths = ["C:\\ProgramData\\Loki"];
+        legacy_paths = ["C:\\ProgramData\\Xolentum"];
       } else {
-        legacy_paths = [path.join(os.homedir(), "Loki")];
+        legacy_paths = [path.join(os.homedir(), "Xolentum")];
       }
       for (var i = 0; i < legacy_paths.length; i++) {
         try {
@@ -2147,7 +1671,6 @@ export class WalletRPC {
 
   async closeWallet() {
     clearInterval(this.heartbeat);
-    clearInterval(this.lnsHeartbeat);
     this.wallet_state = {
       open: false,
       name: "",

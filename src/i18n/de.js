@@ -23,7 +23,6 @@ export default {
     next: "WEITER",
     openWallet: "WALLET ÖFFNEN",
     receive: "EMPFANGEN",
-    registerServiceNode: "SERVICE NODE REGISTRIEREN",
     rescan: "ERNEUT SCANNEN",
     restoreWallet: "WALLET WIEDERHERSTELLEN",
     save: "SPEICHERN",
@@ -32,7 +31,6 @@ export default {
     selectWalletFile: "WALLET DATEU AUSWÄHLEN",
     send: "SENDEN",
     sendCoins: "COINS SENDEN",
-    serviceNode: "SERVICE NODE",
     settings: "EINSTELLUNGEN",
     showQRCode: "QR CODE ANZEIGEN",
     showTxDetails: "TX DETAILS ANZEIGEN",
@@ -94,11 +92,6 @@ export default {
       title: "Passwort",
       message: "Wallet Passwort eingeben um fortzufahren"
     },
-    registerServiceNode: {
-      title: "Service Node registrieren",
-      message: "Möchtest du einen Service Node registrieren?",
-      ok: "REGISTRIEREN "
-    },
     rescan: {
       title: "Wallet erneut scannen",
       message:
@@ -150,18 +143,6 @@ export default {
       title: "Unlock bestätigen",
       ok: "UNLOCK"
     },
-    unlockServiceNode: {
-      title: "Unlock Service Node",
-      confirmTitle: "Unlock bestätigen",
-      message: "Möchtest du den Service Node „unlocken“?",
-      ok: "UNLOCK"
-    },
-    unlockServiceNodeWarning: {
-      title: "Unlock service node warning",
-      message:
-        "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
-      ok: "CONTINUE"
-    }
   },
   fieldLabels: {
     // Field labels are also all uppercased
@@ -202,8 +183,6 @@ export default {
     restoreFromBlockHeight: "WIEDERHERSTELLUNG VON BLOCKHÖHE",
     restoreFromDate: "WIEDERHERSTELLUNG VON DATUM",
     seedLanguage: "SEED SPRACHE",
-    serviceNodeCommand: "SERVICE NODE COMMAND",
-    serviceNodeKey: "SERVICE NODE KEY",
     signature: "SIGNATURE",
     transactionId: "TRANSACTION ID",
     walletFile: "WALLET FILE",
@@ -234,12 +213,11 @@ export default {
     copyQR: "QR Code kopieren",
     copySeedWords: "Seed Wörter kopieren",
     copySpendKey: "Spend Key kopieren",
-    copyServiceNodeKey: "Copy service node key",
     copyTransactionId: "Transaktions ID kopieren",
     copyViewKey: "View Key kopieren",
     createNewWallet: "Neue Wallet erstellen",
     deleteWallet: "Wallet löschen",
-    exit: "Loki GUI Wallet schliessen",
+    exit: "Xolentum GUI Wallet schliessen",
     importOldGUIWallet: "Wallets von alter GUI importieren",
     manageKeyImages: "Key Images verwalten",
     openWallet: "Wallet öffnen",
@@ -267,7 +245,6 @@ export default {
       },
       passwordUpdated: "Passwort aktualisiert",
       qrCopied: "QR Code in die Zwischenablage kopiert",
-      registerServiceNodeSuccess: "Service Node erfolgreich registriert ",
       sendSuccess: "Transaktion erfolgreich gesendet",
       signatureCopied: "Signature copied to clipboard",
       stakeSuccess: "Staking erfolgreich",
@@ -286,7 +263,6 @@ export default {
       enterTransactionProof: "Enter transaction proof",
       enterWalletName: "Wallet Namen eingeben",
       errorSavingItem: "Fehler beim Speichern {item}",
-      failedServiceNodeUnlock: "Fehler beim Service Node unlock",
       failedToSetLanguage: "Fehler bei der Auswahl der Sprache: {lang}",
       failedWalletImport: "Fehler beim Importieren der Wallet",
       failedWalletOpen: "Fehler beim Öffnen der Wallet. Bitte versuche es erneut",
@@ -301,8 +277,6 @@ export default {
       invalidRestoreDate: "Ungültiges Wiederherstellungsdatum",
       invalidRestoreHeight: "Ungültige Wiederherstellungshöhe",
       invalidSeedLength: "Ungültige Seed Wortlänge",
-      invalidServiceNodeCommand: "Bitte füge den Service Node Registrierungsbefehl ein",
-      invalidServiceNodeKey: "Service Node Key nicht gültig",
       invalidWalletPath: "Ungültiger Wallet Pfad",
       keyImages: {
         exporting: "Fehler beim Export der Key images",
@@ -324,7 +298,7 @@ export default {
     warnings: {
       noKeyImageExport: "Keine Key Images zum Exportieren gefunden",
       usingLocalNode: "Zugang zur Remote Node nicht möglich, wechsle zur lokalen Node",
-      usingRemoteNode: "llokid nicht gefunden, benutze eine Remote Node"
+      usingRemoteNode: "lxolentumd nicht gefunden, benutze eine Remote Node"
     }
   },
   placeholders: {
@@ -397,9 +371,9 @@ export default {
     destinationUnknown: "Ziel unbekannt",
     editAddressBookEntry: "Adressbucheintrag bearbeiten",
     loadingSettings: "Einstellungen werden geladen",
-    lokiBalance: "Guthaben",
-    lokiUnlockedBalance: "frei verfügbares Guthaben",
-    lokiUnlockedShort: "frei verfügbar",
+    xolentumBalance: "Guthaben",
+    xolentumUnlockedBalance: "frei verfügbares Guthaben",
+    xolentumUnlockedShort: "frei verfügbar",
     noTransactionsFound: "Keine Transaktionen gefunden",
     notes: "Notizen",
     numberOfUnspentOutputs: "Anzahl der unspent outputs",
@@ -422,8 +396,6 @@ export default {
     saveToAddressBook: "In Adressbuch speichern",
     seedWords: "Seed Wörter",
     selectLanguage: "Sprache auswählen",
-    serviceNodeRegistrationDescription:
-      "Hier den {registerComand} Befehl, der mit Hilfe des Daemons durch das Kommando {prepareCommand} erzeugt wurde, eingeben, um eine Service Node zu aktivieren",
     spendKey: "Spend key",
     startingDaemon: "Daemon wird gestartet",
     startingWallet: "Wallet wird gestartet",
@@ -448,7 +420,6 @@ export default {
         pendingIncoming: "Ausstehend eingehend",
         pendingOutgoing: "Ausstehend ausgehend",
         miner: "Miner",
-        serviceNode: "Service Node",
         governance: "Governance",
         stake: "Stake",
         failed: "Fehlgeschlagen"
@@ -472,10 +443,6 @@ export default {
     currentlyStakedNodes: "Currently staked nodes",
     privateKeys: "Private Keys",
     rescanWallet: "Wallet erneut scannen",
-    serviceNode: {
-      registration: "REGISTRIERUNG",
-      staking: "STAKING"
-    },
     settings: {
       title: "Einstellungen",
       tabs: {

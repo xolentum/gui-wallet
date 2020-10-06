@@ -13,6 +13,7 @@ module.exports = function(ctx) {
       // "mdi",
       // "fontawesome"
     ],
+    
     supportIE: false,
     build: {
       scopeHoisting: true,
@@ -159,11 +160,11 @@ module.exports = function(ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "com.loki-project.electron-wallet",
-        productName: "Loki Electron Wallet",
-        copyright: "Copyright © 2018-2019 Loki Project, 2018 Ryo Currency Project",
-        afterSign: "build/notarize.js",
-        artifactName: "loki-electron-wallet-${version}-${os}.${ext}",
+        appId: "com.xolentum.gui-wallet",
+        productName: "Xolentum GUI Wallet",
+        copyright: "Copyright © 2020 The Xolentum Developers, 2018-2019 Loki Project, 2018 Ryo Currency Project",
+        // afterSign: "build/notarize.js",
+        artifactName: "xolentum-electron-wallet-${version}-${os}.${ext}",
         publish: "github",
 
         linux: {
@@ -186,7 +187,7 @@ module.exports = function(ctx) {
         },
 
         dmg: {
-          background: "src-electron/build/loki-dmg.tiff",
+          background: "src-electron/build/xolentum-dmg.tiff",
           sign: false
         },
 

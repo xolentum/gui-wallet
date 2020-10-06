@@ -3,7 +3,7 @@
     <q-stepper ref="stepper" class="no-shadow" :color="theme == 'dark' ? 'light' : 'dark'" dark @step="onStep">
       <q-step default :title="$t('titles.welcome')" class="first-step">
         <div class="welcome-container">
-          <img src="statics/loki.svg" height="100" class="q-mb-md" />
+          <img src="statics/xolentum.png" height="100" class="q-mb-md" />
           <div>Wallet Version: v{{ version }}</div>
           <div>Deamon Version: v{{ daemonVersion }}</div>
 

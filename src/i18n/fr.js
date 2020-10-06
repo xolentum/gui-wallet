@@ -23,7 +23,6 @@ export default {
     next: "SUIVANT",
     openWallet: "OUVRIR LE PORTEFEUILLE",
     receive: "RECEVOIR",
-    registerServiceNode: "ENREGISTRER UN NOEUD DE SERVICE",
     rescan: "RÉANALYSER",
     restoreWallet: "RESTAURER LE PORTEFEUILLE",
     save: "SAUVEGARDER",
@@ -32,7 +31,6 @@ export default {
     selectWalletFile: "SÉLECTIONNER LE FICHIER PORTEFEUILLE",
     send: "ENVOYER",
     sendCoins: "ENVOYER DES PIECES",
-    serviceNode: "NOEUD DE SERVICE",
     settings: "RÉGLAGES",
     showQRCode: "AFFICHER LE QR CODE",
     showTxDetails: "AFFICHER LES DETAILS DE TRANSACTION",
@@ -95,11 +93,6 @@ export default {
       title: "Mot de passe",
       message: "Entrez le mot de passe du portefeuille pour continuer."
     },
-    registerServiceNode: {
-      title: "Enregistrer le nœud de service",
-      message: "Voulez-vous enregistrer le nœud de service ?",
-      ok: "ENREGISTRER"
-    },
     rescan: {
       title: "Réanalyser le portefeuille",
       message:
@@ -151,18 +144,6 @@ export default {
       title: "Confirmer le déverrouillage",
       ok: "DÉVERROUILLER"
     },
-    unlockServiceNode: {
-      title: "Déverrouiller le nœud de service",
-      confirmTitle: "Confirmer le déverrouillage",
-      message: "Voulez-vous déverrouiller le nœud de service ?",
-      ok: "DÉVERROUILLER"
-    },
-    unlockServiceNodeWarning: {
-      title: "Unlock service node warning",
-      message:
-        "Unlocking a partial stake in a node will also unstake for any other participants, if staking in a shared node its best to let the operator and other participants know you are unstaking.",
-      ok: "CONTINUE"
-    }
   },
   fieldLabels: {
     // Field labels are also all uppercased
@@ -201,8 +182,6 @@ export default {
     restoreFromBlockHeight: "RESTAURATION DE LA HAUTEUR DU BLOC",
     restoreFromDate: "RESTAURATION A PARTIR DE LA DATE",
     seedLanguage: "LANGAGE SEED",
-    serviceNodeCommand: "COMMANDE DE NŒUD DE SERVICE",
-    serviceNodeKey: "CLÉ DE SERVICE NODE",
     signature: "SIGNATURE",
     transactionId: "TRANSACTION ID",
     walletFile: "DOSSIER DU PORTEFEUILLE",
@@ -236,12 +215,11 @@ export default {
     copyQR: "Copier le QR code",
     copySeedWords: "Copier les mots clés",
     copySpendKey: "Copier la clé de dépense",
-    copyServiceNodeKey: "Copy service node key",
     copyTransactionId: "Copier l'ID de transaction",
     copyViewKey: "Copier la clé de visibilité",
     createNewWallet: "Créer un nouveau portefeuille",
     deleteWallet: "Supprimer le portefeuille",
-    exit: "Quitter le portefeuille Loki GUI",
+    exit: "Quitter le portefeuille Xolentum GUI",
     importOldGUIWallet: "Importer le portefeuille depuis l’ancien GUI",
     manageKeyImages: "Gérer les images clés",
     openWallet: "Ouvrir le portefeuille",
@@ -269,7 +247,6 @@ export default {
       },
       passwordUpdated: "Mot de passe mis à jour",
       qrCopied: "QR code copié dans le presse-papier",
-      registerServiceNodeSuccess: "Nœud de service enregistré avec succès",
       sendSuccess: "Transaction envoyée avec succès",
       signatureCopied: "Signature copied to clipboard",
       stakeSuccess: "Mise placée avec succès",
@@ -288,7 +265,6 @@ export default {
       enterTransactionProof: "Enter transaction proof",
       enterWalletName: "Entrez un nom de portefeuille",
       errorSavingItem: "Erreur de sauvegarde {item}",
-      failedServiceNodeUnlock: "Erreur de déverrouillage du nœud de service",
       failedToSetLanguage: "Impossible de définir la langue : {lang}",
       failedWalletImport: "Echec d'import du portefeuille",
       failedWalletOpen: "Echec de l'ouverture du portefeuille : veuillez essayer de nouveau.",
@@ -303,8 +279,6 @@ export default {
       invalidRestoreDate: "Date de restauration non valide",
       invalidRestoreHeight: "Hauteur de restauration non valide",
       invalidSeedLength: "Longueur de mot clé non valide",
-      invalidServiceNodeCommand: "Veuillez entrer la commande d'inscription d'un nœud de service",
-      invalidServiceNodeKey: "Clé du nœud de service non valide",
       invalidWalletPath: "Chemin du portefeuille non valide",
       keyImages: {
         exporting: "Erreur de l'exportation des clés images",
@@ -326,7 +300,7 @@ export default {
     warnings: {
       noKeyImageExport: "Aucune clé image n'a été trouvé pour l'export",
       usingLocalNode: "Impossible d'accéder au nœud distant, basculement en local uniquement",
-      usingRemoteNode: "lokid introuvable, utilisation du nœud distant"
+      usingRemoteNode: "xolentumd introuvable, utilisation du nœud distant"
     }
   },
   placeholders: {
@@ -400,9 +374,9 @@ export default {
     destinationUnknown: "Destination inconnue",
     editAddressBookEntry: "Modifiez l'entrée du carnet d'adresses",
     loadingSettings: "Chargement des réglages",
-    lokiBalance: "Solde",
-    lokiUnlockedBalance: "Solde débloqué",
-    lokiUnlockedShort: "Débloqué",
+    xolentumBalance: "Solde",
+    xolentumUnlockedBalance: "Solde débloqué",
+    xolentumUnlockedShort: "Débloqué",
     noTransactionsFound: "Aucune transaction trouvée",
     notes: "Notes",
     numberOfUnspentOutputs: "Nombre de sorties non dépensées",
@@ -426,8 +400,6 @@ export default {
     saveToAddressBook: "Enregistrez dans le carnet d'adresses",
     seedWords: "Mots clés",
     selectLanguage: "Sélectionnez une langue",
-    serviceNodeRegistrationDescription:
-      'Entrez la commande {registerCommand} produite par le démon qui est enregistrée pour devenir un noeud de service en utilisant la commande "{prepareCommand}"',
     spendKey: "Clé dépensée",
     startingDaemon: "Démarrage du démon",
     startingWallet: "Démarrage du portefeuille",
@@ -452,7 +424,6 @@ export default {
         pendingIncoming: "Entrantes en attente",
         pendingOutgoing: "Sortantes en attente",
         miner: "Miner",
-        serviceNode: "Noeud de service",
         governance: "Gouvernance",
         stake: "Stake",
         failed: "Echouées"
@@ -476,10 +447,6 @@ export default {
     currentlyStakedNodes: "Currently staked nodes",
     privateKeys: "Clés privées",
     rescanWallet: "Analysez de nouveau le portefeuille",
-    serviceNode: {
-      registration: "ENREGISTREMENT",
-      staking: "STAKING"
-    },
     settings: {
       title: "Réglages",
       tabs: {

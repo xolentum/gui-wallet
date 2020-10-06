@@ -1,13 +1,9 @@
-name: Xolentum GUI Wallet Build
+name: Xolentum GUI Wallet Release
 
 on:
   push:
     branches:
       - master
-      - development
-  pull_request:
-    branches:
-      - development 
 
 jobs:
   build:
@@ -28,17 +24,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Download xolentumd binaries
+      - name: Download Xolentum binaries
         run: node ./build/download-binaries.js
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract binaries
+      - name: Extract zip binaries
         run: unzip latest.zip
         shell: bash
         working-directory: ./downloads
 
-      - name: Move xolentumd binaries
+      - name: Move Xolentum binaries
         run: |
           find ./downloads -type f -name "xolentumd*" -exec cp '{}' ./bin \;
           find ./downloads -type f -name "xolentum-wallet-rpc*" -exec cp '{}' ./bin \;
@@ -48,15 +44,15 @@ jobs:
         run: ls ./bin
         shell: bash
 
-      - name: Publish Window and Linux binaries
+      - name: Publish Windows and Linux binaries
         if: runner.os != 'macOS'
-        run: npm run build
+        run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Mac binaries
         if: runner.os == 'macOS'
-        run: npm run build
+        run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
@@ -64,7 +60,7 @@ jobs:
           SIGNING_APPLE_ID: ${{ secrets.SIGNING_APPLE_ID }}
           SIGNING_APP_PASSWORD: ${{ secrets.SIGNING_APP_PASSWORD }}
           SIGNING_TEAM_ID: ${{ secrets.SIGNING_TEAM_ID }}
-
+          
       - name: Remove un-needed artifacts
         run: rm -r -- ./*/
         shell: bash

@@ -14,7 +14,7 @@
         <q-btn class="q-ml-sm" color="primary" :label="$t('buttons.save')" @click="save()" />
       </q-toolbar>
       <div class="address-book-modal q-mx-md">
-        <LokiField :label="$t('fieldLabels.address')" :error="$v.newEntry.address.$error">
+        <XolentumField :label="$t('fieldLabels.address')" :error="$v.newEntry.address.$error">
           <q-input
             v-model.trim="newEntry.address"
             :placeholder="address_placeholder"
@@ -29,11 +29,11 @@
             class="star-entry"
             dark
           />
-        </LokiField>
-        <LokiField :label="$t('fieldLabels.name')">
+        </XolentumField>
+        <XolentumField :label="$t('fieldLabels.name')">
           <q-input v-model.trim="newEntry.name" :dark="theme == 'dark'" hide-underline />
-        </LokiField>
-        <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newEntry.payment_id.$error" optional>
+        </XolentumField>
+        <XolentumField :label="$t('fieldLabels.paymentId')" :error="$v.newEntry.payment_id.$error" optional>
           <q-input
             v-model.trim="newEntry.payment_id"
             :placeholder="
@@ -45,8 +45,8 @@
             hide-underline
             @blur="$v.newEntry.payment_id.$touch"
           />
-        </LokiField>
-        <LokiField :label="$t('fieldLabels.notes')" optional>
+        </XolentumField>
+        <XolentumField :label="$t('fieldLabels.notes')" optional>
           <q-input
             v-model="newEntry.description"
             :placeholder="$t('placeholders.additionalNotes')"
@@ -54,7 +54,7 @@
             :dark="theme == 'dark'"
             hide-underline
           />
-        </LokiField>
+        </XolentumField>
 
         <q-field v-if="mode == 'edit'">
           <q-btn class="float-right" color="red" :label="$t('buttons.delete')" @click="deleteEntry()" />
@@ -98,7 +98,7 @@
 import { mapState } from "vuex";
 import AddressHeader from "components/address_header";
 import TxList from "components/tx_list";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 import { payment_id, address } from "src/validators/common";
 import { required } from "vuelidate/lib/validators";
 export default {
@@ -106,7 +106,7 @@ export default {
   components: {
     AddressHeader,
     TxList,
-    LokiField
+    XolentumField
   },
   data() {
     return {
@@ -226,7 +226,7 @@ export default {
 <style lang="scss">
 .address-book-details {
   .address-book-modal {
-    > .loki-field {
+    > .xolentum-field {
       margin-top: 16px;
     }
 

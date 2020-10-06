@@ -10,13 +10,13 @@
         <div class="row gutter-md">
           <!-- Amount -->
           <div class="col-6">
-            <LokiField :label="$t('fieldLabels.amount')" :error="$v.newTx.amount.$error">
+            <XolentumField :label="$t('fieldLabels.amount')" :error="$v.newTx.amount.$error">
               <q-input
                 v-model="newTx.amount"
                 :dark="theme == 'dark'"
                 type="number"
                 min="0"
-                :max="unlocked_balance / 1e9"
+                :max="unlocked_balance / 1e12"
                 placeholder="0"
                 hide-underline
                 @blur="$v.newTx.amount.$touch"
@@ -24,24 +24,24 @@
               <q-btn
                 color="secondary"
                 :text-color="theme == 'dark' ? 'white' : 'dark'"
-                @click="newTx.amount = unlocked_balance / 1e9"
+                @click="newTx.amount = unlocked_balance / 1e12"
               >
                 {{ $t("buttons.all") }}
               </q-btn>
-            </LokiField>
+            </XolentumField>
           </div>
 
           <!-- Priority -->
           <div class="col-6">
-            <LokiField :label="$t('fieldLabels.priority')">
+            <XolentumField :label="$t('fieldLabels.priority')">
               <q-select v-model="newTx.priority" :dark="theme == 'dark'" :options="priorityOptions" hide-underline />
-            </LokiField>
+            </XolentumField>
           </div>
         </div>
 
         <!-- Address -->
         <div class="col q-mt-sm">
-          <LokiField :label="$t('fieldLabels.address')" :error="$v.newTx.address.$error">
+          <XolentumField :label="$t('fieldLabels.address')" :error="$v.newTx.address.$error">
             <q-input
               v-model.trim="newTx.address"
               :dark="theme == 'dark'"
@@ -52,12 +52,12 @@
             <q-btn color="secondary" :text-color="theme == 'dark' ? 'white' : 'dark'" to="addressbook">
               {{ $t("buttons.contacts") }}
             </q-btn>
-          </LokiField>
+          </XolentumField>
         </div>
 
         <!-- Payment ID -->
         <div class="col q-mt-sm">
-          <LokiField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
+          <XolentumField :label="$t('fieldLabels.paymentId')" :error="$v.newTx.payment_id.$error" optional>
             <q-input
               v-model.trim="newTx.payment_id"
               :dark="theme == 'dark'"
@@ -69,12 +69,12 @@
               hide-underline
               @blur="$v.newTx.payment_id.$touch"
             />
-          </LokiField>
+          </XolentumField>
         </div>
 
         <!-- Notes -->
         <div class="col q-mt-sm">
-          <LokiField :label="$t('fieldLabels.notes')" optional>
+          <XolentumField :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.note"
               type="textarea"
@@ -82,7 +82,7 @@
               :placeholder="$t('placeholders.transactionNotes')"
               hide-underline
             />
-          </LokiField>
+          </XolentumField>
         </div>
 
         <!-- Save to address book -->
@@ -95,15 +95,15 @@
         </q-field>
 
         <div v-if="newTx.address_book.save">
-          <LokiField :label="$t('fieldLabels.name')" optional>
+          <XolentumField :label="$t('fieldLabels.name')" optional>
             <q-input
               v-model="newTx.address_book.name"
               :dark="theme == 'dark'"
               :placeholder="$t('placeholders.addressBookName')"
               hide-underline
             />
-          </LokiField>
-          <LokiField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
+          </XolentumField>
+          <XolentumField class="q-mt-sm" :label="$t('fieldLabels.notes')" optional>
             <q-input
               v-model="newTx.address_book.description"
               type="textarea"
@@ -112,7 +112,7 @@
               :placeholder="$t('placeholders.additionalNotes')"
               hide-underline
             />
-          </LokiField>
+          </XolentumField>
         </div>
 
         <q-field class="q-pt-sm">
@@ -137,13 +137,13 @@
 import { mapState } from "vuex";
 import { required, decimal } from "vuelidate/lib/validators";
 import { payment_id, address, greater_than_zero } from "src/validators/common";
-import LokiField from "components/loki_field";
+import XolentumField from "components/xolentum_field";
 import WalletPassword from "src/mixins/wallet_password";
 const objectAssignDeep = require("object-assign-deep");
 
 export default {
   components: {
-    LokiField
+    XolentumField
   },
   mixins: [WalletPassword],
   data() {
@@ -275,7 +275,7 @@ export default {
           message: this.$t("notification.errors.zeroAmount")
         });
         return;
-      } else if (this.newTx.amount > this.unlocked_balance / 1e9) {
+      } else if (this.newTx.amount > this.unlocked_balance / 1e12) {
         this.$q.notify({
           type: "negative",
           timeout: 1000,

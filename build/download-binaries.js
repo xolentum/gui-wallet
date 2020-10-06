@@ -4,7 +4,7 @@ const path = require("path");
 
 async function download() {
   const { platform, env } = process;
-  const repoUrl = "https://api.github.com/repos/loki-project/loki/releases/latest";
+  const repoUrl = "https://api.github.com/repos/xolentum/xolentum/releases/latest";
   try {
     const pwd = process.cwd();
     const downloadDir = path.join(pwd, "downloads");
@@ -12,7 +12,7 @@ async function download() {
 
     const headers = {
       "Content-Type": "application/json",
-      "User-Agent": "Loki-Electron-Wallet"
+      "User-Agent": "Xolentum-GUI-Wallet"
     };
     if (env.GH_TOKEN) {
       headers.Authorisation = `Bearer ${env.GH_TOKEN}`;
@@ -26,11 +26,11 @@ async function download() {
       .map(asset => asset["browser_download_url"])
       .find(url => {
         if (platform === "darwin") {
-          return url.includes("osx") || url.includes("mac");
-        } else if (platform === "win32") {
-          return url.includes("win") || url.includes("windows");
+          return url.includes("macos.zip");
+        } else if (platform === "win64") {
+          return url.includes("windows.zip");
         }
-        return url.includes("linux");
+        return url.includes("linux.zip");
       });
 
     if (!url) {

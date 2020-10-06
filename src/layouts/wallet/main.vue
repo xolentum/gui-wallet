@@ -4,7 +4,7 @@
       <MainMenu />
       <q-toolbar-title>
         <div class="flex items-center justify-center" style="margin-top:7px">
-          <img src="statics/loki.svg" height="32" />
+          <img src="statics/xolentum.png" height="32" />
         </div>
       </q-toolbar-title>
     </q-layout-header>
@@ -23,12 +23,6 @@
           </router-link>
           <router-link to="/wallet/receive">
             <q-btn class="large-btn" :label="$t('buttons.receive')" size="md" icon-right="save_alt" align="left" />
-          </router-link>
-          <router-link to="/wallet/servicenode">
-            <q-btn class="large-btn" :label="$t('buttons.serviceNode')" size="md" icon-right="router" align="left" />
-          </router-link>
-          <router-link to="/wallet/lns">
-            <q-btn class="large-btn" :label="$t('buttons.lns')" size="md" icon-right="text_fields" align="left" />
           </router-link>
           <router-link to="/wallet/advanced">
             <q-btn class="large-btn" :label="$t('buttons.advanced')" size="md" icon-right="tune" align="left" />
