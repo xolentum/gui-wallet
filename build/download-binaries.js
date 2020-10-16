@@ -27,7 +27,7 @@ async function download() {
       .find(url => {
         if (platform === "darwin") {
           return url.includes("macos.zip");
-        } else if (platform === "win64") {
+        } else if (platform === "win32") {
           return url.includes("windows.zip");
         }
         return url.includes("linux.zip");
