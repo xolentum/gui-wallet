@@ -32,9 +32,8 @@
         <img class="q-mb-md" src="statics/xolentum.png" height="42" />
 
         <p class="q-my-sm">Wallet Version: v{{ version }}</p>
-        <p class="q-my-sm">Deaemon Version: v{{ daemonVersion }}</p>
-        <p class="q-my-sm">Copyright (c) 2018-2019, Xolentum Project</p>
-        <p class="q-my-sm">Copyright (c) 2018, Ryo Currency Project</p>
+        <p class="q-my-sm">Daemon Version: v{{ daemonVersion }}</p>
+        <p class="q-my-sm">Copyright (c) 2020, The Xolentum Project</p>
         <p class="q-my-sm">All rights reserved.</p>
 
         <div class="q-mt-md q-mb-lg external-links">
@@ -42,13 +41,15 @@
             <a href="#" @click="openExternal('https://xolentum.org/')">https://xolentum.org/</a>
           </p>
           <p>
-            <a href="#" @click="openExternal('https://t.me/joinchat/DeNvR0JJ4JPn6TVSQjCsZQ')">Telegram</a>
+            <a href="#" @click="openExternal('https://facebook.com/xolentum/')">Facebook</a>
             -
-            <a href="#" @click="openExternal('https://discordapp.com/invite/67GXfD6')">Discord</a>
+            <a href="#" @click="openExternal('https://twitter.com/@xolentum/')">Twitter</a>
             -
-            <a href="#" @click="openExternal('https://www.reddit.com/r/XolentumProject/')">Reddit</a>
+            <a href="#" @click="openExternal('https://chat.xolentum.org/')">Discord</a>
             -
-            <a href="#" @click="openExternal('https://github.com/xolentum-project/xolentum-electron-wallet')">Github</a>
+            <a href="#" @click="openExternal('https://medium.com/@xolentum/')">Medium</a>
+            -
+            <a href="#" @click="openExternal('https://github.com/xolentum-project/gui-wallet/')">Github</a>
           </p>
         </div>
 
