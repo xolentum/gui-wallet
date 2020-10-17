@@ -61,7 +61,7 @@ export class Backend {
       mainnet: {
         ...daemon,
         remote_host: "xolentum.sohamb03.me",
-        remote_port: 13080
+        remote_port: 13580
       },
       stagenet: {
         ...daemon,
