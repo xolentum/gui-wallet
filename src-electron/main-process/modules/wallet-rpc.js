@@ -582,10 +582,10 @@ export class WalletRPC {
       }
 
       try {
-        fs.copySync(import_path, destination, fs.constants.COPYFILE_EXCL);
+        fs.copyFileSync(import_path, destination, fs.constants.COPYFILE_EXCL);
 
         if (fs.existsSync(import_path + ".keys")) {
-          fs.copySync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL);
+          fs.copyFileSync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL);
         }
       } catch (e) {
         this.sendGateway("set_wallet_error", {
@@ -1445,7 +1445,7 @@ export class WalletRPC {
         fs.moveSync(dir_path, archive_path, { overwrite: true });
 
         // Copy contents of archived folder into the wallet folder
-        fs.copySync(archive_path, this.wallet_dir, { overwrite: true });
+        fs.copyFileSync(archive_path, this.wallet_dir, { overwrite: true });
       } catch (e) {
         failed_wallets.push(directory);
         continue;
