@@ -8,15 +8,16 @@ Please submit any changes as pull requests to the development branch, all change
 
 #### Pre-requisites
 
-- Download latest [xolentumd](https://github.com/xolentum/xolentum/releases/latest)
+- Download latest [xolentum release](https://github.com/xolentum/xolentum/releases/latest)
+- Extract the binaries
 
 #### Commands
 
 ```
-nvm use 11.9.0
-npm install -g quasar-cli
+nvm use 14.2.0
+npm install -g @quasar/cli
 git clone https://github.com/xolentum/gui-wallet
-cd xolentum-gui
+cd gui-wallet
 cp path_to_xolentum_binaries/xolentumd bin/
 cp path_to_xolentum_binaries/xolentum-wallet-rpc bin/
 npm install
