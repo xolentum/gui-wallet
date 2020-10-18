@@ -49,7 +49,7 @@
             -
             <a href="#" @click="openExternal('https://medium.com/@xolentum/')">Medium</a>
             -
-            <a href="#" @click="openExternal('https://github.com/xolentum-project/gui-wallet/')">Github</a>
+            <a href="#" @click="openExternal('https://github.com/xolentum/gui-wallet/')">Github</a>
           </p>
         </div>
 
