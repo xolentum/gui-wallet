@@ -866,7 +866,7 @@ export class WalletRPC {
         return;
       }
 
-      amount = (parseFloat(amount) * 1e9).toFixed(0);
+      amount = (parseFloat(amount) * 1e12).toFixed(0);
 
       let sweep_all = amount == this.wallet_state.unlocked_balance;
 
