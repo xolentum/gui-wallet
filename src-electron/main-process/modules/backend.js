@@ -106,6 +106,14 @@ export class Backend {
       {
         host: "xolentum.sohamb03.me",
         port: "13580"
+      },
+      {
+        host: "xolentum.xyz",
+        port: "13580"
+      },
+      {
+        host: "xol-node1.zechtech.us",
+        port: "13580"
       }
     ];
 
