@@ -61,7 +61,7 @@ export class Backend {
       mainnet: {
         ...daemon,
         remote_host: "xolentum.sohamb03.me",
-        remote_port: 13080
+        remote_port: 13580
       },
       stagenet: {
         ...daemon,
@@ -105,6 +105,14 @@ export class Backend {
     this.remotes = [
       {
         host: "xolentum.sohamb03.me",
+        port: "13580"
+      },
+      {
+        host: "xolentum.xyz",
+        port: "13580"
+      },
+      {
+        host: "xol-node1.zechtech.us",
         port: "13580"
       }
     ];
@@ -232,17 +240,12 @@ export class Backend {
       case "open_explorer": {
         const { net_type } = this.config_data.app;
 
-        let path = null;
-        if (params.type === "tx") {
-          path = "tx";
-        } else if (params.type === "service_node") {
-          path = "service_node";
-        }
+        let path = "#blockchain_transaction";
 
         if (path) {
-          const baseUrl = net_type === "testnet" ? "https://xolentumtestnet.com" : "https://xolentumblocks.com";
-          const url = `${baseUrl}/${path}/`;
-          require("electron").shell.openExternal(url + params.id);
+          const baseUrl = net_type === "testnet" ? "https://testnet.explorer.xolentum.org" : "https://explorer.xolentum.org";
+          const url = `${baseUrl}/?hash=`;
+          require("electron").shell.openExternal(url + params.id + path);
         }
         break;
       }

@@ -23,14 +23,10 @@ export class WalletRPC {
       password_hash: null,
       balance: null,
       unlocked_balance: null,
-      lnsRecords: []
     };
     this.isRPCSyncing = false;
     this.dirs = null;
     this.last_height_send_time = Date.now();
-
-    // A mapping of name => type
-    this.purchasedNames = {};
 
     this.height_regexes = [
       {
@@ -232,10 +228,6 @@ export class WalletRPC {
         break;
       }
 
-      case "copy_old_gui_wallets":
-        this.copyOldGuiWallets(params.wallets || []);
-        break;
-
       case "list_wallets":
         this.listWallets();
         break;
@@ -278,18 +270,6 @@ export class WalletRPC {
         this.closeWallet();
         break;
 
-      case "stake":
-        this.stake(params.password, params.amount, params.key, params.destination);
-        break;
-
-      case "register_service_node":
-        this.registerSnode(params.password, params.string);
-        break;
-
-      case "unlock_stake":
-        this.unlockStake(params.password, params.service_node_key, params.confirmed || false);
-        break;
-
       case "transfer":
         this.transfer(
           params.password,
@@ -300,29 +280,6 @@ export class WalletRPC {
           params.note || "",
           params.address_book
         );
-        break;
-
-      case "purchase_lns":
-        this.purchaseLNS(
-          params.password,
-          params.type,
-          params.name,
-          params.value,
-          params.owner || "",
-          params.backup_owner || ""
-        );
-        break;
-
-      case "update_lns_mapping":
-        this.updateLNSMapping(
-          params.password,
-          params.type,
-          params.name,
-          params.value,
-          params.owner || "",
-          params.backup_owner || ""
-        );
-
         break;
 
       case "prove_transaction":
@@ -355,15 +312,19 @@ export class WalletRPC {
       case "rescan_blockchain":
         this.rescanBlockchain();
         break;
+        
       case "rescan_spent":
         this.rescanSpent();
         break;
+      
       case "get_private_keys":
         this.getPrivateKeys(params.password);
         break;
+      
       case "export_key_images":
         this.exportKeyImages(params.password, params.path);
         break;
+      
       case "import_key_images":
         this.importKeyImages(params.password, params.path);
         break;
@@ -582,10 +543,10 @@ export class WalletRPC {
       }
 
       try {
-        fs.copySync(import_path, destination, fs.constants.COPYFILE_EXCL);
+        fs.copyFileSync(import_path, destination, fs.constants.COPYFILE_EXCL);
 
         if (fs.existsSync(import_path + ".keys")) {
-          fs.copySync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL);
+          fs.copyFileSync(import_path + ".keys", destination + ".keys", fs.constants.COPYFILE_EXCL);
         }
       } catch (e) {
         this.sendGateway("set_wallet_error", {
@@ -866,7 +827,7 @@ export class WalletRPC {
         return;
       }
 
-      amount = (parseFloat(amount) * 1e9).toFixed(0);
+      amount = (parseFloat(amount) * 1e12).toFixed(0);
 
       let sweep_all = amount == this.wallet_state.unlocked_balance;
 
@@ -885,7 +846,6 @@ export class WalletRPC {
       if (payment_id) {
         params.payment_id = payment_id;
       }
-
       this.sendRPC(rpc_endpoint, params).then(data => {
         if (data.hasOwnProperty("error")) {
           let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
@@ -1146,13 +1106,12 @@ export class WalletRPC {
           }
         };
 
-        const types = ["in", "out", "pending", "failed", "pool", "miner", "snode", "gov", "stake"];
+        const types = ["in", "out", "pending", "failed", "pool", "miner"];
         types.forEach(type => {
           if (data.result.hasOwnProperty(type)) {
             wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result[type]);
           }
         });
-
         for (let i = 0; i < wallet.transactions.tx_list.length; i++) {
           if (/^0*$/.test(wallet.transactions.tx_list[i].payment_id)) {
             wallet.transactions.tx_list[i].payment_id = "";
@@ -1203,7 +1162,9 @@ export class WalletRPC {
             entry.description = "";
           }
 
-          if (/^0*$/.test(entry.payment_id)) {
+          if (!entry.payment_id) {
+            entry.payment_id = "";
+          } else if (/^0*$/.test(entry.payment_id)) {
             entry.payment_id = "";
           } else if (/^0*$/.test(entry.payment_id.substring(16))) {
             entry.payment_id = entry.payment_id.substring(0, 16);
@@ -1385,78 +1346,6 @@ export class WalletRPC {
         })
         .catch(() => onError("notification.errors.keyImages.reading"));
     });
-  }
-
-  copyOldGuiWallets(wallets) {
-    this.sendGateway("set_old_gui_import_status", {
-      code: 1,
-      failed_wallets: []
-    });
-
-    /*
-        Old wallets were in the following format:
-            wallets:
-                <name>:
-                    <name>
-                    <name>.keys
-                    <name>.address.txt
-
-        We need to change it so it becomes:
-            wallets:
-                <name>
-                <name>.keys
-                <name>.address.txt
-        */
-
-    const failed_wallets = [];
-
-    for (const wallet of wallets) {
-      const { type, directory } = wallet;
-
-      const old_gui_path = path.join(this.wallet_dir, "old-gui");
-      const dir_path = path.join(this.wallet_dir, directory);
-      const stat = fs.statSync(dir_path);
-      if (!stat.isDirectory()) continue;
-
-      // Make sure the directory has the keys file
-      const wallet_file = path.join(dir_path, directory);
-      const key_file = wallet_file + ".keys";
-
-      // If we don't have them then don't bother copying
-      if (!fs.existsSync(key_file)) {
-        failed_wallets.push(directory);
-        continue;
-      }
-
-      // Copy out the file into the relevant directory
-      const destination = path.join(this.dirs[type], "wallets");
-      if (!fs.existsSync(destination)) fs.mkdirpSync(destination);
-
-      try {
-        // Don't move file if we already have copied the keys file
-        if (fs.existsSync(path.join(destination, directory) + ".keys")) {
-          failed_wallets.push(directory);
-          continue;
-        }
-
-        // Archive the folder
-        if (!fs.existsSync(old_gui_path)) fs.mkdirpSync(old_gui_path);
-        const archive_path = path.join(old_gui_path, directory);
-        fs.moveSync(dir_path, archive_path, { overwrite: true });
-
-        // Copy contents of archived folder into the wallet folder
-        fs.copySync(archive_path, this.wallet_dir, { overwrite: true });
-      } catch (e) {
-        failed_wallets.push(directory);
-        continue;
-      }
-    }
-
-    this.sendGateway("set_old_gui_import_status", {
-      code: 0,
-      failed_wallets
-    });
-    this.listWallets();
   }
 
   listWallets(legacy = false) {
