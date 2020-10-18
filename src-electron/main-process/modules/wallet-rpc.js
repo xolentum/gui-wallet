@@ -885,7 +885,6 @@ export class WalletRPC {
       if (payment_id) {
         params.payment_id = payment_id;
       }
-
       this.sendRPC(rpc_endpoint, params).then(data => {
         if (data.hasOwnProperty("error")) {
           let error = data.error.message.charAt(0).toUpperCase() + data.error.message.slice(1);
@@ -1152,7 +1151,6 @@ export class WalletRPC {
             wallet.transactions.tx_list = wallet.transactions.tx_list.concat(data.result[type]);
           }
         });
-
         for (let i = 0; i < wallet.transactions.tx_list.length; i++) {
           if (/^0*$/.test(wallet.transactions.tx_list[i].payment_id)) {
             wallet.transactions.tx_list[i].payment_id = "";
@@ -1203,7 +1201,9 @@ export class WalletRPC {
             entry.description = "";
           }
 
-          if (/^0*$/.test(entry.payment_id)) {
+          if (!entry.payment_id) {
+            entry.payment_id = "";
+          } else if (/^0*$/.test(entry.payment_id)) {
             entry.payment_id = "";
           } else if (/^0*$/.test(entry.payment_id.substring(16))) {
             entry.payment_id = entry.payment_id.substring(0, 16);
