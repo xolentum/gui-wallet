@@ -1,6 +1,6 @@
 {
   "name": "xolentum-gui-wallet",
-  "version": "1.0.1-beta",
+  "version": "1.0.0",
   "description": "GUI interface for Xolentum",
   "productName": "Xolentum GUI Wallet",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/xolentum/gui-wallet"
   },
   "author": {
-    "name": "The Xolentum Developers",
+    "name": "The Xolentum Project",
     "email": "atom@xolentum.org"
   },
   "private": true,
