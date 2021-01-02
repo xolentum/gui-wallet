@@ -11,7 +11,7 @@ Please submit any changes as pull requests to the development branch, all change
 - Download latest [xolentum release](https://github.com/xolentum/xolentum/releases/latest)
 - Extract the binaries
 
-#### Commands
+#### Compilation
 
 ```
 nvm use 14.2.0
@@ -23,7 +23,7 @@ cp path_to_xolentum_binaries/xolentum-wallet-rpc bin/
 npm install
 ```
 
-For dev:
+For development:
 
 ```
 npm run dev
