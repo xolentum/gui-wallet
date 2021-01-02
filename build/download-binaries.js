@@ -26,11 +26,11 @@ async function download() {
       .map(asset => asset["browser_download_url"])
       .find(url => {
         if (platform === "darwin") {
-          return url.includes("macos.zip");
+          return url.includes("mac-x64");
         } else if (platform === "win32") {
-          return url.includes("windows.zip");
+          return url.includes("win-x64");
         }
-        return url.includes("linux.zip");
+        return url.includes("linux-x64");
       });
 
     if (!url) {
