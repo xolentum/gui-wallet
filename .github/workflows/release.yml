@@ -3,7 +3,7 @@ name: Xolentum GUI Wallet Release
 on:
   push:
     branches:
-      - master
+      - release
 
 jobs:
   build:

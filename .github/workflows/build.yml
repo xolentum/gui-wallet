@@ -2,12 +2,11 @@ name: Xolentum GUI Wallet Build
 
 on:
   push:
-    branches:
-      - master
-      - development
+    branches-ignore:
+      - release
   pull_request:
-    branches:
-      - development 
+    branches-ignore:
+      - release
 
 jobs:
   build:
