@@ -47,22 +47,23 @@ jobs:
         run: ls ./bin
         shell: bash
 
-      - name: Publish Window and Linux binaries
-        if: runner.os != 'macOS'
+#      - name: Publish Window and Linux binaries
+#        if: runner.os != 'macOS'
+      - name: Publish binaries
         run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish Mac binaries
-        if: runner.os == 'macOS'
-        run: npm run build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
-          SIGNING_APPLE_ID: ${{ secrets.SIGNING_APPLE_ID }}
-          SIGNING_APP_PASSWORD: ${{ secrets.SIGNING_APP_PASSWORD }}
-          SIGNING_TEAM_ID: ${{ secrets.SIGNING_TEAM_ID }}
+#      - name: Publish Mac binaries
+#        if: runner.os == 'macOS'
+#        run: npm run build
+#        env:
+#          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          CSC_LINK: ${{ secrets.MAC_CERTIFICATE }}
+#          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTIFICATE_PASSWORD }}
+#          SIGNING_APPLE_ID: ${{ secrets.SIGNING_APPLE_ID }}
+#          SIGNING_APP_PASSWORD: ${{ secrets.SIGNING_APP_PASSWORD }}
+#          SIGNING_TEAM_ID: ${{ secrets.SIGNING_TEAM_ID }}
 
       - name: Remove un-needed artifacts
         run: rm -r -- ./*/

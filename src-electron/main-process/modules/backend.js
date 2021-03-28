@@ -110,18 +110,6 @@ export class Backend {
       {
         host: "xolentum.xyz",
         port: "13580"
-      },
-      {
-        host: "xol-node1.zechtech.us",
-        port: "13580"
-      },
-      {
-        host: "xol-node2.zechtech.us",
-        port: "13580"
-      },
-      {
-        host: "xol.fluxcdn.com",
-        port: "13580"
       }
     ];
 
