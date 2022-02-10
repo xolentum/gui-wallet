@@ -58,7 +58,7 @@
     "eslint-plugin-vue": "^5.2.3",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "prettier": "^1.19.1",
     "quasar-cli": "^0.17.26",
     "sass-loader": "^7.1.0",
